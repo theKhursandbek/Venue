@@ -50,15 +50,15 @@ export default function VenueListPage() {
   const hasActiveFilters = minPrice || maxPrice;
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-4 animate-fade-in">
       {/* ═══ Header ═══ */}
       <div>
-        <p className="text-xs font-semibold text-primary-500 tracking-widest uppercase mb-1">Discover</p>
-        <h1 className="text-2xl font-bold text-surface-50 tracking-tight">
+        <p className="text-[10px] font-medium text-primary-500 tracking-widest uppercase mb-0.5">Discover</p>
+        <h1 className="text-xl font-semibold text-surface-100 tracking-tight">
           Найдите <span className="gradient-text">площадку</span>
         </h1>
         {!loading && !error && (
-          <p className="text-sm text-surface-500 mt-1">
+          <p className="text-xs text-surface-500 mt-0.5">
             {venues.length} доступных площадок
           </p>
         )}
@@ -66,57 +66,57 @@ export default function VenueListPage() {
 
       {/* ═══ Search ═══ */}
       <div className="relative flex items-center">
-        <Search className="absolute left-4 size-4.5 text-surface-500" />
+        <Search className="absolute left-3.5 size-3.5 text-surface-500" />
         <input
           type="text"
           placeholder="Поиск по названию или адресу..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full pl-11 pr-12 py-3.5 rounded-xl border border-surface-700/50 bg-surface-900 text-surface-100 placeholder:text-surface-500 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-500/40 transition-all text-sm"
+          className="w-full pl-9 pr-10 py-2.5 rounded-lg border border-surface-700/30 bg-surface-900/80 text-surface-200 placeholder:text-surface-500 focus:outline-none focus:ring-2 focus:ring-primary-500/15 focus:border-primary-500/30 transition-all text-sm"
         />
         <button
           onClick={() => setShowFilters(!showFilters)}
-          className={`absolute right-2.5 p-2 rounded-lg transition-all duration-200 ${
+          className={`absolute right-2 p-1.5 rounded-md transition-all duration-200 ${
             hasActiveFilters
               ? "bg-primary-500 text-surface-950"
               : showFilters
               ? "bg-surface-700 text-surface-200"
-              : "text-surface-500 hover:bg-surface-800 hover:text-surface-300"
+              : "text-surface-500 hover:bg-white/[0.04] hover:text-surface-300"
           }`}
         >
-          <SlidersHorizontal className="size-4" />
+          <SlidersHorizontal className="size-3.5" />
         </button>
       </div>
 
       {/* ═══ Filters panel ═══ */}
       {showFilters && (
-        <div className="bg-surface-900 border border-surface-700/50 rounded-xl p-5 space-y-4 animate-scale-in">
+        <div className="bg-surface-900/80 border border-surface-700/30 rounded-lg p-4 space-y-3 animate-scale-in inner-light">
           <div className="flex items-center justify-between">
-            <span className="text-sm font-semibold text-surface-200">Цена за час (сум)</span>
+            <span className="text-xs font-medium text-surface-300">Цена за час (сум)</span>
             {hasActiveFilters && (
               <button
                 onClick={() => { setMinPrice(""); setMaxPrice(""); }}
-                className="text-xs text-primary-400 hover:text-primary-300 font-semibold px-2.5 py-1 rounded-md hover:bg-surface-800 transition-colors"
+                className="text-[10px] text-primary-400 hover:text-primary-300 font-medium px-2 py-0.5 rounded hover:bg-white/[0.04] transition-colors"
               >
                 Сбросить
               </button>
             )}
           </div>
-          <div className="flex gap-3">
+          <div className="flex gap-2">
             <input
               type="number"
               placeholder="От"
               value={minPrice}
               onChange={(e) => setMinPrice(e.target.value)}
-              className="flex-1 px-4 py-3 rounded-lg border border-surface-600/50 bg-surface-800 text-surface-100 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-500/40 transition-all"
+              className="flex-1 px-3 py-2 rounded-md border border-surface-700/40 bg-surface-850 text-surface-200 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/15 focus:border-primary-500/30 transition-all"
             />
-            <div className="flex items-center text-surface-600 font-bold">—</div>
+            <div className="flex items-center text-surface-600 text-xs">—</div>
             <input
               type="number"
               placeholder="До"
               value={maxPrice}
               onChange={(e) => setMaxPrice(e.target.value)}
-              className="flex-1 px-4 py-3 rounded-lg border border-surface-600/50 bg-surface-800 text-surface-100 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-500/40 transition-all"
+              className="flex-1 px-3 py-2 rounded-md border border-surface-700/40 bg-surface-850 text-surface-200 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/15 focus:border-primary-500/30 transition-all"
             />
           </div>
         </div>
@@ -124,17 +124,17 @@ export default function VenueListPage() {
 
       {/* ═══ Active filter chips ═══ */}
       {hasActiveFilters && !showFilters && (
-        <div className="flex items-center gap-2 animate-fade-in">
+        <div className="flex items-center gap-1.5 animate-fade-in">
           {minPrice && (
-            <span className="inline-flex items-center gap-1.5 text-xs font-semibold bg-surface-800 text-primary-400 px-3 py-1.5 rounded-lg border border-primary-500/20">
+            <span className="inline-flex items-center gap-1 text-[10px] font-medium bg-surface-850 text-primary-400 px-2 py-1 rounded-md border border-primary-500/15">
               От {Number(minPrice).toLocaleString("ru-RU")}
-              <button onClick={() => setMinPrice("")} className="hover:text-primary-300"><X className="size-3" /></button>
+              <button onClick={() => setMinPrice("")} className="hover:text-primary-300"><X className="size-2.5" /></button>
             </span>
           )}
           {maxPrice && (
-            <span className="inline-flex items-center gap-1.5 text-xs font-semibold bg-surface-800 text-primary-400 px-3 py-1.5 rounded-lg border border-primary-500/20">
+            <span className="inline-flex items-center gap-1 text-[10px] font-medium bg-surface-850 text-primary-400 px-2 py-1 rounded-md border border-primary-500/15">
               До {Number(maxPrice).toLocaleString("ru-RU")}
-              <button onClick={() => setMaxPrice("")} className="hover:text-primary-300"><X className="size-3" /></button>
+              <button onClick={() => setMaxPrice("")} className="hover:text-primary-300"><X className="size-2.5" /></button>
             </span>
           )}
         </div>
@@ -146,15 +146,15 @@ export default function VenueListPage() {
       ) : error ? (
         <ErrorBox message={error} onRetry={fetchVenues} />
       ) : venues.length === 0 ? (
-        <div className="text-center py-24 animate-fade-in">
-          <div className="size-16 bg-surface-800 border border-surface-700/50 rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <MapPin className="size-7 text-surface-500" />
+        <div className="text-center py-16 animate-fade-in">
+          <div className="size-12 bg-surface-850 border border-surface-700/30 rounded-xl flex items-center justify-center mx-auto mb-3">
+            <MapPin className="size-5 text-surface-500" />
           </div>
-          <p className="font-semibold text-surface-300">Площадки не найдены</p>
-          <p className="text-sm text-surface-500 mt-1">Попробуйте изменить параметры поиска</p>
+          <p className="font-medium text-surface-300 text-sm">Площадки не найдены</p>
+          <p className="text-xs text-surface-500 mt-0.5">Попробуйте изменить параметры поиска</p>
         </div>
       ) : (
-        <div className="space-y-4 stagger-children">
+        <div className="space-y-3 stagger-children">
           {venues.map((venue) => (
             <VenueCard
               key={venue.id}
@@ -184,68 +184,68 @@ function VenueCard({
   return (
     <button
       onClick={onClick}
-      className="w-full bg-surface-900 rounded-2xl overflow-hidden border border-surface-700/40 card-dark glow-border text-left group"
+      className="w-full bg-surface-900/80 rounded-xl overflow-hidden border border-surface-700/25 card-dark glow-border text-left group inner-light"
     >
       {/* Image */}
-      <div className="h-44 bg-surface-800 relative overflow-hidden">
+      <div className="h-36 bg-surface-850 relative overflow-hidden">
         {image ? (
           <img
             src={image}
             alt={venue.name}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+            className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500 ease-out"
             loading="lazy"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-surface-800">
-            <MapPin className="size-10 text-surface-600" />
+          <div className="w-full h-full flex items-center justify-center bg-surface-850">
+            <MapPin className="size-8 text-surface-600" />
           </div>
         )}
 
         {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-linear-to-t from-surface-950/80 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-surface-950/70 via-transparent to-transparent" />
 
         {/* Price badge */}
-        <div className="absolute bottom-3 right-3 bg-surface-950/80 backdrop-blur-xl px-3 py-1.5 rounded-lg border border-white/10">
-          <span className="text-sm font-bold text-primary-400">{price}</span>
+        <div className="absolute bottom-2.5 right-2.5 bg-surface-950/70 backdrop-blur-lg px-2.5 py-1 rounded-md border border-white/[0.06]">
+          <span className="text-xs font-semibold text-primary-400">{price}</span>
         </div>
 
         {/* Image count */}
         {venue.image_count > 1 && (
-          <div className="absolute top-3 right-3 bg-surface-950/50 backdrop-blur-md text-surface-200 text-xs font-semibold px-2.5 py-1 rounded-lg border border-white/10">
+          <div className="absolute top-2.5 right-2.5 bg-surface-950/50 backdrop-blur-md text-surface-300 text-[10px] font-medium px-2 py-0.5 rounded-md border border-white/[0.06]">
             📷 {venue.image_count}
           </div>
         )}
       </div>
 
       {/* Info */}
-      <div className="p-4 space-y-2.5">
-        <div className="flex items-start justify-between gap-3">
-          <h3 className="font-bold text-surface-100 text-base group-hover:text-primary-400 transition-colors leading-tight">
+      <div className="p-3.5 space-y-2">
+        <div className="flex items-start justify-between gap-2">
+          <h3 className="font-semibold text-surface-200 text-sm group-hover:text-primary-400 transition-colors duration-300 leading-snug">
             {venue.name}
           </h3>
-          <div className="size-7 bg-surface-800 rounded-lg flex items-center justify-center shrink-0 group-hover:bg-primary-500/10 transition-colors">
-            <ArrowRight className="size-3.5 text-surface-500 group-hover:text-primary-400 group-hover:translate-x-0.5 transition-all" />
+          <div className="size-6 bg-surface-800/80 rounded-md flex items-center justify-center shrink-0 group-hover:bg-primary-500/10 transition-all duration-300">
+            <ArrowRight className="size-3 text-surface-500 group-hover:text-primary-400 group-hover:translate-x-0.5 transition-all duration-300" />
           </div>
         </div>
 
-        <p className="text-sm text-surface-500 flex items-center gap-2">
-          <MapPin className="size-3.5 text-surface-600 shrink-0" />
+        <p className="text-xs text-surface-500 flex items-center gap-1.5">
+          <MapPin className="size-3 text-surface-600 shrink-0" />
           <span className="truncate">{venue.address}</span>
         </p>
 
         {/* Amenities */}
         {venue.amenities && venue.amenities.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 pt-1">
+          <div className="flex flex-wrap gap-1 pt-0.5">
             {venue.amenities.slice(0, 3).map((amenity) => (
               <span
                 key={amenity}
-                className="text-[11px] bg-surface-800 text-surface-400 px-2 py-1 rounded-md border border-surface-700/50 font-medium"
+                className="text-[10px] bg-surface-850 text-surface-400 px-1.5 py-0.5 rounded border border-surface-700/30 font-medium"
               >
                 {amenity}
               </span>
             ))}
             {venue.amenities.length > 3 && (
-              <span className="text-[11px] text-primary-500 font-semibold px-2 py-1">
+              <span className="text-[10px] text-primary-500/80 font-medium px-1.5 py-0.5">
                 +{venue.amenities.length - 3}
               </span>
             )}

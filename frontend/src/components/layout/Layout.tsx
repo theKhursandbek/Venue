@@ -14,14 +14,14 @@ export default function Layout() {
 
   return (
     <div className="min-h-dvh flex flex-col bg-surface-950">
-      {/* Header */}
-      <header className="glass border-b border-white/5 sticky top-0 z-40">
-        <div className="px-5 h-14 flex items-center justify-between">
-          <NavLink to="/" className="flex items-center gap-2.5 group">
-            <div className="size-8 bg-primary-500 rounded-lg flex items-center justify-center">
-              <span className="text-surface-950 font-black text-sm">V</span>
+      {/* Header — ultra-thin glass */}
+      <header className="glass border-b border-white/[0.04] sticky top-0 z-40">
+        <div className="px-4 h-12 flex items-center justify-between">
+          <NavLink to="/" className="flex items-center gap-2 group">
+            <div className="size-7 bg-gradient-to-br from-primary-400 to-primary-600 rounded-md flex items-center justify-center shadow-sm shadow-primary-500/20 group-hover:shadow-primary-500/40 transition-shadow">
+              <span className="text-white font-bold text-xs">V</span>
             </div>
-            <span className="font-bold text-surface-100 text-base tracking-tight">
+            <span className="font-semibold text-surface-200 text-sm tracking-tight">
               Venue<span className="gradient-text">Book</span>
             </span>
           </NavLink>
@@ -29,24 +29,24 @@ export default function Layout() {
           {isAuthenticated && (
             <button
               onClick={handleLogout}
-              className="p-2 text-surface-500 hover:text-danger-400 rounded-lg transition-all duration-200 hover:bg-surface-800 active:scale-95"
+              className="p-1.5 text-surface-500 hover:text-danger-400 rounded-md transition-all duration-200 hover:bg-white/[0.03] active:scale-90"
               title="Выйти"
             >
-              <LogOut className="size-4.5" />
+              <LogOut className="size-4" />
             </button>
           )}
         </div>
       </header>
 
-      {/* Main content — full width */}
-      <main className="flex-1 w-full px-5 py-6 pb-24">
+      {/* Main content */}
+      <main className="flex-1 w-full px-4 py-4 pb-20">
         <Outlet />
       </main>
 
-      {/* Bottom Navigation — edge-to-edge dark bar */}
+      {/* Bottom Navigation — sleek glass bar */}
       {isAuthenticated && (
         <div className="fixed bottom-0 left-0 right-0 z-40 safe-area-bottom">
-          <nav className="flex items-center glass border-t border-white/5">
+          <nav className="flex items-center glass border-t border-white/[0.04]">
             <NavItem to="/" icon={Home} label="Площадки" />
             <NavItem to="/bookings" icon={CalendarDays} label="Брони" />
             <NavItem to="/profile" icon={User} label="Профиль" />
@@ -72,19 +72,19 @@ function NavItem({
       end={to === "/"}
       className={({ isActive }) =>
         clsx(
-          "flex-1 flex flex-col items-center gap-1 py-3 text-[10px] font-semibold transition-all duration-200 relative",
+          "flex-1 flex flex-col items-center gap-0.5 py-2.5 text-[10px] font-medium transition-all duration-300 relative",
           isActive
             ? "text-primary-400"
-            : "text-surface-500 hover:text-surface-300"
+            : "text-surface-500 hover:text-surface-300 active:scale-90"
         )
       }
     >
       {({ isActive }) => (
         <>
           {isActive && (
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-0.5 bg-primary-500 rounded-full" />
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-6 h-[2px] bg-gradient-to-r from-primary-400 to-primary-500 rounded-full animate-pop" />
           )}
-          <Icon className="size-5" />
+          <Icon className={clsx("transition-all duration-300", isActive ? "size-[18px]" : "size-[18px]")} />
           <span className="tracking-wide">{label}</span>
         </>
       )}
