@@ -5,9 +5,13 @@ Admin configuration for venues app.
 from django.contrib import admin
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
-from modeltranslation.admin import TabbedTranslationAdmin
+from modeltranslation.admin import TabbedTranslationAdmin  # type: ignore[import-untyped]
 
 from .models import Venue, VenueImage
+
+# Constants for repeated literals
+NO_IMAGE_TEXT = _("No image")
+NO_IMAGES_TEXT = _("No images")
 
 
 class VenueImageInline(admin.TabularInline):
@@ -28,7 +32,7 @@ class VenueImageInline(admin.TabularInline):
                 '<img src="{}" style="max-width: 100px; max-height: 75px;" />',
                 obj.image.url,
             )
-        return _("No image")
+        return NO_IMAGE_TEXT
     image_preview.short_description = _("preview")
 
 
@@ -137,7 +141,7 @@ class VenueAdmin(TabbedTranslationAdmin):
         """Display all images (uploaded + URL-based) in admin."""
         all_urls = obj.all_image_urls if hasattr(obj, 'all_image_urls') else []
         if not all_urls:
-            return _("No images")
+            return NO_IMAGES_TEXT
         
         html = '<div style="display: flex; flex-wrap: wrap; gap: 10px;">'
         for url in all_urls[:10]:
@@ -210,7 +214,7 @@ class VenueImageAdmin(admin.ModelAdmin):
                 '<img src="{}" style="max-width: 80px; max-height: 60px; border-radius: 4px;" />',
                 obj.image.url,
             )
-        return _("No image")
+        return NO_IMAGE_TEXT
     image_preview.short_description = _("preview")
     
     def image_preview_large(self, obj):
@@ -220,5 +224,5 @@ class VenueImageAdmin(admin.ModelAdmin):
                 '<img src="{}" style="max-width: 400px; max-height: 300px; border-radius: 8px;" />',
                 obj.image.url,
             )
-        return _("No image")
+        return NO_IMAGE_TEXT
     image_preview_large.short_description = _("image preview")

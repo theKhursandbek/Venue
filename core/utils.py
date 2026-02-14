@@ -33,7 +33,7 @@ def validate_uzbekistan_phone(phone: str) -> bool:
     Returns:
         True if valid, False otherwise
     """
-    pattern = r"^\+998[0-9]{9}$"
+    pattern = r"^\+998\d{9}$"
     return bool(re.match(pattern, phone))
 
 

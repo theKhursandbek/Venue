@@ -31,7 +31,6 @@ class TestBookingModel:
     
     def test_price_calculation_2_hours(self, user, venue):
         """Test price calculation for 2-hour booking."""
-        # venue.price_per_hour = 100000
         booking = Booking.objects.create(
             user=user,
             venue=venue,
@@ -59,7 +58,7 @@ class TestBookingModel:
     def test_duration_hours_property(self, booking):
         """Test duration_hours property."""
         # booking is 10:00 - 12:00 = 2 hours
-        assert booking.duration_hours == 2.0
+        assert booking.duration_hours == Decimal("2.0")
     
     def test_can_cancel_pending(self, booking):
         """Test can_cancel for pending booking."""

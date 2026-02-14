@@ -13,6 +13,14 @@ from apps.users.models import User
 from apps.venues.models import Venue, VenueImage
 
 
+# Common amenity constants to avoid string duplication
+AMENITY_LOCKER_ROOM = "Раздевалка"
+AMENITY_SHOWER = "Душ"
+AMENITY_PARKING = "Парковка"
+AMENITY_TRAINER = "Тренер"
+AMENITY_AIR_CONDITIONING = "Кондиционер"
+
+
 class Command(BaseCommand):
     help = "Seed the database with sample venues, users, and bookings"
 
@@ -101,7 +109,7 @@ class Command(BaseCommand):
                     "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800",
                     "https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=800",
                 ],
-                "amenities": ["Душ", "Раздевалка", "Парковка", "Тренер"],
+                "amenities": [AMENITY_SHOWER, AMENITY_LOCKER_ROOM, AMENITY_PARKING, AMENITY_TRAINER],
             },
             {
                 "name_ru": "Конференц-зал 'Бизнес Центр'",
@@ -118,7 +126,7 @@ class Command(BaseCommand):
                     "https://images.unsplash.com/photo-1517502884422-41eaead166d4?w=800",
                     "https://images.unsplash.com/photo-1497366216548-37526070297c?w=800",
                 ],
-                "amenities": ["WiFi", "Проектор", "Кондиционер", "Кофе-брейк"],
+                "amenities": ["WiFi", "Проектор", AMENITY_AIR_CONDITIONING, "Кофе-брейк"],
             },
             {
                 "name_ru": "Банкетный зал 'Праздник'",
@@ -186,7 +194,7 @@ class Command(BaseCommand):
                     "https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=800",
                     "https://images.unsplash.com/photo-1622279457486-62dcc4a431d6?w=800",
                 ],
-                "amenities": ["Раздевалка", "Душ", "Аренда ракеток", "Тренер"],
+                "amenities": [AMENITY_LOCKER_ROOM, AMENITY_SHOWER, "Аренда ракеток", AMENITY_TRAINER],
             },
             {
                 "name_ru": "Танцевальный зал 'Ритм'",
@@ -203,7 +211,7 @@ class Command(BaseCommand):
                     "https://images.unsplash.com/photo-1508807526345-15e9b5f4eaff?w=800",
                     "https://images.unsplash.com/photo-1594737625785-a6cbdabd333c?w=800",
                 ],
-                "amenities": ["Зеркала", "Звук", "Раздевалка", "Кондиционер"],
+                "amenities": ["Зеркала", "Звук", AMENITY_LOCKER_ROOM, AMENITY_AIR_CONDITIONING],
             },
             {
                 "name_ru": "Йога-студия 'Гармония'",
@@ -220,7 +228,7 @@ class Command(BaseCommand):
                     "https://images.unsplash.com/photo-1545205597-3d9d02c29597?w=800",
                     "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800",
                 ],
-                "amenities": ["Коврики", "Реквизит", "Раздевалка", "Чай"],
+                "amenities": ["Коврики", "Реквизит", AMENITY_LOCKER_ROOM, "Чай"],
             },
             {
                 "name_ru": "Караоке-клуб 'Звезда'",
@@ -254,13 +262,13 @@ class Command(BaseCommand):
                     "https://images.unsplash.com/photo-1575361204480-aadea25e6e68?w=800",
                     "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800",
                 ],
-                "amenities": ["Раздевалка", "Душ", "Мячи", "Манишки", "Освещение"],
+                "amenities": [AMENITY_LOCKER_ROOM, AMENITY_SHOWER, "Мячи", "Манишки", "Освещение"],
             },
         ]
 
         venues = []
         for data in venues_data:
-            venue, created = Venue.all_objects.get_or_create(
+            venue, _ = Venue.all_objects.get_or_create(
                 name_ru=data["name_ru"],
                 defaults={
                     "name": data["name_ru"],
@@ -306,7 +314,7 @@ class Command(BaseCommand):
 
         users = []
         for data in users_data:
-            user, created = User.objects.get_or_create(
+            user, _ = User.objects.get_or_create(
                 phone_number=data["phone_number"],
                 defaults={
                     "name": data["name"],

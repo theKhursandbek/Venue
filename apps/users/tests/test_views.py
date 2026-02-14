@@ -194,7 +194,7 @@ class TestUserProfileView:
         """Test that phone number cannot be updated via profile."""
         original_phone = user.phone_number
         
-        response = authenticated_client.patch(self.url, {
+        authenticated_client.patch(self.url, {
             "phone_number": "+998909999999",
         })
         

@@ -2,7 +2,8 @@
 Django development settings for venue-booking-backend project.
 """
 
-from .base import *  # noqa: F401, F403
+# Wildcard import is intentional for Django settings inheritance
+from .base import *  # noqa: F401, F403  # NOSONAR
 
 DEBUG = True
 

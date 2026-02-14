@@ -40,8 +40,9 @@ class BookingAdmin(admin.ModelAdmin):
     list_per_page = 25
     list_select_related = ("user", "venue")
     
-    # Enable inline status editing
-    list_editable = ("status",) if False else ()  # Disabled for safety, enable if needed
+    # Inline status editing is disabled for safety
+    # Uncomment to enable: list_editable = ("status",)
+    list_editable = ()
     
     fieldsets = (
         (None, {

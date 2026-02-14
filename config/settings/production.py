@@ -5,7 +5,8 @@ Security-hardened configuration for deployment.
 
 from decouple import Csv, config
 
-from .base import *  # noqa: F401, F403
+# Wildcard import is intentional for Django settings inheritance
+from .base import *  # noqa: F401, F403  # NOSONAR
 
 # =============================================================================
 # Core Settings
