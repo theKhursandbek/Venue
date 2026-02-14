@@ -10,7 +10,7 @@ from django.core.management.base import BaseCommand
 
 from apps.bookings.models import Booking, BookingStatus
 from apps.users.models import User
-from apps.venues.models import Venue
+from apps.venues.models import Venue, VenueImage
 
 
 class Command(BaseCommand):
@@ -22,16 +22,28 @@ class Command(BaseCommand):
             action="store_true",
             help="Clear existing data before seeding",
         )
+        parser.add_argument(
+            "--admin",
+            action="store_true",
+            help="Create a superuser admin account",
+        )
 
     def handle(self, *args, **options):
         if options["clear"]:
             self.stdout.write("Clearing existing data...")
             Booking.objects.all().delete()
+            VenueImage.objects.all().delete()
             Venue.all_objects.all().delete()
             User.objects.filter(is_superuser=False).delete()
             self.stdout.write(self.style.SUCCESS("Data cleared!"))
 
         self.stdout.write("Seeding database...")
+        
+        # Create admin user if requested
+        if options["admin"]:
+            admin = self.create_admin()
+            if admin:
+                self.stdout.write(self.style.SUCCESS("Created admin user"))
         
         # Create venues
         venues = self.create_venues()
@@ -45,10 +57,31 @@ class Command(BaseCommand):
         bookings = self.create_bookings(venues, users)
         self.stdout.write(self.style.SUCCESS(f"Created {len(bookings)} bookings"))
         
-        self.stdout.write(self.style.SUCCESS("\nDatabase seeded successfully!"))
-        self.stdout.write("\nSample user credentials:")
-        self.stdout.write("  Phone: +998901234567 (send OTP to login)")
-        self.stdout.write("  Phone: +998901234568 (send OTP to login)")
+        self.stdout.write(self.style.SUCCESS("\n✅ Database seeded successfully!"))
+        self.stdout.write("\n" + "=" * 50)
+        self.stdout.write("SAMPLE CREDENTIALS")
+        self.stdout.write("=" * 50)
+        self.stdout.write("\nSample users (send OTP to login):")
+        self.stdout.write("  📱 +998901234567 (Алишер Каримов)")
+        self.stdout.write("  📱 +998901234568 (Малика Рахимова)")
+        self.stdout.write("  📱 +998901234569 (Жамшид Усманов)")
+        if options["admin"]:
+            self.stdout.write("\nAdmin user:")
+            self.stdout.write("  📱 +998900000000 (Admin)")
+            self.stdout.write("  🔑 Access Django Admin at /admin/")
+
+    def create_admin(self):
+        """Create admin superuser."""
+        admin, created = User.objects.get_or_create(
+            phone_number="+998900000000",
+            defaults={
+                "name": "Admin",
+                "is_verified": True,
+                "is_staff": True,
+                "is_superuser": True,
+            }
+        )
+        return admin if created else None
 
     def create_venues(self):
         """Create sample venues."""
@@ -285,69 +318,138 @@ class Command(BaseCommand):
         return users
 
     def create_bookings(self, venues, users):
-        """Create sample bookings."""
+        """Create sample bookings with various statuses and dates."""
         if not venues or not users:
             return []
 
+        today = date.today()
+        
         bookings_data = [
-            # Future bookings (pending)
+            # ========== Future bookings (PENDING) ==========
             {
                 "user": users[0],
-                "venue": venues[0],
-                "booking_date": date.today() + timedelta(days=1),
+                "venue": venues[0],  # Sports Hall
+                "booking_date": today + timedelta(days=1),
                 "start_time": time(10, 0),
                 "end_time": time(12, 0),
                 "status": BookingStatus.PENDING,
             },
             {
                 "user": users[1],
-                "venue": venues[1],
-                "booking_date": date.today() + timedelta(days=2),
+                "venue": venues[1],  # Conference Hall
+                "booking_date": today + timedelta(days=2),
                 "start_time": time(14, 0),
                 "end_time": time(17, 0),
                 "status": BookingStatus.PENDING,
             },
-            # Confirmed bookings
+            {
+                "user": users[2],
+                "venue": venues[4],  # Photo Studio
+                "booking_date": today + timedelta(days=3),
+                "start_time": time(11, 0),
+                "end_time": time(14, 0),
+                "status": BookingStatus.PENDING,
+            },
             {
                 "user": users[0],
-                "venue": venues[2],
-                "booking_date": date.today() + timedelta(days=3),
+                "venue": venues[7],  # Yoga Studio
+                "booking_date": today + timedelta(days=5),
+                "start_time": time(9, 0),
+                "end_time": time(10, 0),
+                "status": BookingStatus.PENDING,
+            },
+            
+            # ========== Future bookings (CONFIRMED) ==========
+            {
+                "user": users[0],
+                "venue": venues[2],  # Banquet Hall
+                "booking_date": today + timedelta(days=3),
                 "start_time": time(18, 0),
                 "end_time": time(22, 0),
                 "status": BookingStatus.CONFIRMED,
             },
             {
                 "user": users[2],
-                "venue": venues[3],
-                "booking_date": date.today() + timedelta(days=4),
+                "venue": venues[3],  # Coworking
+                "booking_date": today + timedelta(days=4),
                 "start_time": time(9, 0),
                 "end_time": time(13, 0),
                 "status": BookingStatus.CONFIRMED,
             },
-            # Past completed bookings
+            {
+                "user": users[1],
+                "venue": venues[9],  # Football Field
+                "booking_date": today + timedelta(days=6),
+                "start_time": time(19, 0),
+                "end_time": time(21, 0),
+                "status": BookingStatus.CONFIRMED,
+            },
             {
                 "user": users[0],
-                "venue": venues[4],
-                "booking_date": date.today() - timedelta(days=2),
+                "venue": venues[5],  # Tennis Court
+                "booking_date": today + timedelta(days=7),
+                "start_time": time(16, 0),
+                "end_time": time(18, 0),
+                "status": BookingStatus.CONFIRMED,
+            },
+            
+            # ========== Past bookings (COMPLETED) ==========
+            {
+                "user": users[0],
+                "venue": venues[4],  # Photo Studio
+                "booking_date": today - timedelta(days=2),
                 "start_time": time(15, 0),
                 "end_time": time(18, 0),
                 "status": BookingStatus.COMPLETED,
             },
             {
                 "user": users[1],
-                "venue": venues[5],
-                "booking_date": date.today() - timedelta(days=5),
+                "venue": venues[5],  # Tennis Court
+                "booking_date": today - timedelta(days=5),
                 "start_time": time(10, 0),
                 "end_time": time(12, 0),
                 "status": BookingStatus.COMPLETED,
             },
-            # Cancelled booking
             {
                 "user": users[2],
-                "venue": venues[6],
-                "booking_date": date.today() + timedelta(days=1),
+                "venue": venues[8],  # Karaoke
+                "booking_date": today - timedelta(days=7),
+                "start_time": time(20, 0),
+                "end_time": time(22, 0),
+                "status": BookingStatus.COMPLETED,
+            },
+            {
+                "user": users[0],
+                "venue": venues[6],  # Dance Hall
+                "booking_date": today - timedelta(days=10),
+                "start_time": time(14, 0),
+                "end_time": time(16, 0),
+                "status": BookingStatus.COMPLETED,
+            },
+            {
+                "user": users[1],
+                "venue": venues[2],  # Banquet Hall
+                "booking_date": today - timedelta(days=14),
+                "start_time": time(17, 0),
+                "end_time": time(22, 0),
+                "status": BookingStatus.COMPLETED,
+            },
+            
+            # ========== Cancelled bookings ==========
+            {
+                "user": users[2],
+                "venue": venues[6],  # Dance Hall
+                "booking_date": today + timedelta(days=1),
                 "start_time": time(16, 0),
                 "end_time": time(18, 0),
+                "status": BookingStatus.CANCELLED,
+            },
+            {
+                "user": users[1],
+                "venue": venues[0],  # Sports Hall
+                "booking_date": today - timedelta(days=3),
+                "start_time": time(18, 0),
+                "end_time": time(20, 0),
                 "status": BookingStatus.CANCELLED,
             },
         ]
