@@ -11,10 +11,39 @@ from drf_spectacular.views import (
     SpectacularRedocView,
     SpectacularSwaggerView,
 )
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from rest_framework.reverse import reverse
+
+
+@api_view(["GET"])
+@permission_classes([AllowAny])
+def api_root(request, format=None):
+    """API Root - lists all available endpoints."""
+    return Response({
+        "auth": {
+            "send_otp": reverse("send-otp", request=request, format=format),
+            "verify_otp": reverse("verify-otp", request=request, format=format),
+            "token_refresh": reverse("token-refresh", request=request, format=format),
+            "me": reverse("user-profile", request=request, format=format),
+        },
+        "venues": reverse("venue-list", request=request, format=format),
+        "bookings": reverse("booking-list-create", request=request, format=format),
+        "documentation": {
+            "swagger": reverse("swagger-ui", request=request, format=format),
+            "redoc": reverse("redoc", request=request, format=format),
+            "schema": reverse("schema", request=request, format=format),
+        },
+    })
+
 
 urlpatterns = [
     # Admin
     path("admin/", admin.site.urls),
+    
+    # API Root
+    path("api/", api_root, name="api-root"),
     
     # API endpoints
     path("api/auth/", include("apps.users.urls")),
