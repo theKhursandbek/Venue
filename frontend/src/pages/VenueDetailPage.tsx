@@ -8,6 +8,9 @@ import {
   ChevronRight,
   CalendarDays,
   Check,
+  Zap,
+  CreditCard,
+  Timer,
 } from "lucide-react";
 import { format, addDays, isBefore, startOfToday } from "date-fns";
 import { ru } from "date-fns/locale";
@@ -29,7 +32,6 @@ export default function VenueDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // Booking state
   const [selectedDate, setSelectedDate] = useState(
     format(addDays(new Date(), 1), "yyyy-MM-dd")
   );
@@ -40,7 +42,6 @@ export default function VenueDetailPage() {
   const [booking, setBooking] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
 
-  // Fetch venue
   useEffect(() => {
     const fetch = async () => {
       setLoading(true);
@@ -56,16 +57,12 @@ export default function VenueDetailPage() {
     fetch();
   }, [id]);
 
-  // Fetch availability
   useEffect(() => {
     if (!id) return;
     const fetch = async () => {
       setSlotsLoading(true);
       try {
-        const { data } = await venueService.availability(
-          Number(id),
-          selectedDate
-        );
+        const { data } = await venueService.availability(Number(id), selectedDate);
         setSlots(data.time_slots);
         setSelectedStart(null);
         setSelectedEnd(null);
@@ -80,25 +77,14 @@ export default function VenueDetailPage() {
 
   const handleSlotClick = (slot: TimeSlot) => {
     if (!slot.is_available) return;
-
     if (!selectedStart || (selectedStart && selectedEnd)) {
-      // Start new selection
       setSelectedStart(slot.start_time);
       setSelectedEnd(slot.end_time);
     } else {
-      // Extend selection
       if (slot.start_time >= selectedStart) {
-        // Check continuity
-        const startIdx = slots.findIndex(
-          (s) => s.start_time === selectedStart
-        );
-        const endIdx = slots.findIndex(
-          (s) => s.start_time === slot.start_time
-        );
-        const allAvailable = slots
-          .slice(startIdx, endIdx + 1)
-          .every((s) => s.is_available);
-
+        const startIdx = slots.findIndex((s) => s.start_time === selectedStart);
+        const endIdx = slots.findIndex((s) => s.start_time === slot.start_time);
+        const allAvailable = slots.slice(startIdx, endIdx + 1).every((s) => s.is_available);
         if (allAvailable) {
           setSelectedEnd(slot.end_time);
         } else {
@@ -119,7 +105,6 @@ export default function VenueDetailPage() {
 
   const handleBook = async () => {
     if (!selectedStart || !selectedEnd || !id) return;
-
     setBooking(true);
     try {
       await bookingService.create({
@@ -128,14 +113,11 @@ export default function VenueDetailPage() {
         start_time: selectedStart,
         end_time: selectedEnd,
       });
-      toast.success("Бронирование создано!");
+      toast.success("Бронирование создано! 🎉");
       navigate("/bookings");
     } catch (err) {
       const axiosErr = err as AxiosError<APIError>;
-      const message =
-        axiosErr.response?.data?.error?.message ||
-        "Ошибка создания бронирования";
-      toast.error(message);
+      toast.error(axiosErr.response?.data?.error?.message || "Ошибка создания бронирования");
     } finally {
       setBooking(false);
     }
@@ -154,22 +136,20 @@ export default function VenueDetailPage() {
     const end = timeToMinutes(selectedEnd);
     const hours = (end - start) / 60;
     const total = hours * Number(venue.price_per_hour);
-    return {
-      hours,
-      total: total.toLocaleString("ru-RU"),
-    };
+    return { hours, total: total.toLocaleString("ru-RU") };
   };
 
   const priceInfo = calculatePrice();
   const images = venue?.all_image_urls || venue?.images || [];
+  const availableCount = slots.filter((s) => s.is_available).length;
 
   if (loading) return <PageLoader />;
   if (error || !venue) return <ErrorBox message={error} onRetry={() => navigate(0)} />;
 
   return (
-    <div className="space-y-4 -mx-4 -mt-4">
+    <div className="space-y-5 -mx-4 -mt-5 animate-fade-in">
       {/* Image Gallery */}
-      <div className="relative h-56 bg-gray-100">
+      <div className="relative h-64 bg-linear-to-br from-gray-100 to-gray-50">
         {images.length > 0 ? (
           <>
             <img
@@ -177,32 +157,30 @@ export default function VenueDetailPage() {
               alt={venue.name}
               className="w-full h-full object-cover"
             />
+            <div className="absolute inset-0 bg-linear-to-t from-black/30 via-transparent to-transparent" />
             {images.length > 1 && (
               <>
                 <button
-                  onClick={() =>
-                    setCurrentImage(
-                      (currentImage - 1 + images.length) % images.length
-                    )
-                  }
-                  className="absolute left-2 top-1/2 -translate-y-1/2 size-8 bg-black/30 backdrop-blur-sm rounded-full flex items-center justify-center text-white"
+                  onClick={() => setCurrentImage((currentImage - 1 + images.length) % images.length)}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 size-9 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-colors"
                 >
                   <ChevronLeft className="size-5" />
                 </button>
                 <button
-                  onClick={() =>
-                    setCurrentImage((currentImage + 1) % images.length)
-                  }
-                  className="absolute right-2 top-1/2 -translate-y-1/2 size-8 bg-black/30 backdrop-blur-sm rounded-full flex items-center justify-center text-white"
+                  onClick={() => setCurrentImage((currentImage + 1) % images.length)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 size-9 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-colors"
                 >
                   <ChevronRight className="size-5" />
                 </button>
-                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
+                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
                   {images.map((_, i) => (
-                    <div
+                    <button
                       key={i}
-                      className={`size-1.5 rounded-full transition-colors ${
-                        i === currentImage ? "bg-white" : "bg-white/50"
+                      onClick={() => setCurrentImage(i)}
+                      className={`rounded-full transition-all ${
+                        i === currentImage
+                          ? "w-6 h-1.5 bg-white"
+                          : "w-1.5 h-1.5 bg-white/50 hover:bg-white/70"
                       }`}
                     />
                   ))}
@@ -211,86 +189,99 @@ export default function VenueDetailPage() {
             )}
           </>
         ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <MapPin className="size-12 text-gray-300" />
+          <div className="w-full h-full flex items-center justify-center bg-linear-to-br from-primary-50 to-purple-50">
+            <MapPin className="size-14 text-primary-200" />
           </div>
         )}
 
         <button
           onClick={() => navigate(-1)}
-          className="absolute top-3 left-3 size-9 bg-black/30 backdrop-blur-sm rounded-full flex items-center justify-center text-white"
+          className="absolute top-4 left-4 size-10 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-white hover:bg-white/30 transition-colors"
         >
           <ArrowLeft className="size-5" />
         </button>
+
+        {images.length > 1 && (
+          <div className="absolute top-4 right-4 bg-black/30 backdrop-blur-md text-white text-xs font-medium px-2.5 py-1 rounded-xl">
+            {currentImage + 1}/{images.length}
+          </div>
+        )}
       </div>
 
-      <div className="px-4 space-y-5">
-        {/* Info */}
-        <div>
-          <h1 className="text-xl font-bold text-gray-900">{venue.name}</h1>
-          <p className="text-sm text-gray-500 flex items-center gap-1 mt-1">
-            <MapPin className="size-3.5" />
-            {venue.address}
-          </p>
-          <p className="text-lg font-bold text-primary-600 mt-2">
-            {Number(venue.price_per_hour).toLocaleString("ru-RU")} сум/час
-          </p>
+      <div className="px-4 space-y-6">
+        {/* Title & Info */}
+        <div className="space-y-3">
+          <h1 className="text-2xl font-extrabold text-gray-900">{venue.name}</h1>
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 text-sm text-gray-500">
+              <MapPin className="size-4 text-primary-500" />
+              <span>{venue.address}</span>
+            </div>
+          </div>
+          <div className="inline-flex items-center gap-1.5 bg-linear-to-r from-primary-50 to-indigo-50 border border-primary-100 px-4 py-2 rounded-2xl">
+            <CreditCard className="size-4 text-primary-600" />
+            <span className="text-lg font-extrabold text-primary-700">
+              {Number(venue.price_per_hour).toLocaleString("ru-RU")}
+            </span>
+            <span className="text-sm text-primary-500 font-medium">сум/час</span>
+          </div>
         </div>
 
         {/* Description */}
         {venue.description && (
-          <p className="text-sm text-gray-600 leading-relaxed">
-            {venue.description}
-          </p>
+          <div className="bg-white rounded-2xl border border-gray-100 p-4 shadow-sm">
+            <p className="text-sm text-gray-600 leading-relaxed">{venue.description}</p>
+          </div>
         )}
 
         {/* Amenities */}
         {venue.amenities && venue.amenities.length > 0 && (
           <div>
-            <h3 className="text-sm font-semibold text-gray-700 mb-2">
+            <h3 className="text-sm font-bold text-gray-800 mb-3 flex items-center gap-1.5">
+              <Zap className="size-4 text-yellow-500" />
               Удобства
             </h3>
-            <div className="flex flex-wrap gap-2">
+            <div className="grid grid-cols-2 gap-2">
               {venue.amenities.map((amenity) => (
-                <span
+                <div
                   key={amenity}
-                  className="flex items-center gap-1 text-sm bg-gray-100 text-gray-600 px-3 py-1.5 rounded-lg"
+                  className="flex items-center gap-2 text-sm bg-white border border-gray-100 text-gray-700 px-3 py-2.5 rounded-xl shadow-sm"
                 >
-                  <Check className="size-3.5 text-green-500" />
-                  {amenity}
-                </span>
+                  <div className="size-5 bg-green-100 rounded-full flex items-center justify-center shrink-0">
+                    <Check className="size-3 text-green-600" />
+                  </div>
+                  <span className="font-medium truncate">{amenity}</span>
+                </div>
               ))}
             </div>
           </div>
         )}
 
         {/* Date Selector */}
-        <div>
-          <h3 className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-1.5">
-            <CalendarDays className="size-4" />
+        <div className="bg-white rounded-2xl border border-gray-100 p-4 shadow-sm space-y-3">
+          <h3 className="text-sm font-bold text-gray-800 flex items-center gap-1.5">
+            <CalendarDays className="size-4 text-primary-500" />
             Выберите дату
           </h3>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <button
               onClick={() => changeDate(-1)}
-              disabled={isBefore(
-                addDays(new Date(selectedDate), -1),
-                startOfToday()
-              )}
-              className="p-2 rounded-lg border border-gray-200 hover:bg-gray-50 disabled:opacity-30"
+              disabled={isBefore(addDays(new Date(selectedDate), -1), startOfToday())}
+              className="p-2.5 rounded-xl border-2 border-gray-100 hover:bg-gray-50 disabled:opacity-20 transition-all"
             >
               <ChevronLeft className="size-4" />
             </button>
-            <div className="flex-1 text-center">
-              <p className="font-semibold text-gray-900">
-                {format(new Date(selectedDate), "d MMMM, EEEE", {
-                  locale: ru,
-                })}
+            <div className="flex-1 text-center bg-primary-50/50 border border-primary-100 rounded-xl py-2.5 px-3">
+              <p className="font-bold text-gray-900 text-[15px]">
+                {format(new Date(selectedDate), "d MMMM", { locale: ru })}
+              </p>
+              <p className="text-xs text-gray-500 capitalize">
+                {format(new Date(selectedDate), "EEEE", { locale: ru })}
               </p>
             </div>
             <button
               onClick={() => changeDate(1)}
-              className="p-2 rounded-lg border border-gray-200 hover:bg-gray-50"
+              className="p-2.5 rounded-xl border-2 border-gray-100 hover:bg-gray-50 transition-all"
             >
               <ChevronRight className="size-4" />
             </button>
@@ -298,25 +289,30 @@ export default function VenueDetailPage() {
         </div>
 
         {/* Time Slots */}
-        <div>
-          <h3 className="text-sm font-semibold text-gray-700 mb-2 flex items-center gap-1.5">
-            <Clock className="size-4" />
-            Выберите время
-          </h3>
+        <div className="bg-white rounded-2xl border border-gray-100 p-4 shadow-sm space-y-3">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-bold text-gray-800 flex items-center gap-1.5">
+              <Clock className="size-4 text-primary-500" />
+              Выберите время
+            </h3>
+            {!slotsLoading && slots.length > 0 && (
+              <span className="text-xs font-medium text-green-600 bg-green-50 px-2.5 py-1 rounded-full border border-green-100">
+                {availableCount} свободных
+              </span>
+            )}
+          </div>
 
           {slotsLoading ? (
             <div className="grid grid-cols-4 gap-2">
               {Array.from({ length: 12 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="h-10 bg-gray-100 rounded-lg animate-pulse"
-                />
+                <div key={i} className="h-11 skeleton rounded-xl" />
               ))}
             </div>
           ) : slots.length === 0 ? (
-            <p className="text-sm text-gray-400 text-center py-4">
-              Нет доступных слотов
-            </p>
+            <div className="text-center py-6">
+              <Clock className="size-8 text-gray-200 mx-auto mb-2" />
+              <p className="text-sm text-gray-400 font-medium">Нет доступных слотов</p>
+            </div>
           ) : (
             <div className="grid grid-cols-4 gap-2">
               {slots.map((slot) => (
@@ -324,12 +320,12 @@ export default function VenueDetailPage() {
                   key={slot.start_time}
                   onClick={() => handleSlotClick(slot)}
                   disabled={!slot.is_available}
-                  className={`py-2 px-1 rounded-lg text-sm font-medium transition-all ${
+                  className={`py-2.5 px-1 rounded-xl text-sm font-semibold transition-all ${
                     isSlotSelected(slot)
-                      ? "bg-primary-600 text-white shadow-sm"
+                      ? "bg-linear-to-r from-primary-600 to-primary-500 text-white shadow-md shadow-primary-500/25 scale-[1.02]"
                       : slot.is_available
-                      ? "bg-white border border-gray-200 text-gray-700 hover:border-primary-300"
-                      : "bg-gray-100 text-gray-300 cursor-not-allowed line-through"
+                      ? "bg-gray-50 border-2 border-gray-100 text-gray-700 hover:border-primary-200 hover:bg-primary-50/50"
+                      : "bg-gray-50 text-gray-300 cursor-not-allowed line-through"
                   }`}
                 >
                   {slot.start_time.slice(0, 5)}
@@ -339,38 +335,48 @@ export default function VenueDetailPage() {
           )}
         </div>
 
-        {/* Booking Summary & Button */}
+        {/* Booking Summary */}
         {selectedStart && selectedEnd && priceInfo && (
-          <div className="bg-primary-50 rounded-2xl p-4 space-y-3">
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Время</span>
-              <span className="font-semibold text-gray-900">
-                {selectedStart.slice(0, 5)} — {selectedEnd.slice(0, 5)}
-              </span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Длительность</span>
-              <span className="font-semibold text-gray-900">
-                {priceInfo.hours} ч
-              </span>
-            </div>
-            <div className="flex justify-between text-sm border-t border-primary-100 pt-2">
-              <span className="text-gray-600 font-medium">Итого</span>
-              <span className="font-bold text-primary-700 text-base">
-                {priceInfo.total} сум
-              </span>
+          <div className="bg-linear-to-br from-primary-50 via-primary-50 to-indigo-50 rounded-3xl p-5 space-y-4 border border-primary-100 shadow-sm animate-scale-in">
+            <h3 className="text-sm font-bold text-primary-800 flex items-center gap-1.5">
+              <Zap className="size-4" />
+              Итоги бронирования
+            </h3>
+
+            <div className="space-y-2.5">
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600 flex items-center gap-1.5">
+                  <Timer className="size-3.5" /> Время
+                </span>
+                <span className="font-bold text-gray-900">
+                  {selectedStart.slice(0, 5)} — {selectedEnd.slice(0, 5)}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600 flex items-center gap-1.5">
+                  <Clock className="size-3.5" /> Длительность
+                </span>
+                <span className="font-bold text-gray-900">{priceInfo.hours} ч</span>
+              </div>
+              <div className="flex justify-between items-center pt-2.5 border-t border-primary-200/50">
+                <span className="text-sm font-semibold text-gray-700">Итого</span>
+                <span className="font-extrabold text-primary-700 text-xl">{priceInfo.total} сум</span>
+              </div>
             </div>
 
             <Button
               onClick={handleBook}
               loading={booking}
-              className="w-full"
+              className="w-full rounded-2xl! py-4! text-[15px]!"
               size="lg"
             >
-              Забронировать
+              ⚡ Забронировать
             </Button>
           </div>
         )}
+
+        {/* Spacer for bottom nav */}
+        <div className="h-4" />
       </div>
     </div>
   );

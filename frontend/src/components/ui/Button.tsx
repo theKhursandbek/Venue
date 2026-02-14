@@ -19,14 +19,16 @@ export default function Button({
   ...props
 }: ButtonProps) {
   const base =
-    "inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-200 active:scale-[0.97] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100";
+    "inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-200 active:scale-[0.97] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 cursor-pointer";
 
   const variants = {
-    primary: "bg-primary-600 text-white hover:bg-primary-700 shadow-sm",
+    primary:
+      "bg-linear-to-r from-primary-600 to-primary-500 text-white hover:from-primary-700 hover:to-primary-600 shadow-md shadow-primary-500/20 hover:shadow-lg hover:shadow-primary-500/30",
     secondary:
-      "bg-white text-gray-700 border border-gray-200 hover:bg-gray-50",
-    danger: "bg-red-500 text-white hover:bg-red-600",
-    ghost: "text-gray-600 hover:bg-gray-100",
+      "bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 hover:border-gray-300 shadow-sm",
+    danger:
+      "bg-linear-to-r from-danger-500 to-red-500 text-white hover:from-danger-600 hover:to-red-600 shadow-md shadow-danger-500/20",
+    ghost: "text-gray-600 hover:bg-gray-100 hover:text-gray-900",
   };
 
   const sizes = {
@@ -41,7 +43,7 @@ export default function Button({
       disabled={disabled || loading}
       {...props}
     >
-      {loading && <Spinner className="!size-4" />}
+      {loading && <Spinner className="size-4!" />}
       {children}
     </button>
   );

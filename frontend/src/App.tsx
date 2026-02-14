@@ -1,11 +1,11 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import Layout from "@/components/layout/Layout";
-import ProtectedRoute from "@/components/layout/ProtectedRoute";
-import LoginPage from "@/pages/LoginPage";
-import VenueListPage from "@/pages/VenueListPage";
-import VenueDetailPage from "@/pages/VenueDetailPage";
-import MyBookingsPage from "@/pages/MyBookingsPage";
-import ProfilePage from "@/pages/ProfilePage";
+import Layout from "./components/layout/Layout";
+import ProtectedRoute from "./components/layout/ProtectedRoute";
+import LoginPage from "./pages/LoginPage";
+import VenueListPage from "./pages/VenueListPage";
+import VenueDetailPage from "./pages/VenueDetailPage";
+import MyBookingsPage from "./pages/MyBookingsPage";
+import ProfilePage from "./pages/ProfilePage";
 
 export default function App() {
   return (
