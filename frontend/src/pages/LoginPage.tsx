@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Phone, ArrowRight, ArrowLeft, ShieldCheck, Zap } from "lucide-react";
+import { Phone, ArrowRight, ArrowLeft, ShieldCheck } from "lucide-react";
 import toast from "react-hot-toast";
 import Button from "@/components/ui/Button";
 import { authService } from "@/services/authService";
@@ -84,57 +84,41 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-dvh flex flex-col items-center justify-center px-6 relative overflow-hidden">
-      {/* ═══ Animated mesh background ═══ */}
+    <div className="min-h-dvh flex flex-col items-center justify-center px-6 relative overflow-hidden bg-surface-950">
+      {/* ═══ Ambient light effects ═══ */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute top-[-15%] right-[-10%] w-125 h-125 bg-primary-300/20 rounded-full blur-3xl animate-morph" />
-        <div className="absolute bottom-[-20%] left-[-15%] w-150 h-150 bg-accent-400/15 rounded-full blur-3xl animate-morph" style={{ animationDelay: "-4s" }} />
-        <div className="absolute top-[20%] left-[60%] w-64 h-64 bg-primary-200/20 rounded-full blur-2xl animate-float" />
-        <div className="absolute bottom-[30%] right-[70%] w-48 h-48 bg-accent-400/10 rounded-full blur-2xl animate-float" style={{ animationDelay: "-3s" }} />
-        {/* Grid pattern overlay */}
-        <div className="absolute inset-0" style={{
-          backgroundImage: "radial-gradient(circle at 1px 1px, rgba(139,92,246,0.04) 1px, transparent 0)",
-          backgroundSize: "40px 40px"
-        }} />
+        <div className="absolute top-[-20%] left-[-10%] w-96 h-96 bg-primary-500/6 rounded-full blur-3xl animate-float" />
+        <div className="absolute bottom-[-15%] right-[-10%] w-80 h-80 bg-accent-500/5 rounded-full blur-3xl animate-float" style={{ animationDelay: "-4s" }} />
       </div>
 
       <div className="w-full max-w-sm space-y-8 animate-fade-in">
         {/* ═══ Logo ═══ */}
         <div className="text-center">
-          <div className="relative inline-block mb-6">
-            <div className="absolute -inset-2 bg-primary-500/15 rounded-[28px] blur-xl animate-pulse-soft" />
-            <div className="relative size-19 bg-linear-to-br from-primary-600 via-primary-500 to-accent-500 rounded-[22px] flex items-center justify-center shadow-2xl shadow-primary-500/30 animate-float">
-              <Zap className="size-9 text-white drop-shadow-lg" />
-            </div>
-            <div className="absolute -top-2 -right-2 size-7 bg-linear-to-br from-amber-400 to-orange-500 rounded-xl flex items-center justify-center shadow-lg shadow-orange-500/30 ring-[3px] ring-white animate-bounce-in" style={{ animationDelay: "0.3s" }}>
-              <span className="text-white text-[10px] font-black">✦</span>
-            </div>
+          <div className="inline-flex items-center justify-center size-16 bg-primary-500 rounded-2xl mb-6 animate-float">
+            <span className="text-surface-950 font-black text-2xl">V</span>
           </div>
-          <h1 className="text-4xl font-black tracking-tight">
-            <span className="gradient-text">VenueBook</span>
+          <h1 className="text-3xl font-bold text-surface-50 tracking-tight">
+            Venue<span className="gradient-text">Book</span>
           </h1>
-          <p className="text-gray-400 mt-2.5 text-[15px] font-medium">Бронирование спортивных площадок</p>
+          <p className="text-surface-500 mt-2 text-sm">Бронирование спортивных площадок</p>
         </div>
 
         {step === "phone" ? (
           <div className="animate-scale-in space-y-5" key="phone">
-            <div className="relative bg-white/60 backdrop-blur-2xl rounded-[28px] p-7 shadow-2xl shadow-gray-900/6 border border-white/70 shimmer-border">
-              <div className="flex items-center gap-4 mb-7">
-                <div className="relative">
-                  <div className="absolute inset-0 bg-primary-500/15 rounded-2xl blur-md" />
-                  <div className="relative size-14 bg-linear-to-br from-primary-600 to-primary-500 rounded-2xl flex items-center justify-center shadow-lg shadow-primary-500/25">
-                    <Phone className="size-6 text-white" />
-                  </div>
+            <div className="bg-surface-900 border border-surface-700/50 rounded-2xl p-6">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="size-11 bg-surface-800 border border-surface-600/50 rounded-xl flex items-center justify-center">
+                  <Phone className="size-5 text-primary-400" />
                 </div>
                 <div>
-                  <h2 className="font-extrabold text-gray-900 text-lg">Вход в систему</h2>
-                  <p className="text-sm text-gray-400 font-medium">Введите номер телефона</p>
+                  <h2 className="font-bold text-surface-50 text-lg">Вход</h2>
+                  <p className="text-sm text-surface-500">Введите номер телефона</p>
                 </div>
               </div>
 
               <div className="space-y-2">
-                <label className="block text-sm font-bold text-gray-700 tracking-wide">Номер телефона</label>
-                <div className="relative group">
+                <label className="block text-sm font-semibold text-surface-300">Номер телефона</label>
+                <div className="relative">
                   <div className="absolute left-4 top-1/2 -translate-y-1/2 text-lg select-none pointer-events-none">🇺🇿</div>
                   <input
                     type="tel"
@@ -146,11 +130,11 @@ export default function LoginPage() {
                       if (val.length <= 13) setPhone(val);
                     }}
                     autoFocus
-                    className="w-full pl-13 pr-4 py-4.5 rounded-2xl border-2 border-gray-100 bg-gray-50/50 focus:bg-white focus:outline-none focus:ring-4 focus:ring-primary-500/10 focus:border-primary-400 transition-all text-lg font-bold tracking-[0.15em] group-hover:border-gray-200"
+                    className="w-full pl-13 pr-4 py-4 rounded-xl border border-surface-600/50 bg-surface-800 text-surface-50 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-500/50 transition-all text-lg font-bold tracking-[0.15em]"
                   />
                 </div>
                 {error && (
-                  <p className="text-sm text-danger-500 mt-2.5 flex items-center gap-1.5 font-semibold animate-fade-in">
+                  <p className="text-sm text-danger-400 mt-2 flex items-center gap-1.5 font-medium animate-fade-in">
                     <span className="size-1.5 rounded-full bg-danger-500 inline-block animate-pulse" />
                     {error}
                   </p>
@@ -158,30 +142,27 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <Button onClick={handleSendOTP} loading={loading} className="w-full rounded-2xl! py-4.5! text-base! font-bold!" size="lg">
+            <Button onClick={handleSendOTP} loading={loading} className="w-full py-4! text-base!" size="lg">
               Получить код
               <ArrowRight className="size-5" />
             </Button>
           </div>
         ) : (
           <div className="animate-scale-in space-y-5" key="otp">
-            <div className="relative bg-white/60 backdrop-blur-2xl rounded-[28px] p-7 shadow-2xl shadow-gray-900/6 border border-white/70 shimmer-border">
-              <div className="flex items-center gap-4 mb-7">
-                <div className="relative">
-                  <div className="absolute inset-0 bg-success-500/15 rounded-2xl blur-md" />
-                  <div className="relative size-14 bg-linear-to-br from-emerald-500 to-green-600 rounded-2xl flex items-center justify-center shadow-lg shadow-emerald-500/25">
-                    <ShieldCheck className="size-6 text-white" />
-                  </div>
+            <div className="bg-surface-900 border border-surface-700/50 rounded-2xl p-6">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="size-11 bg-success-50 border border-success-500/20 rounded-xl flex items-center justify-center">
+                  <ShieldCheck className="size-5 text-success-400" />
                 </div>
                 <div>
-                  <h2 className="font-extrabold text-gray-900 text-lg">Подтверждение</h2>
-                  <p className="text-sm text-gray-400 font-medium">
-                    Код отправлен на <span className="font-bold text-gray-600">{phone}</span>
+                  <h2 className="font-bold text-surface-50 text-lg">Подтверждение</h2>
+                  <p className="text-sm text-surface-500">
+                    Код на <span className="font-bold text-surface-200">{phone}</span>
                   </p>
                 </div>
               </div>
 
-              <div className="flex gap-3 justify-center">
+              <div className="flex gap-2.5 justify-center">
                 {otp.map((digit, i) => (
                   <input
                     key={i}
@@ -192,18 +173,17 @@ export default function LoginPage() {
                     value={digit}
                     onChange={(e) => handleOtpChange(i, e.target.value)}
                     onKeyDown={(e) => handleOtpKeyDown(i, e)}
-                    className={`w-13 h-15 text-center text-2xl font-black rounded-2xl border-2 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-primary-500/10 ${
+                    className={`w-12 h-14 text-center text-2xl font-bold rounded-xl border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500/30 bg-surface-800 ${
                       digit
-                        ? "border-primary-400 bg-primary-50/70 text-primary-700 shadow-md shadow-primary-500/10 scale-105"
-                        : "border-gray-100 bg-gray-50/50 hover:border-gray-200"
+                        ? "border-primary-500/50 text-primary-300 shadow-lg shadow-primary-500/10"
+                        : "border-surface-600/50 text-surface-100 hover:border-surface-500"
                     }`}
-                    style={{ animationDelay: `${i * 50}ms` }}
                   />
                 ))}
               </div>
 
               {error && (
-                <p className="text-sm text-danger-500 text-center mt-5 flex items-center justify-center gap-1.5 font-semibold animate-fade-in">
+                <p className="text-sm text-danger-400 text-center mt-5 flex items-center justify-center gap-1.5 font-medium animate-fade-in">
                   <span className="size-1.5 rounded-full bg-danger-500 inline-block animate-pulse" />
                   {error}
                 </p>
@@ -214,7 +194,7 @@ export default function LoginPage() {
               <Button
                 variant="secondary"
                 onClick={() => { setStep("phone"); setOtp(["", "", "", "", "", ""]); setError(""); }}
-                className="flex-1 rounded-2xl! py-4!"
+                className="flex-1 py-4!"
                 size="lg"
               >
                 <ArrowLeft className="size-4" />
@@ -223,7 +203,7 @@ export default function LoginPage() {
               <Button
                 onClick={() => handleVerifyOTP()}
                 loading={loading}
-                className="flex-1 rounded-2xl! py-4!"
+                className="flex-1 py-4!"
                 size="lg"
               >
                 Войти
@@ -232,7 +212,7 @@ export default function LoginPage() {
           </div>
         )}
 
-        <p className="text-xs text-gray-300 text-center font-medium">OTP-код в консоли сервера (dev)</p>
+        <p className="text-xs text-surface-600 text-center">OTP-код в консоли сервера (dev)</p>
       </div>
     </div>
   );

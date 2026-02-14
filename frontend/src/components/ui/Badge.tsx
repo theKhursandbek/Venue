@@ -9,15 +9,15 @@ interface BadgeProps {
 
 const variants = {
   success:
-    "bg-linear-to-r from-emerald-50 to-green-50 text-emerald-700 border border-emerald-200/60 shadow-sm shadow-emerald-500/5",
+    "bg-success-50 text-success-400 border border-success-500/20",
   warning:
-    "bg-linear-to-r from-amber-50 to-orange-50 text-amber-700 border border-amber-200/60 shadow-sm shadow-amber-500/5",
+    "bg-warning-50 text-warning-400 border border-warning-500/20",
   danger:
-    "bg-linear-to-r from-rose-50 to-red-50 text-rose-700 border border-rose-200/60 shadow-sm shadow-rose-500/5",
+    "bg-danger-50 text-danger-400 border border-danger-500/20",
   info:
-    "bg-linear-to-r from-violet-50 to-indigo-50 text-violet-700 border border-violet-200/60 shadow-sm shadow-violet-500/5",
+    "bg-surface-800 text-accent-400 border border-accent-500/20",
   neutral:
-    "bg-gray-100 text-gray-600 border border-gray-200/60",
+    "bg-surface-800 text-surface-300 border border-surface-600/50",
 };
 
 export default function Badge({
@@ -28,7 +28,7 @@ export default function Badge({
   return (
     <span
       className={clsx(
-        "inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold tracking-wide",
+        "inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold tracking-wide",
         variants[variant],
         className
       )}
