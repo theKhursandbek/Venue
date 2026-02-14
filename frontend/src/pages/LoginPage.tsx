@@ -84,43 +84,36 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-dvh flex flex-col items-center justify-center px-5 relative overflow-hidden bg-surface-950">
-      {/* ═══ Ambient light orbs ═══ */}
-      <div className="absolute inset-0 -z-10 overflow-hidden">
-        <div className="absolute top-[-30%] left-[-15%] w-80 h-80 bg-primary-500/[0.04] rounded-full blur-3xl animate-breathe" />
-        <div className="absolute bottom-[-20%] right-[-15%] w-64 h-64 bg-accent-500/[0.03] rounded-full blur-3xl animate-breathe" style={{ animationDelay: "-2s" }} />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-primary-500/[0.015] rounded-full blur-3xl animate-pulse-soft" />
-      </div>
-
-      <div className="w-full max-w-sm space-y-6 animate-entrance">
-        {/* ═══ Logo ═══ */}
+    <div className="min-h-dvh flex flex-col items-center justify-center px-5 bg-surface-950">
+      <div className="w-full max-w-xs space-y-5 animate-enter">
+        {/* Logo */}
         <div className="text-center">
-          <div className="inline-flex items-center justify-center size-12 bg-gradient-to-br from-primary-400 to-primary-600 rounded-xl mb-4 shadow-lg shadow-primary-500/20 animate-float">
-            <span className="text-white font-bold text-lg">V</span>
+          <div className="inline-flex items-center justify-center size-10 bg-primary-500 rounded-lg mb-3">
+            <span className="text-white font-bold text-sm">V</span>
           </div>
-          <h1 className="text-2xl font-semibold text-surface-100 tracking-tight">
+          <h1 className="text-xl font-semibold text-surface-100 tracking-tight">
             Venue<span className="gradient-text">Book</span>
           </h1>
-          <p className="text-surface-500 mt-1 text-xs">Бронирование спортивных площадок</p>
+          <p className="text-surface-500 mt-0.5 text-[11px]">Бронирование спортивных площадок</p>
         </div>
 
         {step === "phone" ? (
-          <div className="animate-scale-in space-y-4" key="phone">
-            <div className="bg-surface-900/80 border border-surface-700/30 rounded-xl p-5 inner-light backdrop-blur-sm">
-              <div className="flex items-center gap-2.5 mb-5">
-                <div className="size-9 bg-surface-800 border border-surface-700/40 rounded-lg flex items-center justify-center">
-                  <Phone className="size-4 text-primary-400" />
+          <div className="animate-fade-in space-y-3" key="phone">
+            <div className="bg-surface-900 border border-surface-700/30 rounded-lg p-4 v-edge">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="size-7 bg-surface-800 border border-surface-700/30 rounded flex items-center justify-center">
+                  <Phone className="size-3 text-primary-400" />
                 </div>
                 <div>
-                  <h2 className="font-semibold text-surface-100 text-sm">Вход</h2>
-                  <p className="text-xs text-surface-500">Введите номер телефона</p>
+                  <h2 className="font-semibold text-surface-100 text-[13px]">Вход</h2>
+                  <p className="text-[11px] text-surface-500">Введите номер телефона</p>
                 </div>
               </div>
 
-              <div className="space-y-1.5">
-                <label className="block text-xs font-medium text-surface-400">Номер телефона</label>
+              <div className="space-y-1">
+                <label className="block text-[11px] font-medium text-surface-400">Номер телефона</label>
                 <div className="relative">
-                  <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm select-none pointer-events-none">🇺🇿</div>
+                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-xs select-none pointer-events-none">🇺🇿</div>
                   <input
                     type="tel"
                     placeholder="+998901234567"
@@ -131,12 +124,12 @@ export default function LoginPage() {
                       if (val.length <= 13) setPhone(val);
                     }}
                     autoFocus
-                    className="w-full pl-11 pr-3.5 py-2.5 rounded-lg border border-surface-700/40 bg-surface-850 text-surface-100 focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500/40 transition-all text-sm font-semibold tracking-widest"
+                    className="w-full pl-9 pr-3 py-2 rounded-md border border-surface-700/30 bg-surface-850 text-surface-100 focus:outline-none focus:ring-1 focus:ring-primary-500/30 focus:border-primary-500/40 transition-colors text-[13px] font-semibold tracking-widest"
                   />
                 </div>
                 {error && (
-                  <p className="text-xs text-danger-400 mt-1.5 flex items-center gap-1 font-medium animate-fade-in">
-                    <span className="size-1 rounded-full bg-danger-500 inline-block animate-pulse" />
+                  <p className="text-[11px] text-danger-400 mt-1 flex items-center gap-1 font-medium animate-fade-in">
+                    <span className="size-1 rounded-full bg-danger-500 inline-block" />
                     {error}
                   </p>
                 )}
@@ -145,25 +138,25 @@ export default function LoginPage() {
 
             <Button onClick={handleSendOTP} loading={loading} className="w-full" size="lg">
               Получить код
-              <ArrowRight className="size-4" />
+              <ArrowRight className="size-3.5" />
             </Button>
           </div>
         ) : (
-          <div className="animate-scale-in space-y-4" key="otp">
-            <div className="bg-surface-900/80 border border-surface-700/30 rounded-xl p-5 inner-light backdrop-blur-sm">
-              <div className="flex items-center gap-2.5 mb-5">
-                <div className="size-9 bg-success-50 border border-success-500/15 rounded-lg flex items-center justify-center">
-                  <ShieldCheck className="size-4 text-success-400" />
+          <div className="animate-fade-in space-y-3" key="otp">
+            <div className="bg-surface-900 border border-surface-700/30 rounded-lg p-4 v-edge">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="size-7 bg-success-50 border border-success-500/15 rounded flex items-center justify-center">
+                  <ShieldCheck className="size-3 text-success-400" />
                 </div>
                 <div>
-                  <h2 className="font-semibold text-surface-100 text-sm">Подтверждение</h2>
-                  <p className="text-xs text-surface-500">
+                  <h2 className="font-semibold text-surface-100 text-[13px]">Подтверждение</h2>
+                  <p className="text-[11px] text-surface-500">
                     Код на <span className="font-semibold text-surface-300">{phone}</span>
                   </p>
                 </div>
               </div>
 
-              <div className="flex gap-2 justify-center">
+              <div className="flex gap-1.5 justify-center">
                 {otp.map((digit, i) => (
                   <input
                     key={i}
@@ -174,31 +167,31 @@ export default function LoginPage() {
                     value={digit}
                     onChange={(e) => handleOtpChange(i, e.target.value)}
                     onKeyDown={(e) => handleOtpKeyDown(i, e)}
-                    className={`w-10 h-11 text-center text-lg font-bold rounded-lg border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500/20 bg-surface-850 ${
+                    className={`w-9 h-10 text-center text-base font-bold rounded-md border transition-colors duration-150 focus:outline-none focus:ring-1 focus:ring-primary-500/30 bg-surface-850 ${
                       digit
-                        ? "border-primary-500/40 text-primary-300 shadow-sm shadow-primary-500/10"
-                        : "border-surface-700/40 text-surface-200 hover:border-surface-600"
+                        ? "border-primary-500/40 text-primary-300"
+                        : "border-surface-700/30 text-surface-200 hover:border-surface-600"
                     }`}
                   />
                 ))}
               </div>
 
               {error && (
-                <p className="text-xs text-danger-400 text-center mt-4 flex items-center justify-center gap-1 font-medium animate-fade-in">
-                  <span className="size-1 rounded-full bg-danger-500 inline-block animate-pulse" />
+                <p className="text-[11px] text-danger-400 text-center mt-3 flex items-center justify-center gap-1 font-medium animate-fade-in">
+                  <span className="size-1 rounded-full bg-danger-500 inline-block" />
                   {error}
                 </p>
               )}
             </div>
 
-            <div className="flex gap-2.5">
+            <div className="flex gap-2">
               <Button
                 variant="secondary"
                 onClick={() => { setStep("phone"); setOtp(["", "", "", "", "", ""]); setError(""); }}
                 className="flex-1"
                 size="lg"
               >
-                <ArrowLeft className="size-3.5" />
+                <ArrowLeft className="size-3" />
                 Назад
               </Button>
               <Button

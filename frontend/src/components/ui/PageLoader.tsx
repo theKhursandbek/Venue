@@ -2,14 +2,11 @@ import Spinner from "./Spinner";
 
 export default function PageLoader() {
   return (
-    <div className="flex flex-col items-center justify-center py-20 animate-fade-in">
-      <div className="relative">
-        <div className="absolute -inset-3 bg-primary-500/6 rounded-full blur-2xl animate-breathe" />
-        <div className="relative size-11 bg-surface-850 border border-surface-700/25 rounded-xl flex items-center justify-center">
-          <Spinner className="size-5! text-primary-400" />
-        </div>
+    <div className="flex flex-col items-center justify-center py-16 animate-fade-in">
+      <div className="size-8 bg-surface-900 border border-surface-700/20 rounded flex items-center justify-center">
+        <Spinner className="size-4! text-primary-400" />
       </div>
-      <p className="text-xs text-surface-500 mt-4 font-medium tracking-wide">Загрузка...</p>
+      <p className="text-[11px] text-surface-500 mt-3 font-medium">Загрузка...</p>
     </div>
   );
 }

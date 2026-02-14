@@ -19,22 +19,22 @@ export default function Button({
   ...props
 }: ButtonProps) {
   const base =
-    "relative inline-flex items-center justify-center font-medium rounded-lg transition-all duration-250 active:scale-[0.95] disabled:opacity-35 disabled:cursor-not-allowed disabled:active:scale-100 cursor-pointer overflow-hidden";
+    "relative inline-flex items-center justify-center font-medium rounded-md transition-all duration-150 active:scale-[0.96] disabled:opacity-30 disabled:cursor-not-allowed disabled:active:scale-100 cursor-pointer";
 
   const variants = {
     primary:
-      "bg-gradient-to-r from-primary-500 to-primary-400 text-surface-950 shadow-md shadow-primary-500/15 hover:shadow-lg hover:shadow-primary-400/25 hover:brightness-110",
+      "bg-primary-500 text-white hover:bg-primary-400",
     secondary:
-      "bg-surface-800/80 text-surface-200 border border-surface-600/40 hover:border-surface-500/60 hover:bg-surface-750",
+      "bg-surface-800 text-surface-200 border border-surface-600/40 hover:border-surface-500/60 hover:bg-surface-750",
     danger:
-      "bg-danger-600/90 text-white shadow-md shadow-danger-600/15 hover:bg-danger-500 hover:shadow-lg",
+      "bg-danger-600 text-white hover:bg-danger-500",
     ghost: "text-surface-400 hover:bg-white/[0.04] hover:text-surface-200",
   };
 
   const sizes = {
-    sm: "px-3 py-1.5 text-xs gap-1.5",
-    md: "px-4 py-2 text-sm gap-1.5",
-    lg: "px-5 py-2.5 text-sm gap-2",
+    sm: "px-2.5 py-1.5 text-xs gap-1",
+    md: "px-3.5 py-2 text-[13px] gap-1.5",
+    lg: "px-4 py-2.5 text-[13px] gap-1.5",
   };
 
   return (

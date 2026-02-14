@@ -74,14 +74,13 @@ export default function MyBookingsPage() {
   if (error) return <ErrorBox message={error} onRetry={fetchBookings} />;
 
   return (
-    <div className="space-y-4 animate-fade-in">
+    <div className="space-y-3 animate-fade-in">
       {/* Header */}
       <div>
-        <p className="text-[10px] font-medium text-primary-500 tracking-widest uppercase mb-0.5">История</p>
-        <h1 className="text-xl font-semibold text-surface-50 tracking-tight">
-          Мои <span className="gradient-text">бронирования</span>
+        <h1 className="text-lg font-semibold text-surface-100 tracking-tight">
+          Мои бронирования
         </h1>
-        <p className="text-xs text-surface-500 mt-0.5">
+        <p className="text-[11px] text-surface-500 mt-0.5">
           {bookings.length > 0
             ? `${bookings.length} бронирован${bookings.length === 1 ? "ие" : "ий"}`
             : "Пока пусто"}
@@ -89,22 +88,20 @@ export default function MyBookingsPage() {
       </div>
 
       {bookings.length === 0 ? (
-        <div className="text-center py-12 animate-fade-in">
-          <div className="size-12 bg-surface-850 border border-surface-700/25 rounded-lg flex items-center justify-center mx-auto mb-3">
-            <CalendarDays className="size-5 text-surface-600" />
-          </div>
-          <p className="font-medium text-surface-300 text-sm">Нет бронирований</p>
-          <p className="text-xs text-surface-500 mt-0.5">Найдите площадку и забронируйте время</p>
+        <div className="text-center py-10 animate-fade-in">
+          <CalendarDays className="size-6 text-surface-600 mx-auto mb-2" />
+          <p className="font-medium text-surface-300 text-[13px]">Нет бронирований</p>
+          <p className="text-[11px] text-surface-500 mt-0.5">Найдите площадку и забронируйте</p>
           <Link
             to="/"
-            className="inline-flex items-center gap-1.5 mt-4 text-surface-950 font-medium text-xs bg-gradient-to-r from-primary-500 to-primary-400 hover:brightness-110 px-4 py-2 rounded-lg transition-all active:scale-90"
+            className="inline-flex items-center gap-1 mt-3 text-white font-medium text-[12px] bg-primary-500 hover:bg-primary-400 px-3 py-1.5 rounded-md transition-colors active:scale-95"
           >
             Перейти к площадкам
             <ArrowRight className="size-3" />
           </Link>
         </div>
       ) : (
-        <div className="space-y-2.5 stagger-children">
+        <div className="space-y-2 stagger-children">
           {bookings.map((booking) => {
             const status = STATUS_MAP[booking.status] || {
               label: booking.status,
@@ -114,44 +111,40 @@ export default function MyBookingsPage() {
             return (
               <div
                 key={booking.id}
-                className="bg-surface-900/80 rounded-lg border border-surface-700/25 overflow-hidden inner-light backdrop-blur-sm"
+                className="bg-surface-900 rounded-md border border-surface-700/20 v-card"
               >
-                <div className="p-3.5 space-y-2.5">
-                  {/* Header */}
+                <div className="p-3 space-y-2">
                   <div className="flex items-start justify-between gap-2">
                     <Link
                       to={`/venues/${booking.venue}`}
-                      className="font-semibold text-surface-100 hover:text-primary-400 transition-colors text-sm flex items-center gap-1 group"
+                      className="font-semibold text-surface-100 hover:text-primary-400 transition-colors text-[13px] flex items-center gap-1 group"
                     >
                       {booking.venue_name || `Площадка #${booking.venue}`}
-                      <ArrowRight className="size-2.5 text-surface-600 group-hover:text-primary-400 group-hover:translate-x-0.5 transition-all" />
+                      <ArrowRight className="size-2.5 text-surface-600 group-hover:text-primary-400 transition-colors" />
                     </Link>
                     <Badge variant={status.variant}>{status.label}</Badge>
                   </div>
 
-                  {/* Details */}
-                  <div className="flex flex-wrap gap-1.5">
-                    <div className="flex items-center gap-1 bg-surface-850 border border-surface-700/25 px-2.5 py-1 rounded-md">
+                  <div className="flex flex-wrap gap-1">
+                    <div className="flex items-center gap-1 bg-surface-850 border border-surface-700/20 px-2 py-0.5 rounded">
                       <CalendarDays className="size-2.5 text-primary-500" />
-                      <span className="text-[11px] font-medium text-surface-300">{formatDate(booking.booking_date)}</span>
+                      <span className="text-[10px] font-medium text-surface-300">{formatDate(booking.booking_date)}</span>
                     </div>
-                    <div className="flex items-center gap-1 bg-surface-850 border border-surface-700/25 px-2.5 py-1 rounded-md">
+                    <div className="flex items-center gap-1 bg-surface-850 border border-surface-700/20 px-2 py-0.5 rounded">
                       <Clock className="size-2.5 text-primary-500" />
-                      <span className="text-[11px] font-medium text-surface-300">
+                      <span className="text-[10px] font-medium text-surface-300">
                         {formatTime(booking.start_time)} — {formatTime(booking.end_time)}
                       </span>
                     </div>
                   </div>
 
-                  {/* Price + Cancel */}
-                  <div className="flex items-center justify-between pt-2.5 border-t border-surface-700/25">
+                  <div className="flex items-center justify-between pt-2 border-t border-surface-700/20">
                     <div>
-                      <p className="text-[10px] text-surface-500 font-medium">Итого</p>
-                      <span className="font-semibold text-primary-400 text-base">
+                      <p className="text-[10px] text-surface-500">Итого</p>
+                      <span className="font-semibold text-primary-400 text-[14px]">
                         {Number(booking.total_price).toLocaleString("ru-RU")} сум
                       </span>
                     </div>
-
                     {canCancel(booking) && (
                       <Button
                         variant="danger"
