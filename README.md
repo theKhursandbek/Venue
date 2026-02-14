@@ -2,27 +2,69 @@
 
 A REST API backend for a venue/spot booking application inspired by [Bron24.uz](https://bron24.uz/). The system includes user authentication via OTP, venue management, and booking functionality with a full admin panel.
 
-## Tech Stack
+## 🚀 Features
 
-- **Language**: Python 3.11+
-- **Framework**: Django 5.0+
-- **API**: Django REST Framework
-- **Database**: PostgreSQL 15
-- **Cache/OTP Storage**: Redis 7
-- **Internationalization**: django-modeltranslation
-- **API Documentation**: drf-spectacular (Swagger UI & ReDoc)
-- **Containerization**: Docker with Docker Compose
-- **Authentication**: JWT (SimpleJWT)
+- **📱 OTP Authentication**: Phone number-based authentication with OTP verification (Uzbekistan numbers)
+- **🏢 Venue Management**: Full CRUD with multi-language support (Uzbek, Russian, English)
+- **📅 Booking System**: Create, view, and cancel bookings with double-booking prevention
+- **✅ Availability Checking**: Real-time venue availability with hourly slots (9 AM - 10 PM)
+- **💰 Automatic Pricing**: Price calculated based on duration × hourly rate
+- **🌐 Multi-language**: Full i18n support with Accept-Language header detection
+- **👨‍💼 Admin Panel**: Django admin with translation tabs, image uploads, bulk actions
+- **📚 API Documentation**: Interactive Swagger UI and ReDoc
+- **🛡️ Rate Limiting**: Protection against abuse (3 OTP requests per 10 minutes)
+- **🐳 Docker Support**: Complete Docker Compose setup for easy deployment
 
-## Features
+## 🏗️ Architecture Overview
 
-- **OTP Authentication**: Phone number-based authentication with OTP verification
-- **Venue Management**: Full CRUD with multi-language support (Uzbek, Russian, English)
-- **Booking System**: Create, view, and cancel bookings with availability checking
-- **Admin Panel**: Django admin with translation support
-- **API Documentation**: Interactive Swagger UI and ReDoc
-- **Rate Limiting**: Protection against abuse on authentication endpoints
-- **Docker Support**: Complete Docker Compose setup for easy deployment
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                         Client Applications                      │
+│                    (Mobile App / Web Frontend)                   │
+└─────────────────────────────────────────────────────────────────┘
+                                  │
+                                  ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                      Django REST Framework                       │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────────┐  │
+│  │   Users     │  │   Venues    │  │       Bookings          │  │
+│  │   App       │  │   App       │  │       App               │  │
+│  │             │  │             │  │                         │  │
+│  │ - OTP Auth  │  │ - CRUD      │  │ - Create/Cancel         │  │
+│  │ - JWT       │  │ - Filters   │  │ - Availability Check    │  │
+│  │ - Profiles  │  │ - i18n      │  │ - Double-booking Guard  │  │
+│  └─────────────┘  └─────────────┘  └─────────────────────────┘  │
+└─────────────────────────────────────────────────────────────────┘
+         │                    │                     │
+         ▼                    ▼                     ▼
+┌─────────────────┐  ┌─────────────────┐  ┌─────────────────────┐
+│   PostgreSQL    │  │      Redis      │  │   Media Storage     │
+│   Database      │  │   (OTP Cache)   │  │   (Venue Images)    │
+└─────────────────┘  └─────────────────┘  └─────────────────────┘
+```
+
+### Key Components
+
+| Component | Purpose |
+|-----------|---------|
+| **Users App** | Custom User model with phone-based auth, OTP service with Redis |
+| **Venues App** | Venue model with translations, image uploads, amenities |
+| **Bookings App** | Booking lifecycle management with status transitions |
+| **Core Module** | Shared base models, custom exceptions, permissions |
+
+## 🛠️ Tech Stack
+
+| Category | Technology | Version |
+|----------|------------|---------|
+| **Language** | Python | 3.11+ |
+| **Framework** | Django | 5.0+ |
+| **API** | Django REST Framework | 3.14+ |
+| **Database** | PostgreSQL | 15 |
+| **Cache** | Redis | 7 |
+| **Auth** | SimpleJWT | 5.3+ |
+| **i18n** | django-modeltranslation | 0.18+ |
+| **Docs** | drf-spectacular | 0.27+ |
+| **Container** | Docker + Compose | Latest |
 
 ## Getting Started
 
@@ -145,11 +187,104 @@ Once the server is running, access the API documentation at:
 
 ### Example Requests
 
+#### Authentication Flow
+
+**Step 1: Send OTP**
+```bash
+curl -X POST "http://localhost:8000/api/auth/send-otp/" \
+  -H "Content-Type: application/json" \
+  -d '{"phone_number": "+998901234567"}'
+```
+Response:
+```json
+{
+  "message": "OTP sent successfully",
+  "phone_number": "+998901234567"
+}
+```
+
+**Step 2: Verify OTP & Get Tokens**
+```bash
+curl -X POST "http://localhost:8000/api/auth/verify-otp/" \
+  -H "Content-Type: application/json" \
+  -d '{"phone_number": "+998901234567", "otp": "123456"}'
+```
+Response:
+```json
+{
+  "access": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
+  "refresh": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
+  "user": {
+    "id": 1,
+    "phone_number": "+998901234567",
+    "name": null,
+    "is_verified": true
+  }
+}
+```
+
+**Step 3: Refresh Access Token**
+```bash
+curl -X POST "http://localhost:8000/api/auth/refresh/" \
+  -H "Content-Type: application/json" \
+  -d '{"refresh": "<refresh_token>"}'
+```
+
+---
+
+#### Venue Operations
+
 **List Venues with Filters:**
 ```bash
-curl -X GET "http://localhost:8000/api/venues/?min_price=50000&search=sport" \
+# Filter by price range and search
+curl -X GET "http://localhost:8000/api/venues/?min_price=50000&max_price=200000&search=sport" \
   -H "Accept-Language: uz"
 ```
+
+**Get Venue Details:**
+```bash
+curl -X GET "http://localhost:8000/api/venues/1/" \
+  -H "Accept-Language: en"
+```
+
+**Check Venue Availability:**
+```bash
+curl -X GET "http://localhost:8000/api/venues/1/availability/?date=2026-02-15"
+```
+Response:
+```json
+{
+  "venue_id": 1,
+  "date": "2026-02-15",
+  "time_slots": [
+    {"start_time": "09:00:00", "end_time": "10:00:00", "is_available": true},
+    {"start_time": "10:00:00", "end_time": "11:00:00", "is_available": false},
+    {"start_time": "11:00:00", "end_time": "12:00:00", "is_available": false},
+    {"start_time": "12:00:00", "end_time": "13:00:00", "is_available": true}
+  ]
+}
+```
+
+**Create Venue (Admin Only):**
+```bash
+curl -X POST "http://localhost:8000/api/venues/" \
+  -H "Authorization: Bearer <admin_token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "New Sports Hall",
+    "name_ru": "Новый спортзал",
+    "name_uz": "Yangi sport zali",
+    "address": "123 Main St",
+    "description": "A modern sports facility",
+    "price_per_hour": "150000.00",
+    "amenities": ["WiFi", "Parking", "Showers"],
+    "images": ["https://example.com/image.jpg"]
+  }'
+```
+
+---
+
+#### Booking Operations
 
 **Create Booking:**
 ```bash
@@ -163,76 +298,372 @@ curl -X POST "http://localhost:8000/api/bookings/" \
     "end_time": "12:00"
   }'
 ```
-
-## Admin Panel
-
-Access the Django admin at: http://localhost:8000/admin/
-
-Features:
-- User management with verification status
-- Venue management with inline translation editing
-- Booking management with status update actions
-- Image preview for venues
-
-## Internationalization
-
-The API supports three languages:
-- **Russian (ru)** - Default
-- **Uzbek (uz)**
-- **English (en)**
-
-Set the language using the `Accept-Language` header:
-```
-Accept-Language: uz
+Response:
+```json
+{
+  "id": 1,
+  "venue": {"id": 1, "name": "Sports Hall"},
+  "booking_date": "2026-02-15",
+  "start_time": "10:00:00",
+  "end_time": "12:00:00",
+  "total_price": "300000.00",
+  "status": "pending",
+  "duration_hours": 2.0,
+  "can_cancel": true
+}
 ```
 
-Translatable fields:
-- Venue: name, address, description
+**List My Bookings:**
+```bash
+curl -X GET "http://localhost:8000/api/bookings/" \
+  -H "Authorization: Bearer <token>"
+```
 
-## Testing
+**Cancel Booking:**
+```bash
+curl -X PATCH "http://localhost:8000/api/bookings/1/cancel/" \
+  -H "Authorization: Bearer <token>"
+```
 
-Run tests with pytest:
+---
+
+#### User Profile
+
+**Get Profile:**
+```bash
+curl -X GET "http://localhost:8000/api/auth/profile/" \
+  -H "Authorization: Bearer <token>"
+```
+
+**Update Profile:**
+```bash
+curl -X PATCH "http://localhost:8000/api/auth/profile/" \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{"name": "John Doe"}'
+```
+
+## 👨‍💼 Admin Panel Guide
+
+Access the Django admin at: **http://localhost:8000/admin/**
+
+### Features by Model
+
+#### Users Management
+- View all users with phone numbers and verification status
+- **Colored badges**: Green for verified, red for unverified
+- **Booking statistics**: See booking count per user
+- **Bulk actions**: Verify/unverify, activate/deactivate users
+- Filter by: verification status, active status, staff status
+
+#### Venues Management
+- **Tabbed translation editing**: Edit Russian, Uzbek, English in tabs
+- **Image uploads**: Add multiple images with drag-and-drop ordering
+- **Inline image previews**: See thumbnails in list and detail views
+- **List-editable fields**: Quick edit price and active status
+- **Bulk actions**: Activate, deactivate, duplicate venues
+- Filter by: active status, price range, creation date
+
+#### Bookings Management
+- **Colored status badges**: Pending (orange), Confirmed (green), Cancelled (red), Completed (blue)
+- **Date hierarchy**: Navigate by year/month/day
+- **Bulk status actions**: Mark as confirmed, completed, cancelled
+- **CSV export**: Export selected bookings to CSV file
+- **Duration display**: Shows booking duration in hours
+- Filter by: status, venue, booking date
+
+### Creating an Admin User
+
 ```bash
 # With Docker
-docker-compose exec web pytest
+docker-compose exec web python manage.py createsuperuser
 
 # Without Docker
-pytest
+python manage.py createsuperuser
 
-# With coverage
-pytest --cov=apps --cov-report=html
+# Or use seed_data with --admin flag
+python manage.py seed_data --admin
+# Creates: +998900000000 (Admin)
+
+## 🌐 Internationalization Guide
+
+The API supports three languages with full translation support:
+
+| Language | Code | Default |
+|----------|------|---------|
+| Russian | `ru` | ✅ Yes |
+| Uzbek | `uz` | No |
+| English | `en` | No |
+
+### Using Translations
+
+**Set language via Accept-Language header:**
+```bash
+# Get venues in Uzbek
+curl -X GET "http://localhost:8000/api/venues/" \
+  -H "Accept-Language: uz"
+
+# Get venues in English
+curl -X GET "http://localhost:8000/api/venues/" \
+  -H "Accept-Language: en"
 ```
 
-## Project Structure
+### Translatable Fields
+
+| Model | Translated Fields |
+|-------|-------------------|
+| Venue | `name`, `address`, `description` |
+
+### Database Fields
+
+Each translated field creates language-specific columns:
+- `name` → `name_ru`, `name_uz`, `name_en`
+- `address` → `address_ru`, `address_uz`, `address_en`
+- `description` → `description_ru`, `description_uz`, `description_en`
+
+### Admin Panel Translations
+
+The admin uses **TabbedTranslationAdmin** which shows:
+- Language tabs at the top of each translatable field
+- Click a tab to switch between Russian, Uzbek, English
+- All translations are saved together
+
+### Adding New Languages
+
+1. Add to `LANGUAGES` in `config/settings/base.py`:
+   ```python
+   LANGUAGES = [
+       ("ru", "Russian"),
+       ("uz", "Uzbek"),
+       ("en", "English"),
+       ("kk", "Kazakh"),  # New language
+   ]
+   MODELTRANSLATION_LANGUAGES = ("ru", "uz", "en", "kk")
+   ```
+
+2. Run migrations to create new columns:
+   ```bash
+   python manage.py makemigrations
+   python manage.py migrate
+   ```
+
+## 🧪 Testing Guide
+
+### Running Tests
+
+```bash
+# Run all tests with Docker
+docker-compose exec web pytest
+
+# Run all tests locally
+pytest
+
+# Run with verbose output
+pytest -v
+
+# Run specific test file
+pytest apps/bookings/tests/test_views.py
+
+# Run specific test class
+pytest apps/bookings/tests/test_views.py::TestBookingListCreateView
+
+# Run specific test
+pytest apps/bookings/tests/test_views.py::TestBookingListCreateView::test_create_booking_success
+```
+
+### Test Coverage
+
+```bash
+# Generate coverage report
+pytest --cov=apps --cov-report=html
+
+# View HTML report
+open htmlcov/index.html
+```
+
+### Test Categories
+
+| Category | Location | Tests |
+|----------|----------|-------|
+| **User Models** | `apps/users/tests/test_models.py` | User creation, validation |
+| **OTP Service** | `apps/users/tests/test_services.py` | OTP generation, rate limiting |
+| **Auth Endpoints** | `apps/users/tests/test_views.py` | Send/verify OTP, tokens |
+| **Venue Models** | `apps/venues/tests/test_models.py` | CRUD, managers |
+| **Venue API** | `apps/venues/tests/test_views.py` | List, filter, availability |
+| **Booking Models** | `apps/bookings/tests/test_models.py` | Price calc, cancellation |
+| **Booking API** | `apps/bookings/tests/test_views.py` | Create, cancel, double-booking |
+
+### Key Test Fixtures (conftest.py)
+
+| Fixture | Description |
+|---------|-------------|
+| `user` | Regular verified user |
+| `admin_user` | Superuser for admin tests |
+| `api_client` | Unauthenticated API client |
+| `authenticated_client` | Client with JWT token |
+| `admin_client` | Client with admin JWT token |
+| `venue`, `venue2` | Test venues with translations |
+| `booking`, `confirmed_booking` | Test bookings |
+
+## 📁 Project Structure
 
 ```
 venue-booking-backend/
 ├── apps/
-│   ├── users/          # User model & OTP authentication
-│   ├── venues/         # Venue management
-│   └── bookings/       # Booking system
+│   ├── users/                    # User authentication app
+│   │   ├── models.py            # Custom User model (phone-based)
+│   │   ├── services.py          # OTPService with Redis
+│   │   ├── views.py             # Auth endpoints
+│   │   ├── serializers.py       # Request/response serialization
+│   │   ├── admin.py             # User admin configuration
+│   │   └── tests/               # User-related tests
+│   │
+│   ├── venues/                   # Venue management app
+│   │   ├── models/              # Venue + VenueImage models
+│   │   ├── translation.py       # Translation field registration
+│   │   ├── views.py             # Venue CRUD + availability
+│   │   ├── serializers.py       # Venue serializers
+│   │   ├── filters.py           # Price range filtering
+│   │   ├── services.py          # Availability calculation
+│   │   ├── admin.py             # Admin with tabbed translations
+│   │   ├── management/commands/ # seed_data command
+│   │   └── tests/               # Venue-related tests
+│   │
+│   └── bookings/                 # Booking management app
+│       ├── models.py            # Booking model with status
+│       ├── views.py             # Booking CRUD + cancellation
+│       ├── serializers.py       # Validation + price calculation
+│       ├── admin.py             # Admin with bulk actions
+│       └── tests/               # Booking-related tests
+│
 ├── config/
-│   ├── settings/       # Django settings (base, development, production)
-│   ├── urls.py         # Root URL configuration
-│   └── wsgi.py
-├── core/               # Shared utilities, exceptions, permissions
-├── docker/             # Docker configuration
-├── requirements/       # Python dependencies
-├── docker-compose.yml
-├── manage.py
-└── README.md
+│   ├── settings/
+│   │   ├── base.py              # Common settings
+│   │   ├── development.py       # Debug, local settings
+│   │   └── production.py        # Security, HTTPS settings
+│   ├── urls.py                  # Root URL routing
+│   ├── wsgi.py                  # WSGI entry point
+│   └── asgi.py                  # ASGI entry point
+│
+├── core/                         # Shared components
+│   ├── models.py                # TimeStampedModel, ActiveModel
+│   ├── exceptions.py            # Custom exception classes
+│   ├── permissions.py           # IsOwner, IsAdminOrReadOnly
+│   └── utils.py                 # Phone validation, OTP generation
+│
+├── docker/
+│   ├── Dockerfile               # Development image
+│   └── Dockerfile.prod          # Production image
+│
+├── requirements/
+│   ├── base.txt                 # Core dependencies
+│   ├── development.txt          # Dev tools (debug toolbar)
+│   └── production.txt           # Production (gunicorn)
+│
+├── docker-compose.yml           # Container orchestration
+├── conftest.py                  # Pytest fixtures
+├── pytest.ini                   # Pytest configuration
+├── setup.cfg                    # Flake8, isort config
+├── .env.example                 # Environment template
+└── README.md                    # This file
 ```
 
-## AI Tools Used
+## 🤖 AI Tools Usage Documentation
 
-This project was built with assistance from:
+This project was built with assistance from **GitHub Copilot** powered by **Claude** AI.
 
-- **GitHub Copilot (Claude)**: Used for:
-  - Project structure planning and architecture design
-  - Code generation for models, serializers, and views
-  - Docker configuration
-  - Documentation writing
+### How AI Was Used
 
-## License
+| Phase | AI Contribution |
+|-------|-----------------|
+| **Architecture Design** | Project structure planning, app organization, model relationships |
+| **Code Generation** | Models, serializers, views, admin configurations |
+| **Docker Setup** | Dockerfile, docker-compose.yml, multi-stage builds |
+| **Testing** | Test fixtures, test cases, pytest configuration |
+| **Documentation** | README, inline docstrings, API documentation |
+
+### AI-Assisted Components
+
+#### 1. Project Planning
+- Analyzed requirements from ProjectPlan.md
+- Created phased implementation strategy
+- Suggested tech stack and dependencies
+
+#### 2. Code Implementation
+- **Models**: Custom User model, Venue with translations, Booking with status management
+- **Services**: OTPService with rate limiting, availability checking
+- **Serializers**: Validation logic, price calculation, double-booking prevention
+- **Views**: RESTful endpoints with proper permissions
+
+#### 3. Best Practices Applied
+- Django coding conventions (docstrings, type hints)
+- DRY principle with base models and mixins
+- Proper error handling with custom exceptions
+- Comprehensive test coverage
+
+### Prompting Patterns Used
+
+```
+"Create a Django model for [entity] with fields [...]"
+"Add validation for [rule] in serializer"
+"Write tests for [scenario]"
+"Explain how to implement [feature]"
+"Check that all stages of phase [N] are fully implemented"
+```
+
+### Verification Process
+- Each phase was explained before implementation
+- Code was reviewed for correctness
+- Tests were written to verify functionality
+- Commits were made with descriptive messages
+
+## 📄 API Endpoints Reference
+
+### Authentication (`/api/auth/`)
+
+| Method | Endpoint | Description | Auth |
+|--------|----------|-------------|------|
+| POST | `/send-otp/` | Send OTP to phone | No |
+| POST | `/verify-otp/` | Verify OTP, get tokens | No |
+| POST | `/refresh/` | Refresh access token | No |
+| GET | `/profile/` | Get user profile | Yes |
+| PATCH | `/profile/` | Update user profile | Yes |
+
+### Venues (`/api/venues/`)
+
+| Method | Endpoint | Description | Auth |
+|--------|----------|-------------|------|
+| GET | `/` | List venues (paginated, filterable) | No |
+| POST | `/` | Create venue | Admin |
+| GET | `/{id}/` | Get venue details | No |
+| PUT/PATCH | `/{id}/` | Update venue | Admin |
+| DELETE | `/{id}/` | Soft-delete venue | Admin |
+| GET | `/{id}/availability/` | Check availability | No |
+
+### Bookings (`/api/bookings/`)
+
+| Method | Endpoint | Description | Auth |
+|--------|----------|-------------|------|
+| GET | `/` | List my bookings | Yes |
+| POST | `/` | Create booking | Yes |
+| GET | `/{id}/` | Get booking details | Yes (Owner) |
+| PATCH | `/{id}/cancel/` | Cancel booking | Yes (Owner) |
+
+## 🔒 Environment Variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `SECRET_KEY` | Django secret key | (required) |
+| `DEBUG` | Debug mode | `False` |
+| `POSTGRES_DB` | Database name | `venue_booking` |
+| `POSTGRES_USER` | Database user | `postgres` |
+| `POSTGRES_PASSWORD` | Database password | `postgres` |
+| `POSTGRES_HOST` | Database host | `db` |
+| `POSTGRES_PORT` | Database port | `5432` |
+| `REDIS_URL` | Redis connection URL | `redis://redis:6379/0` |
+| `ACCESS_TOKEN_LIFETIME_MINUTES` | JWT access token lifetime | `60` |
+| `REFRESH_TOKEN_LIFETIME_DAYS` | JWT refresh token lifetime | `7` |
+
+## 📜 License
 
 MIT License
