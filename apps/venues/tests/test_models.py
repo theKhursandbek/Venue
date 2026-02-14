@@ -95,11 +95,14 @@ class TestVenueModel:
     
     def test_venue_ordering(self, db):
         """Test venues are ordered by created_at descending."""
+        from time import sleep
+        
         venue1 = Venue.objects.create(
             name="First",
             address="First address",
             price_per_hour=Decimal("100000.00"),
         )
+        sleep(0.01)  # Small delay to ensure different timestamps
         venue2 = Venue.objects.create(
             name="Second",
             address="Second address",

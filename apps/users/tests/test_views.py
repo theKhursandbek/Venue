@@ -32,7 +32,8 @@ class TestSendOTPView:
         })
         
         assert response.status_code == status.HTTP_400_BAD_REQUEST
-        assert "phone_number" in response.data
+        error_details = response.data.get("error", {}).get("details", response.data)
+        assert "phone_number" in error_details
     
     def test_send_otp_missing_phone(self, api_client):
         """Test sending OTP without phone number."""

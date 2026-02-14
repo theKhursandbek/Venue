@@ -91,7 +91,9 @@ class TestBookingListCreateView:
         })
         
         assert response.status_code == status.HTTP_400_BAD_REQUEST
-        assert "booking_date" in response.data
+        # Check for field in error details (custom exception handler wraps errors)
+        error_details = response.data.get("error", {}).get("details", response.data)
+        assert "booking_date" in error_details
     
     def test_create_booking_end_before_start_fails(self, authenticated_client, venue):
         """Test that end time before start time fails."""
@@ -105,7 +107,8 @@ class TestBookingListCreateView:
         })
         
         assert response.status_code == status.HTTP_400_BAD_REQUEST
-        assert "end_time" in response.data
+        error_details = response.data.get("error", {}).get("details", response.data)
+        assert "end_time" in error_details
     
     def test_create_booking_outside_hours_fails(self, authenticated_client, venue):
         """Test that booking outside allowed hours fails."""
@@ -120,7 +123,8 @@ class TestBookingListCreateView:
         })
         
         assert response.status_code == status.HTTP_400_BAD_REQUEST
-        assert "start_time" in response.data
+        error_details = response.data.get("error", {}).get("details", response.data)
+        assert "start_time" in error_details
     
     def test_create_booking_after_10pm_fails(self, authenticated_client, venue):
         """Test that booking after 10 PM fails."""
@@ -158,8 +162,9 @@ class TestBookingListCreateView:
         })
         
         assert response.status_code == status.HTTP_400_BAD_REQUEST
-        assert "start_time" in response.data
-        assert "already booked" in str(response.data["start_time"]).lower()
+        error_details = response.data.get("error", {}).get("details", response.data)
+        assert "start_time" in error_details
+        assert "already booked" in str(error_details.get("start_time", "")).lower()
     
     def test_create_booking_adjacent_time_succeeds(self, authenticated_client, venue, user, db):
         """Test that booking immediately after existing booking succeeds."""

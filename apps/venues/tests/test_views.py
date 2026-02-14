@@ -192,7 +192,12 @@ class TestVenueAvailabilityView:
         
         assert response.status_code == status.HTTP_200_OK
         assert response.data["venue_id"] == venue.id
-        assert response.data["date"] == tomorrow.isoformat()
+        # Date may be returned as date object or string
+        response_date = response.data["date"]
+        if hasattr(response_date, 'isoformat'):
+            assert response_date == tomorrow
+        else:
+            assert response_date == tomorrow.isoformat()
         assert "time_slots" in response.data
         
         # Should have slots from 9 AM to 10 PM (13 hourly slots)
@@ -219,10 +224,15 @@ class TestVenueAvailabilityView:
         assert response.status_code == status.HTTP_200_OK
         
         # Find the 10-11 and 11-12 slots
-        slots = {
-            (s["start_time"], s["end_time"]): s["is_available"]
-            for s in response.data["time_slots"]
-        }
+        # Times may be returned as time objects or strings
+        slots = {}
+        for s in response.data["time_slots"]:
+            start = s["start_time"]
+            end = s["end_time"]
+            # Convert to string for comparison if needed
+            start_str = start.strftime("%H:%M:%S") if hasattr(start, 'strftime') else start
+            end_str = end.strftime("%H:%M:%S") if hasattr(end, 'strftime') else end
+            slots[(start_str, end_str)] = s["is_available"]
         
         # 10:00-11:00 and 11:00-12:00 should be unavailable
         assert slots.get(("10:00:00", "11:00:00")) is False
