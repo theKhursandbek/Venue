@@ -2,6 +2,8 @@
 Views for venues app.
 """
 
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from drf_spectacular.utils import OpenApiParameter, OpenApiResponse, extend_schema
 from rest_framework import generics, status
 from rest_framework.permissions import AllowAny, IsAdminUser
@@ -25,19 +27,29 @@ from .services import get_available_time_slots
 class VenueListView(generics.ListCreateAPIView):
     """
     List all active venues or create a new venue (admin only).
+    
+    GET: Returns paginated list of active venues with filtering and search.
+    POST: Creates a new venue (admin only).
     """
     
-    queryset = Venue.objects.all()
     filterset_class = VenueFilter
     search_fields = ["name", "name_ru", "name_uz", "name_en"]
     ordering_fields = ["price_per_hour", "created_at", "name"]
     permission_classes = [IsAdminOrReadOnly]
+    
+    def get_queryset(self):
+        """
+        Optimized queryset with prefetch for uploaded images.
+        Uses select_related and prefetch_related to minimize DB queries.
+        """
+        return Venue.objects.prefetch_related("uploaded_images").all()
     
     def get_serializer_class(self):
         if self.request.method == "POST":
             return VenueCreateUpdateSerializer
         return VenueListSerializer
     
+    @method_decorator(cache_page(60))  # Cache for 1 minute
     @extend_schema(
         parameters=[
             OpenApiParameter(
@@ -76,16 +88,24 @@ class VenueListView(generics.ListCreateAPIView):
 class VenueDetailView(generics.RetrieveUpdateDestroyAPIView):
     """
     Retrieve, update, or delete a venue.
+    
+    GET: Returns detailed venue information.
+    PUT/PATCH: Updates venue (admin only).
+    DELETE: Soft-deletes venue (admin only).
     """
     
-    queryset = Venue.objects.all()
     permission_classes = [IsAdminOrReadOnly]
+    
+    def get_queryset(self):
+        """Optimized queryset with prefetch for uploaded images."""
+        return Venue.objects.prefetch_related("uploaded_images").all()
     
     def get_serializer_class(self):
         if self.request.method in ["PUT", "PATCH"]:
             return VenueCreateUpdateSerializer
         return VenueDetailSerializer
     
+    @method_decorator(cache_page(60))  # Cache for 1 minute
     @extend_schema(
         responses={200: VenueDetailSerializer},
         summary="Get Venue Details",
