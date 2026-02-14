@@ -222,7 +222,7 @@ export default function VenueDetailPage() {
 
       <div className="px-4 space-y-6">
         {/* ═══ Price Card ═══ */}
-        <div className="relative bg-white rounded-[22px] border border-gray-100/80 p-5 shadow-lg shadow-gray-900/[0.04] overflow-hidden">
+        <div className="relative bg-white rounded-[22px] border border-gray-100/80 p-5 shadow-lg shadow-gray-900/4 overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-primary-50/50 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2" />
           <div className="relative flex items-center justify-between">
             <div className="flex items-center gap-3">

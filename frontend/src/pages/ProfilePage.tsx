@@ -81,8 +81,8 @@ export default function ProfilePage() {
 
         <div className="flex items-center gap-4 relative z-10">
           <div className="relative">
-            <div className="absolute inset-[-3px] bg-white/20 rounded-2xl blur-sm" />
-            <div className="relative size-[72px] bg-white/15 backdrop-blur-xl rounded-2xl flex items-center justify-center ring-2 ring-white/20">
+            <div className="absolute -inset-0.75 bg-white/20 rounded-2xl blur-sm" />
+            <div className="relative size-18 bg-white/15 backdrop-blur-xl rounded-2xl flex items-center justify-center ring-2 ring-white/20">
               <User className="size-9 text-white drop-shadow-md" />
             </div>
             {user?.is_verified && (

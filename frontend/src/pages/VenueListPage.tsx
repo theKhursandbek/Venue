@@ -99,7 +99,7 @@ export default function VenueListPage() {
 
       {/* ═══ Filters panel ═══ */}
       {showFilters && (
-        <div className="bg-white/80 backdrop-blur-xl rounded-[22px] border border-gray-100/80 p-5 space-y-4 shadow-xl shadow-gray-900/[0.03] animate-scale-in">
+        <div className="bg-white/80 backdrop-blur-xl rounded-[22px] border border-gray-100/80 p-5 space-y-4 shadow-xl shadow-gray-900/3 animate-scale-in">
           <div className="flex items-center justify-between">
             <span className="text-sm font-bold text-gray-800 flex items-center gap-2">
               <span className="size-7 bg-amber-50 rounded-lg flex items-center justify-center text-base">💰</span>
@@ -160,7 +160,7 @@ export default function VenueListPage() {
       ) : venues.length === 0 ? (
         <div className="text-center py-24 animate-fade-in">
           <div className="relative inline-block mb-5">
-            <div className="absolute inset-[-6px] bg-gray-200/30 rounded-[22px] blur-lg" />
+            <div className="absolute -inset-1.5 bg-gray-200/30 rounded-[22px] blur-lg" />
             <div className="relative size-20 bg-white rounded-[22px] flex items-center justify-center shadow-lg border border-gray-100">
               <MapPin className="size-9 text-gray-300" />
             </div>
@@ -199,7 +199,7 @@ function VenueCard({
   return (
     <button
       onClick={onClick}
-      className="w-full bg-white rounded-[22px] overflow-hidden shadow-lg shadow-gray-900/[0.04] card-premium text-left group border border-gray-100/50"
+      className="w-full bg-white rounded-[22px] overflow-hidden shadow-lg shadow-gray-900/4 card-premium text-left group border border-gray-100/50"
     >
       {/* Image */}
       <div className="h-48 bg-gray-100 relative overflow-hidden">

@@ -94,7 +94,7 @@ export default function MyBookingsPage() {
       {bookings.length === 0 ? (
         <div className="text-center py-20 animate-fade-in">
           <div className="relative inline-block mb-5">
-            <div className="absolute inset-[-8px] bg-primary-200/20 rounded-[22px] blur-xl animate-pulse-soft" />
+            <div className="absolute -inset-2 bg-primary-200/20 rounded-[22px] blur-xl animate-pulse-soft" />
             <div className="relative size-20 mesh-gradient rounded-[22px] flex items-center justify-center shadow-lg border border-primary-100/30">
               <CalendarDays className="size-9 text-primary-300" />
             </div>
@@ -123,7 +123,7 @@ export default function MyBookingsPage() {
             return (
               <div
                 key={booking.id}
-                className="bg-white rounded-[22px] border border-gray-100/60 shadow-lg shadow-gray-900/[0.04] overflow-hidden card-premium"
+                className="bg-white rounded-[22px] border border-gray-100/60 shadow-lg shadow-gray-900/4 overflow-hidden card-premium"
               >
                 {/* Status accent bar */}
                 <div className={`h-1 bg-linear-to-r ${status.gradient}`} />

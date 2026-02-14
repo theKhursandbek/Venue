@@ -15,8 +15,8 @@ export default function Layout() {
   return (
     <div className="min-h-dvh flex flex-col bg-gray-50">
       {/* Header */}
-      <header className="glass border-b border-white/40 sticky top-0 z-40 shadow-sm shadow-primary-500/[0.03]">
-        <div className="max-w-lg mx-auto px-4 h-[60px] flex items-center justify-between">
+      <header className="glass border-b border-white/40 sticky top-0 z-40 shadow-sm shadow-primary-500/3">
+        <div className="max-w-lg mx-auto px-4 h-15 flex items-center justify-between">
           <NavLink to="/" className="flex items-center gap-3 group">
             <div className="relative">
               <div className="absolute inset-0 bg-primary-500/20 rounded-2xl blur-lg group-hover:bg-primary-500/30 transition-all" />
@@ -78,7 +78,7 @@ function NavItem({
       end={to === "/"}
       className={({ isActive }) =>
         clsx(
-          "flex items-center gap-1.5 px-4 py-2.5 rounded-[16px] text-xs font-semibold transition-all duration-300",
+          "flex items-center gap-1.5 px-4 py-2.5 rounded-2xl text-xs font-semibold transition-all duration-300",
           isActive
             ? "bg-linear-to-r from-primary-600 via-primary-500 to-accent-500 text-white shadow-lg shadow-primary-500/25"
             : "text-gray-400 hover:text-gray-600 hover:bg-gray-50"
@@ -87,7 +87,7 @@ function NavItem({
     >
       {({ isActive }) => (
         <>
-          <Icon className="size-[18px]" />
+          <Icon className="size-4.5" />
           {isActive && <span>{label}</span>}
         </>
       )}

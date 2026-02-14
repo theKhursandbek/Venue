@@ -87,8 +87,8 @@ export default function LoginPage() {
     <div className="min-h-dvh flex flex-col items-center justify-center px-6 relative overflow-hidden">
       {/* ═══ Animated mesh background ═══ */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute top-[-15%] right-[-10%] w-[500px] h-[500px] bg-primary-300/20 rounded-full blur-3xl animate-morph" />
-        <div className="absolute bottom-[-20%] left-[-15%] w-[600px] h-[600px] bg-accent-400/15 rounded-full blur-3xl animate-morph" style={{ animationDelay: "-4s" }} />
+        <div className="absolute top-[-15%] right-[-10%] w-125 h-125 bg-primary-300/20 rounded-full blur-3xl animate-morph" />
+        <div className="absolute bottom-[-20%] left-[-15%] w-150 h-150 bg-accent-400/15 rounded-full blur-3xl animate-morph" style={{ animationDelay: "-4s" }} />
         <div className="absolute top-[20%] left-[60%] w-64 h-64 bg-primary-200/20 rounded-full blur-2xl animate-float" />
         <div className="absolute bottom-[30%] right-[70%] w-48 h-48 bg-accent-400/10 rounded-full blur-2xl animate-float" style={{ animationDelay: "-3s" }} />
         {/* Grid pattern overlay */}
@@ -102,8 +102,8 @@ export default function LoginPage() {
         {/* ═══ Logo ═══ */}
         <div className="text-center">
           <div className="relative inline-block mb-6">
-            <div className="absolute inset-[-8px] bg-primary-500/15 rounded-[28px] blur-xl animate-pulse-soft" />
-            <div className="relative size-[76px] bg-linear-to-br from-primary-600 via-primary-500 to-accent-500 rounded-[22px] flex items-center justify-center shadow-2xl shadow-primary-500/30 animate-float">
+            <div className="absolute -inset-2 bg-primary-500/15 rounded-[28px] blur-xl animate-pulse-soft" />
+            <div className="relative size-19 bg-linear-to-br from-primary-600 via-primary-500 to-accent-500 rounded-[22px] flex items-center justify-center shadow-2xl shadow-primary-500/30 animate-float">
               <Zap className="size-9 text-white drop-shadow-lg" />
             </div>
             <div className="absolute -top-2 -right-2 size-7 bg-linear-to-br from-amber-400 to-orange-500 rounded-xl flex items-center justify-center shadow-lg shadow-orange-500/30 ring-[3px] ring-white animate-bounce-in" style={{ animationDelay: "0.3s" }}>
@@ -118,7 +118,7 @@ export default function LoginPage() {
 
         {step === "phone" ? (
           <div className="animate-scale-in space-y-5" key="phone">
-            <div className="relative bg-white/60 backdrop-blur-2xl rounded-[28px] p-7 shadow-2xl shadow-gray-900/[0.06] border border-white/70 shimmer-border">
+            <div className="relative bg-white/60 backdrop-blur-2xl rounded-[28px] p-7 shadow-2xl shadow-gray-900/6 border border-white/70 shimmer-border">
               <div className="flex items-center gap-4 mb-7">
                 <div className="relative">
                   <div className="absolute inset-0 bg-primary-500/15 rounded-2xl blur-md" />
@@ -165,7 +165,7 @@ export default function LoginPage() {
           </div>
         ) : (
           <div className="animate-scale-in space-y-5" key="otp">
-            <div className="relative bg-white/60 backdrop-blur-2xl rounded-[28px] p-7 shadow-2xl shadow-gray-900/[0.06] border border-white/70 shimmer-border">
+            <div className="relative bg-white/60 backdrop-blur-2xl rounded-[28px] p-7 shadow-2xl shadow-gray-900/6 border border-white/70 shimmer-border">
               <div className="flex items-center gap-4 mb-7">
                 <div className="relative">
                   <div className="absolute inset-0 bg-success-500/15 rounded-2xl blur-md" />
@@ -192,7 +192,7 @@ export default function LoginPage() {
                     value={digit}
                     onChange={(e) => handleOtpChange(i, e.target.value)}
                     onKeyDown={(e) => handleOtpKeyDown(i, e)}
-                    className={`w-[52px] h-[60px] text-center text-2xl font-black rounded-2xl border-2 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-primary-500/10 ${
+                    className={`w-13 h-15 text-center text-2xl font-black rounded-2xl border-2 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-primary-500/10 ${
                       digit
                         ? "border-primary-400 bg-primary-50/70 text-primary-700 shadow-md shadow-primary-500/10 scale-105"
                         : "border-gray-100 bg-gray-50/50 hover:border-gray-200"
