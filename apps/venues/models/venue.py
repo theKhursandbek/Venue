@@ -1,5 +1,5 @@
 """
-Venue models for the venue-booking-backend project.
+Venue model for the venue-booking-backend project.
 """
 
 from django.contrib.postgres.fields import ArrayField
@@ -53,4 +53,21 @@ class Venue(TimeStampedModel, ActiveModel):
     
     @property
     def image_count(self):
-        return len(self.images)
+        """Return total count of all images (URLs + uploaded)."""
+        return len(self.images) + self.uploaded_images.count()
+    
+    @property
+    def primary_image(self):
+        """Return the primary uploaded image or first URL."""
+        primary = self.uploaded_images.filter(is_primary=True).first()
+        if primary:
+            return primary.image.url
+        if self.images:
+            return self.images[0]
+        return None
+    
+    @property
+    def all_image_urls(self):
+        """Return all image URLs (both uploaded and URL-based)."""
+        uploaded_urls = [img.image.url for img in self.uploaded_images.all()]
+        return uploaded_urls + self.images

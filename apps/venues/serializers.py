@@ -4,7 +4,27 @@ Serializers for venues app.
 
 from rest_framework import serializers
 
-from .models import Venue
+from .models import Venue, VenueImage
+
+
+class VenueImageSerializer(serializers.ModelSerializer):
+    """
+    Serializer for venue images.
+    """
+    
+    image_url = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = VenueImage
+        fields = ("id", "image", "image_url", "alt_text", "is_primary", "order")
+        read_only_fields = ("id",)
+    
+    def get_image_url(self, obj):
+        """Return absolute URL for the image."""
+        request = self.context.get("request")
+        if obj.image and request:
+            return request.build_absolute_uri(obj.image.url)
+        return obj.image.url if obj.image else None
 
 
 class VenueListSerializer(serializers.ModelSerializer):
@@ -13,6 +33,8 @@ class VenueListSerializer(serializers.ModelSerializer):
     Returns minimal venue information for listing.
     """
     
+    primary_image = serializers.SerializerMethodField()
+    
     class Meta:
         model = Venue
         fields = (
@@ -20,9 +42,14 @@ class VenueListSerializer(serializers.ModelSerializer):
             "name",
             "address",
             "price_per_hour",
+            "primary_image",
             "images",
             "is_active",
         )
+    
+    def get_primary_image(self, obj):
+        """Return the primary image URL."""
+        return obj.primary_image
 
 
 class VenueDetailSerializer(serializers.ModelSerializer):
@@ -30,6 +57,9 @@ class VenueDetailSerializer(serializers.ModelSerializer):
     Serializer for venue detail view.
     Returns full venue information.
     """
+    
+    uploaded_images = VenueImageSerializer(many=True, read_only=True)
+    all_images = serializers.SerializerMethodField()
     
     class Meta:
         model = Venue
@@ -40,11 +70,17 @@ class VenueDetailSerializer(serializers.ModelSerializer):
             "description",
             "price_per_hour",
             "images",
+            "uploaded_images",
+            "all_images",
             "amenities",
             "is_active",
             "created_at",
             "updated_at",
         )
+    
+    def get_all_images(self, obj):
+        """Return all image URLs (uploaded + external)."""
+        return obj.all_image_urls
 
 
 class VenueCreateUpdateSerializer(serializers.ModelSerializer):
