@@ -5,6 +5,7 @@ Serializers for bookings app.
 from datetime import date, time
 
 from django.conf import settings
+from django.db import transaction
 from rest_framework import serializers
 
 from apps.venues.serializers import VenueListSerializer
@@ -125,9 +126,33 @@ class BookingCreateSerializer(serializers.ModelSerializer):
         
         return attrs
     
+    @transaction.atomic
     def create(self, validated_data):
-        """Create booking with user from request."""
+        """
+        Create booking with user from request.
+        Uses atomic transaction to prevent race conditions with double bookings.
+        """
         validated_data["user"] = self.context["request"].user
+        
+        # Re-check availability within transaction using select_for_update
+        venue = validated_data["venue"]
+        booking_date = validated_data["booking_date"]
+        start_time = validated_data["start_time"]
+        end_time = validated_data["end_time"]
+        
+        # Lock the venue's bookings for update to prevent race conditions
+        existing_bookings = Booking.objects.select_for_update().filter(
+            venue=venue,
+            booking_date=booking_date,
+            status__in=[BookingStatus.PENDING, BookingStatus.CONFIRMED],
+        )
+        
+        for booking in existing_bookings:
+            if not (end_time <= booking.start_time or start_time >= booking.end_time):
+                raise serializers.ValidationError({
+                    "start_time": "This time slot was just booked by another user."
+                })
+        
         return super().create(validated_data)
 
 

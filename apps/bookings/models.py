@@ -29,14 +29,16 @@ class Booking(TimeStampedModel):
         on_delete=models.CASCADE,
         related_name="bookings",
         verbose_name=_("user"),
+        db_index=True,  # Index for filtering by user
     )
     venue = models.ForeignKey(
         "venues.Venue",
         on_delete=models.CASCADE,
         related_name="bookings",
         verbose_name=_("venue"),
+        db_index=True,  # Index for filtering by venue
     )
-    booking_date = models.DateField(_("booking date"))
+    booking_date = models.DateField(_("booking date"), db_index=True)  # Index for date queries
     start_time = models.TimeField(_("start time"))
     end_time = models.TimeField(_("end time"))
     total_price = models.DecimalField(
@@ -50,12 +52,24 @@ class Booking(TimeStampedModel):
         max_length=20,
         choices=BookingStatus.choices,
         default=BookingStatus.PENDING,
+        db_index=True,  # Index for status filtering
     )
     
     class Meta:
         verbose_name = _("booking")
         verbose_name_plural = _("bookings")
         ordering = ["-booking_date", "-start_time"]
+        # Composite index for double-booking prevention queries
+        indexes = [
+            models.Index(
+                fields=["venue", "booking_date", "status"],
+                name="booking_venue_date_status_idx",
+            ),
+            models.Index(
+                fields=["user", "booking_date"],
+                name="booking_user_date_idx",
+            ),
+        ]
         # Prevent double booking at database level
         constraints = [
             models.CheckConstraint(
