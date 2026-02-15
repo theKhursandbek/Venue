@@ -222,6 +222,7 @@ function VenueCard({
   price: string;
   onClick: () => void;
 }>) {
+  const { i18n } = useTranslation();
   return (
     <button
       onClick={onClick}
