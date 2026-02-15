@@ -91,7 +91,7 @@ export default function MyBookingsPage() {
           <p className="text-[11px] text-surface-500 mt-0.5">Найдите площадку и забронируйте</p>
           <Link
             to="/"
-            className="inline-flex items-center gap-1.5 mt-4 text-surface-200 font-medium text-[12px] hover:text-surface-50 transition-colors"
+            className="inline-flex items-center gap-1.5 mt-4 text-primary-400 font-medium text-[12px] hover:text-primary-300 transition-colors"
           >
             Перейти к площадкам
             <ArrowRight className="size-3" />
@@ -113,10 +113,10 @@ export default function MyBookingsPage() {
                 <div className="flex items-start justify-between gap-2">
                   <Link
                     to={`/venues/${booking.venue}`}
-                    className="font-semibold text-surface-100 hover:text-surface-50 transition-colors text-[14px] flex items-center gap-1 group"
+                    className="font-semibold text-surface-100 hover:text-primary-400 transition-colors text-[14px] flex items-center gap-1 group"
                   >
                     {booking.venue_name || `Площадка #${booking.venue}`}
-                    <ArrowRight className="size-3 text-surface-600 group-hover:text-surface-300 transition-colors" />
+                    <ArrowRight className="size-3 text-surface-600 group-hover:text-primary-400 transition-colors" />
                   </Link>
                   <Badge variant={status.variant}>{status.label}</Badge>
                 </div>

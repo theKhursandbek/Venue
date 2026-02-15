@@ -63,7 +63,7 @@ export default function ProfilePage() {
             <User className="size-5 text-surface-400" />
           </div>
           {user?.is_verified && (
-            <div className="absolute -bottom-0.5 -right-0.5 size-4 bg-surface-50 rounded-full flex items-center justify-center ring-2 ring-surface-950">
+            <div className="absolute -bottom-0.5 -right-0.5 size-4 bg-primary-500 rounded-full flex items-center justify-center ring-2 ring-surface-950">
               <CheckCircle className="size-2.5 text-surface-950" />
             </div>
           )}
@@ -110,7 +110,7 @@ export default function ProfilePage() {
           {!isEditing && (
             <button
               onClick={() => setIsEditing(true)}
-              className="text-[12px] font-medium text-surface-200 hover:text-surface-50 transition-colors"
+              className="text-[12px] font-medium text-primary-400 hover:text-primary-300 transition-colors"
             >
               Редактировать
             </button>

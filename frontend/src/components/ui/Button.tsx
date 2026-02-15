@@ -23,7 +23,7 @@ export default function Button({
 
   const variants = {
     primary:
-      "bg-surface-50 text-surface-950 hover:bg-surface-200 font-semibold",
+      "bg-primary-500 text-white hover:bg-primary-400 font-semibold",
     secondary:
       "bg-surface-850 text-surface-200 hover:bg-surface-800",
     danger:

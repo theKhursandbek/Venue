@@ -107,7 +107,7 @@ export default function LoginPage() {
                     if (val.length <= 13) setPhone(val);
                   }}
                   autoFocus
-                  className="w-full pl-10 pr-3.5 py-3 rounded-lg bg-surface-850 text-surface-100 focus:outline-none focus:ring-2 focus:ring-surface-50/15 text-[15px] font-semibold tracking-widest border-none"
+                  className="w-full pl-10 pr-3.5 py-3 rounded-lg bg-surface-850 text-surface-100 focus:outline-none focus:ring-2 focus:ring-primary-500/25 text-[15px] font-semibold tracking-widest border-none"
                 />
               </div>
               {error && (
@@ -138,8 +138,8 @@ export default function LoginPage() {
                   value={digit}
                   onChange={(e) => handleOtpChange(i, e.target.value)}
                   onKeyDown={(e) => handleOtpKeyDown(i, e)}
-                  className={`w-10 h-12 text-center text-lg font-bold rounded-lg border-none bg-surface-850 transition-all focus:outline-none focus:ring-2 focus:ring-surface-50/15 ${
-                    digit ? "text-surface-50" : "text-surface-200"
+                  className={`w-10 h-12 text-center text-lg font-bold rounded-lg border-none bg-surface-850 transition-all focus:outline-none focus:ring-2 focus:ring-primary-500/25 ${
+                    digit ? "text-primary-300" : "text-surface-200"
                   }`}
                 />
               ))}

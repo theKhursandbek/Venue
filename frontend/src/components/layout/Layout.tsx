@@ -67,7 +67,7 @@ function NavItem({
         clsx(
           "flex-1 flex flex-col items-center gap-0.5 py-2.5 text-[10px] font-medium transition-colors relative",
           isActive
-            ? "text-surface-50"
+            ? "text-primary-400"
             : "text-surface-500 hover:text-surface-300 active:scale-95"
         )
       }
@@ -75,7 +75,7 @@ function NavItem({
       {({ isActive }) => (
         <>
           {isActive && (
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-6 h-[1.5px] bg-surface-50 rounded-full animate-line-expand" />
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-6 h-[1.5px] bg-primary-400 rounded-full animate-line-expand" />
           )}
           <Icon className="size-[18px] stroke-[1.5]" />
           <span>{label}</span>

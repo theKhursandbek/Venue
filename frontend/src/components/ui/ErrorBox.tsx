@@ -16,7 +16,7 @@ export default function ErrorBox({
       {onRetry && (
         <button
           onClick={onRetry}
-          className="text-surface-200 text-[12px] font-medium hover:text-surface-50 mt-2 flex items-center gap-1 mx-auto transition-colors"
+          className="text-primary-400 text-[12px] font-medium hover:text-primary-300 mt-2 flex items-center gap-1 mx-auto transition-colors"
         >
           <RefreshCw className="size-3" />
           Повторить

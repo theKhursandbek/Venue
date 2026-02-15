@@ -232,7 +232,7 @@ export default function VenueDetailPage() {
               <div className="flex flex-wrap gap-1.5">
                 {venue.amenities.map((amenity) => (
                   <span key={amenity} className="text-[12px] text-surface-300 bg-surface-850 px-2.5 py-1 rounded-full flex items-center gap-1">
-                    <Check className="size-2.5 text-surface-300" />
+                    <Check className="size-2.5 text-primary-400" />
                     {amenity}
                   </span>
                 ))}
@@ -277,7 +277,7 @@ export default function VenueDetailPage() {
           <div className="flex items-center justify-between mb-2">
             <p className="text-[11px] text-surface-500 uppercase tracking-wider">Время</p>
             {!slotsLoading && slots.length > 0 && (
-              <span className="text-[11px] text-surface-200 font-medium">{availableCount} свободных</span>
+              <span className="text-[11px] text-primary-400 font-medium">{availableCount} свободных</span>
             )}
           </div>
 
@@ -300,7 +300,7 @@ export default function VenueDetailPage() {
                   disabled={!slot.is_available}
                   className={`py-2 rounded-lg text-[13px] font-medium transition-all active:scale-95 ${
                     isSlotSelected(slot)
-                      ? "bg-surface-50 text-surface-950 font-semibold"
+                      ? "bg-primary-500 text-white font-semibold"
                       : slot.is_available
                       ? "bg-surface-850 text-surface-300 hover:bg-surface-800 hover:text-surface-100"
                       : "text-surface-600 cursor-not-allowed line-through opacity-25"
