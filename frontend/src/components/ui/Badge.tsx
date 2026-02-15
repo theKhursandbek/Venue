@@ -23,7 +23,7 @@ export default function Badge({
   return (
     <span
       className={clsx(
-        "inline-flex items-center px-2.5 py-0.5 rounded-lg text-[11px] font-semibold border",
+        "inline-flex items-center px-2.5 py-0.5 rounded-lg text-[11px] font-semibold border transition-all duration-300 animate-scale-in hover:scale-105",
         variants[variant],
         className
       )}

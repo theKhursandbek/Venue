@@ -19,9 +19,9 @@ export default function Input({
       )}
       <input
         className={clsx(
-          "w-full px-4 py-3 rounded-xl glass text-surface-900 placeholder:text-surface-400 transition-all text-[14px]",
-          "focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-500/30",
-          error && "ring-2 ring-danger-500/30",
+          "w-full px-4 py-3 rounded-xl glass text-surface-900 placeholder:text-surface-400 transition-all duration-300 text-[14px] input-glow",
+          "focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-500/30 focus:scale-[1.01]",
+          error && "ring-2 ring-danger-500/30 animate-shake",
           className
         )}
         {...props}

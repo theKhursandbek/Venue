@@ -1,15 +1,26 @@
+import { useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Layout from "./components/layout/Layout";
 import ProtectedRoute from "./components/layout/ProtectedRoute";
+import ScrollAnimator from "./components/ui/ScrollAnimator";
 import LoginPage from "./pages/LoginPage";
 import VenueListPage from "./pages/VenueListPage";
 import VenueDetailPage from "./pages/VenueDetailPage";
 import MyBookingsPage from "./pages/MyBookingsPage";
 import ProfilePage from "./pages/ProfilePage";
+import { useThemeStore } from "./store/themeStore";
 
 export default function App() {
+  const theme = useThemeStore((s) => s.theme);
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+  }, [theme]);
+
   return (
-    <Routes>
+    <>
+      <ScrollAnimator />
+      <Routes>
       {/* Public */}
       <Route path="/login" element={<LoginPage />} />
 
@@ -26,5 +37,6 @@ export default function App() {
       {/* Fallback */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
+    </>
   );
 }
