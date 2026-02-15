@@ -17,13 +17,13 @@ export default function Button({
   className,
   disabled,
   ...props
-}: ButtonProps) {
+}: Readonly<ButtonProps>) {
   const base =
     "relative inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-300 active:scale-[0.96] disabled:opacity-30 disabled:cursor-not-allowed disabled:active:scale-100 cursor-pointer overflow-hidden shimmer-line";
 
   const variants = {
     primary:
-      "bg-gradient-to-r from-primary-500 to-primary-600 text-white hover:from-primary-400 hover:to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-xl hover:shadow-primary-500/30 hover:-translate-y-0.5 depth-push",
+      "bg-linear-to-r from-primary-500 to-primary-600 text-white hover:from-primary-400 hover:to-primary-500 shadow-lg shadow-primary-500/20 hover:shadow-xl hover:shadow-primary-500/30 hover:-translate-y-0.5 depth-push",
     secondary:
       "glass text-surface-700 hover:text-surface-900 hover:bg-surface-200/60 hover:-translate-y-0.5",
     danger:

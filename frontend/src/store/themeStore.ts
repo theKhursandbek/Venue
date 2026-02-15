@@ -15,11 +15,11 @@ export const useThemeStore = create<ThemeState>()(
       theme: "light",
       toggle: () => {
         const next = get().theme === "light" ? "dark" : "light";
-        document.documentElement.setAttribute("data-theme", next);
+        document.documentElement.dataset.theme = next;
         set({ theme: next });
       },
       setTheme: (t) => {
-        document.documentElement.setAttribute("data-theme", t);
+        document.documentElement.dataset.theme = t;
         set({ theme: t });
       },
     }),

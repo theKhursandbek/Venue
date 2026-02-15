@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { format, addDays, isBefore, startOfToday } from "date-fns";
 import { ru, enUS, uz } from "date-fns/locale";
+import type { Locale } from "date-fns";
 import { useTranslation } from "react-i18next";
 import toast from "react-hot-toast";
 import Button from "@/components/ui/Button";
@@ -20,9 +21,8 @@ import ErrorBox from "@/components/ui/ErrorBox";
 import { useReveal } from "@/hooks/useReveal";
 import { venueService } from "@/services/venueService";
 import { bookingService } from "@/services/bookingService";
-import type { Venue, TimeSlot } from "@/types";
+import type { Venue, TimeSlot, APIError } from "@/types";
 import type { AxiosError } from "axios";
-import type { APIError } from "@/types";
 
 const DATE_LOCALES: Record<string, Locale> = { ru, en: enUS, uz };
 
@@ -81,30 +81,41 @@ export default function VenueDetailPage() {
 
   const handleSlotClick = (slot: TimeSlot) => {
     if (!slot.is_available) return;
-    if (!selectedStart || (selectedStart && selectedEnd)) {
+
+    const selectSlot = () => {
       setSelectedStart(slot.start_time);
       setSelectedEnd(slot.end_time);
-    } else {
-      if (slot.start_time >= selectedStart) {
-        const startIdx = slots.findIndex((s) => s.start_time === selectedStart);
-        const endIdx = slots.findIndex((s) => s.start_time === slot.start_time);
-        const allAvailable = slots.slice(startIdx, endIdx + 1).every((s) => s.is_available);
-        if (allAvailable) {
-          setSelectedEnd(slot.end_time);
-        } else {
-          setSelectedStart(slot.start_time);
-          setSelectedEnd(slot.end_time);
-        }
-      } else {
-        setSelectedStart(slot.start_time);
+    };
+
+    if (!selectedStart || (selectedStart && selectedEnd)) {
+      selectSlot();
+    } else if (slot.start_time >= selectedStart) {
+      const startIdx = slots.findIndex((s) => s.start_time === selectedStart);
+      const endIdx = slots.findIndex((s) => s.start_time === slot.start_time);
+      const allAvailable = slots.slice(startIdx, endIdx + 1).every((s) => s.is_available);
+      if (allAvailable) {
         setSelectedEnd(slot.end_time);
+      } else {
+        selectSlot();
       }
+    } else {
+      selectSlot();
     }
   };
 
   const isSlotSelected = (slot: TimeSlot) => {
     if (!selectedStart || !selectedEnd) return false;
     return slot.start_time >= selectedStart && slot.end_time <= selectedEnd;
+  };
+
+  const getSlotClassName = (slot: TimeSlot) => {
+    if (isSlotSelected(slot)) {
+      return "bg-linear-to-r from-primary-500 to-primary-600 text-white shadow-lg shadow-primary-500/25 scale-105 animated-gradient";
+    }
+    if (slot.is_available) {
+      return "glass text-surface-900 hover:text-primary-600 hover:border-primary-500/20 hover:scale-105 hover:shadow-md";
+    }
+    return "text-surface-400 cursor-not-allowed line-through opacity-50";
   };
 
   const handleBook = async () => {
@@ -163,7 +174,7 @@ export default function VenueDetailPage() {
         {images.length > 0 ? (
           <>
             <img src={images[currentImage]} alt={venue.name} className="w-full h-full object-cover transition-all duration-700 hover:scale-105" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-black/20" />
+            <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/10 to-black/20" />
             {images.length > 1 && (
               <>
                 <button
@@ -179,9 +190,9 @@ export default function VenueDetailPage() {
                   <ChevronRight className="size-4" />
                 </button>
                 <div className="absolute bottom-20 left-1/2 -translate-x-1/2 flex gap-1.5">
-                  {images.map((_, i) => (
+                  {images.map((imgUrl, i) => (
                     <button
-                      key={i}
+                      key={imgUrl}
                       onClick={() => setCurrentImage(i)}
                       className={`rounded-full transition-all duration-500 ${
                         i === currentImage ? "w-6 h-1.5 bg-primary-400 animate-breathe" : "w-1.5 h-1.5 bg-white/30 hover:bg-white/60"
@@ -292,36 +303,32 @@ export default function VenueDetailPage() {
               {t("venueDetail.time")}
             </p>
             {!slotsLoading && slots.length > 0 && (
-              <span className="text-[11px] text-primary-600 font-semibold bg-primary-500/10 border border-primary-500/15 px-2.5 py-1 rounded-lg animate-scale-in animate-breathe">
+              <span className="text-[11px] text-primary-600 font-semibold bg-primary-500/10 border border-primary-500/15 px-2.5 py-1 rounded-lg animate-scale-in">
                 {availableCount} {t("venueDetail.available")}
               </span>
             )}
           </div>
 
-          {slotsLoading ? (
+          {slotsLoading && (
             <div className="grid grid-cols-4 gap-2">
-              {Array.from({ length: 12 }).map((_, i) => (
-                <div key={i} className="h-10 skeleton rounded-xl" style={{animationDelay: `${i * 50}ms`}} />
+              {(["s1","s2","s3","s4","s5","s6","s7","s8","s9","s10","s11","s12"] as const).map((skeletonId, i) => (
+                <div key={skeletonId} className="h-10 skeleton rounded-xl" style={{animationDelay: `${i * 50}ms`}} />
               ))}
             </div>
-          ) : slots.length === 0 ? (
+          )}
+          {!slotsLoading && slots.length === 0 && (
             <div className="text-center py-8" data-scroll="up">
               <p className="text-[13px] text-surface-500">{t("venueDetail.noSlots")}</p>
             </div>
-          ) : (
+          )}
+          {!slotsLoading && slots.length > 0 && (
             <div className="grid grid-cols-4 gap-2">
               {slots.map((slot, i) => (
                 <button
                   key={slot.start_time}
                   onClick={() => handleSlotClick(slot)}
                   disabled={!slot.is_available}
-                  className={`py-2.5 rounded-xl text-[13px] font-semibold transition-all duration-300 active:scale-95 animate-scale-in ${
-                    isSlotSelected(slot)
-                      ? "bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg shadow-primary-500/25 scale-105 animated-gradient"
-                      : slot.is_available
-                      ? "glass text-surface-900 hover:text-primary-600 hover:border-primary-500/20 hover:scale-105 hover:shadow-md"
-                      : "text-surface-400 cursor-not-allowed line-through opacity-50"
-                  }`}
+                  className={`py-2.5 rounded-xl text-[13px] font-semibold transition-all duration-300 active:scale-95 animate-scale-in ${getSlotClassName(slot)}`}
                   style={{animationDelay: `${i * 30}ms`}}
                 >
                   {slot.start_time.slice(0, 5)}

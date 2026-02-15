@@ -27,7 +27,7 @@ export default function Layout() {
           <nav className="flex items-center gap-1.5 glass-strong rounded-2xl px-2.5 py-2 shadow-xl shadow-black/8">
             {/* Logo */}
             <NavLink to="/" className="flex items-center justify-center size-9 rounded-xl mr-1 group">
-              <div className="size-7 rounded-lg bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center shadow-md shadow-primary-500/20 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6 animate-float">
+              <div className="size-7 rounded-lg bg-linear-to-br from-primary-500 to-accent-500 flex items-center justify-center shadow-md shadow-primary-500/20 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6 animate-float">
                 <span className="text-white text-[11px] font-black">V</span>
               </div>
             </NavLink>
@@ -66,11 +66,11 @@ function NavPill({
   to,
   icon: Icon,
   label,
-}: {
+}: Readonly<{
   to: string;
   icon: typeof CalendarDays;
   label: string;
-}) {
+}>) {
   return (
     <NavLink
       to={to}
@@ -79,14 +79,14 @@ function NavPill({
         clsx(
           "flex items-center gap-1.5 px-4 py-2 rounded-xl text-[12px] font-medium transition-all duration-300 nav-hover",
           isActive
-            ? "bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg shadow-primary-500/25 animated-gradient"
+            ? "bg-linear-to-r from-primary-500 to-primary-600 text-white shadow-lg shadow-primary-500/25 animated-gradient"
             : "text-surface-500 hover:text-surface-800 hover:bg-surface-200/60 active:scale-95"
         )
       }
     >
       {({ isActive }) => (
         <>
-          <Icon className={clsx("size-[16px] transition-transform duration-300", isActive ? "scale-110" : "group-hover:scale-110")} />
+          <Icon className={clsx("size-4 transition-transform duration-300", isActive ? "scale-110" : "group-hover:scale-110")} />
           <span>{label}</span>
         </>
       )}

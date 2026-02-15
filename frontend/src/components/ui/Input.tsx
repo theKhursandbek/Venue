@@ -11,7 +11,7 @@ export default function Input({
   error,
   className,
   ...props
-}: InputProps) {
+}: Readonly<InputProps>) {
   return (
     <div className="space-y-2">
       {label && (

@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { CalendarDays, Clock, X, ArrowRight, Sparkles } from "lucide-react";
+import { CalendarDays, Clock, X, ArrowRight } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { ru, enUS, uz } from "date-fns/locale";
+import type { Locale } from "date-fns";
 import { useTranslation } from "react-i18next";
 import toast from "react-hot-toast";
 import Badge from "@/components/ui/Badge";
@@ -11,9 +12,8 @@ import PageLoader from "@/components/ui/PageLoader";
 import ErrorBox from "@/components/ui/ErrorBox";
 import { bookingService } from "@/services/bookingService";
 import { useRevealChildren } from "@/hooks/useReveal";
-import type { Booking } from "@/types";
+import type { Booking, APIError } from "@/types";
 import type { AxiosError } from "axios";
-import type { APIError } from "@/types";
 
 const DATE_LOCALES: Record<string, Locale> = { ru, en: enUS, uz };
 
@@ -103,7 +103,7 @@ export default function MyBookingsPage() {
           <p className="text-[13px] text-surface-500 mt-1">{t("bookings.emptyHint")}</p>
           <Link
             to="/"
-            className="inline-flex items-center gap-2 mt-5 bg-gradient-to-r from-primary-500 to-primary-600 text-white font-semibold text-[13px] px-5 py-2.5 rounded-xl shadow-lg shadow-primary-500/20 hover:shadow-xl transition-all duration-300 shimmer-line hover:-translate-y-0.5"
+            className="inline-flex items-center gap-2 mt-5 bg-linear-to-r from-primary-500 to-primary-600 text-white font-semibold text-[13px] px-5 py-2.5 rounded-xl shadow-lg shadow-primary-500/20 hover:shadow-xl transition-all duration-300 shimmer-line hover:-translate-y-0.5"
             data-scroll="up" data-scroll-delay="200"
           >
             {t("bookings.goToVenues")}

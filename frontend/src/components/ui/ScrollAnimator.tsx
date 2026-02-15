@@ -19,7 +19,7 @@ import { useEffect } from "react";
  */
 export default function ScrollAnimator() {
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    if (globalThis.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       // Instantly show all scroll-animated elements
       document.querySelectorAll("[data-scroll]").forEach((el) => {
         (el as HTMLElement).style.opacity = "1";
@@ -36,33 +36,40 @@ export default function ScrollAnimator() {
 
     const staggerMs = 80;
 
+    const addScrollVisible = (el: HTMLElement) => {
+      el.classList.add("scroll-visible");
+    };
+
+    const revealStaggerChildren = (el: HTMLElement) => {
+      const children = el.querySelectorAll("[data-scroll-child]");
+      children.forEach((child, i) => {
+        setTimeout(addScrollVisible, i * staggerMs, child as HTMLElement);
+      });
+    };
+
+    const revealElement = (el: HTMLElement) => {
+      const delay = Number.parseInt(el.dataset.scrollDelay || "0", 10);
+      setTimeout(addScrollVisible, delay, el);
+    };
+
+    const handleIntersection = (entry: IntersectionObserverEntry) => {
+      if (!entry.isIntersecting) return;
+
+      const el = entry.target as HTMLElement;
+
+      if (el.dataset.scrollStagger !== undefined) {
+        revealStaggerChildren(el);
+        observer.unobserve(el);
+        return;
+      }
+
+      revealElement(el);
+      observer.unobserve(el);
+    };
+
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-
-          const el = entry.target as HTMLElement;
-
-          // Handle stagger containers
-          if (el.hasAttribute("data-scroll-stagger")) {
-            const children = el.querySelectorAll("[data-scroll-child]");
-            children.forEach((child, i) => {
-              setTimeout(() => {
-                (child as HTMLElement).classList.add("scroll-visible");
-              }, i * staggerMs);
-            });
-            observer.unobserve(el);
-            return;
-          }
-
-          // Handle individual elements
-          const delay = parseInt(el.dataset.scrollDelay || "0", 10);
-          setTimeout(() => {
-            el.classList.add("scroll-visible");
-          }, delay);
-
-          observer.unobserve(el);
-        });
+        entries.forEach(handleIntersection);
       },
       {
         threshold: 0.08,

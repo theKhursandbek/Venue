@@ -9,7 +9,7 @@ interface ErrorBoxProps {
 export default function ErrorBox({
   message = "Произошла ошибка. Попробуйте снова.",
   onRetry,
-}: ErrorBoxProps) {
+}: Readonly<ErrorBoxProps>) {
   return (
     <div className="flex flex-col items-center justify-center min-h-[40vh] px-4 animate-fade-in text-center">
       <div className="size-14 rounded-2xl bg-danger-500/10 border border-danger-500/20 flex items-center justify-center mb-4 animate-shake">

@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Phone, ArrowRight, ArrowLeft, ShieldCheck, Sun, Moon, Globe } from "lucide-react";
+import { ArrowRight, ArrowLeft, ShieldCheck, Sun, Moon, Globe } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import toast from "react-hot-toast";
 import Button from "@/components/ui/Button";
@@ -122,7 +122,7 @@ export default function LoginPage() {
 
           {/* Animated logo with spinning ring */}
           <div className="relative inline-block mb-4">
-            <div className="size-16 rounded-2xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center shadow-xl shadow-primary-500/20 animate-levitate aurora-glow">
+            <div className="size-16 rounded-2xl bg-linear-to-br from-primary-500 to-accent-500 flex items-center justify-center shadow-xl shadow-primary-500/20 animate-levitate aurora-glow">
               <span className="text-white text-2xl font-black">V</span>
             </div>
             <div className="absolute -inset-3 hero-ring" />
@@ -181,18 +181,18 @@ export default function LoginPage() {
               </div>
 
               <div className="flex gap-2.5 justify-center">
-                {otp.map((digit, i) => (
+                {(["slot-1", "slot-2", "slot-3", "slot-4", "slot-5", "slot-6"] as const).map((slotId, i) => (
                   <input
-                    key={i}
+                    key={slotId}
                     ref={(el) => { otpRefs.current[i] = el; }}
                     type="text"
                     inputMode="numeric"
                     maxLength={1}
-                    value={digit}
+                    value={otp[i]}
                     onChange={(e) => handleOtpChange(i, e.target.value)}
                     onKeyDown={(e) => handleOtpKeyDown(i, e)}
                     className={`w-11 h-13 text-center text-xl font-bold rounded-xl border transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:scale-110 animate-bounce-in ${
-                      digit
+                      otp[i]
                         ? "bg-primary-500/10 border-primary-500/30 text-primary-600"
                         : "bg-surface-100 border-surface-300 text-surface-800"
                     }`}

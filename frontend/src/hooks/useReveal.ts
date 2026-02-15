@@ -1,8 +1,8 @@
 import { useCallback, useRef } from "react";
 
 const reducedMotion =
-  typeof window !== "undefined" &&
-  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  globalThis.window !== undefined &&
+  globalThis.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 /**
  * Scroll-reveal hook using IntersectionObserver + **callback ref**.
@@ -46,6 +46,10 @@ export function useReveal<T extends HTMLElement = HTMLDivElement>(
   );
 }
 
+function revealWithStagger(el: Element, index: number, staggerMs: number) {
+  setTimeout(() => el.classList.add("revealed"), index * staggerMs);
+}
+
 /**
  * Staggered reveal for a container's `.reveal-item` children.
  * Uses callback ref — works with conditional rendering.
@@ -75,9 +79,7 @@ export function useRevealChildren<T extends HTMLElement = HTMLDivElement>(
         ([entry]) => {
           if (entry.isIntersecting) {
             const items = node.querySelectorAll(".reveal-item");
-            items.forEach((el, i) => {
-              setTimeout(() => el.classList.add("revealed"), i * staggerMs);
-            });
+            items.forEach((el, i) => revealWithStagger(el, i, staggerMs));
             observerRef.current?.unobserve(node);
           }
         },

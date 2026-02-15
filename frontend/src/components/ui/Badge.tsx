@@ -19,7 +19,7 @@ export default function Badge({
   variant = "neutral",
   children,
   className,
-}: BadgeProps) {
+}: Readonly<BadgeProps>) {
   return (
     <span
       className={clsx(

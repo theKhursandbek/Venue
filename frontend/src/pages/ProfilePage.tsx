@@ -69,11 +69,11 @@ export default function ProfilePage() {
       <div className="glass rounded-2xl p-5 tilt-card shimmer-line" data-scroll="up">
         <div className="flex items-center gap-4">
           <div className="relative">
-            <div className="size-16 rounded-2xl bg-gradient-to-br from-primary-500/20 to-accent-500/20 border border-primary-500/20 flex items-center justify-center animate-levitate aurora-glow">
+            <div className="size-16 rounded-2xl bg-linear-to-br from-primary-500/20 to-accent-500/20 border border-primary-500/20 flex items-center justify-center animate-levitate aurora-glow">
               <User className="size-7 text-primary-500" />
             </div>
             {user?.is_verified && (
-              <div className="absolute -bottom-1 -right-1 size-5 bg-gradient-to-br from-primary-500 to-accent-500 rounded-lg flex items-center justify-center ring-2 ring-white animate-bounce-in">
+              <div className="absolute -bottom-1 -right-1 size-5 bg-linear-to-br from-primary-500 to-accent-500 rounded-lg flex items-center justify-center ring-2 ring-white animate-bounce-in">
                 <CheckCircle className="size-3 text-white" />
               </div>
             )}
@@ -106,11 +106,15 @@ export default function ProfilePage() {
           </div>
           <p className="text-[15px] font-bold text-surface-900">
             {user?.date_joined
-              ? new Date(user.date_joined).toLocaleDateString(i18n.language === "uz" ? "uz-UZ" : i18n.language === "en" ? "en-US" : "ru-RU", {
-                  day: "numeric",
-                  month: "short",
-                  year: "numeric",
-                })
+              ? (() => {
+                  const localeMap: Record<string, string> = { uz: "uz-UZ", en: "en-US", ru: "ru-RU" };
+                  const localeStr = localeMap[i18n.language] || "ru-RU";
+                  return new Date(user.date_joined).toLocaleDateString(localeStr, {
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric",
+                  });
+                })()
               : "—"}
           </p>
         </div>

@@ -118,7 +118,7 @@ export default function VenueListPage() {
           onClick={() => setShowFilters(!showFilters)}
           className={`size-12 rounded-xl flex items-center justify-center transition-all duration-300 hover:-translate-y-0.5 active:scale-95 ${
             hasActiveFilters
-              ? "bg-gradient-to-br from-primary-500 to-primary-600 text-white shadow-lg shadow-primary-500/20"
+              ? "from-primary-500 to-primary-600 bg-linear-to-br text-white shadow-lg shadow-primary-500/20"
               : "glass text-surface-500 hover:text-surface-700"
           }`}
         >
@@ -181,11 +181,9 @@ export default function VenueListPage() {
       )}
 
       {/* Content */}
-      {loading ? (
-        <PageLoader />
-      ) : error ? (
-        <ErrorBox message={error} onRetry={fetchVenues} />
-      ) : venues.length === 0 ? (
+      {loading && <PageLoader />}
+      {!loading && error && <ErrorBox message={error} onRetry={fetchVenues} />}
+      {!loading && !error && venues.length === 0 && (
         <div className="text-center py-20" data-scroll="scale">
           <div className="size-16 rounded-2xl glass flex items-center justify-center mx-auto mb-4 animate-levitate">
             <MapPin className="size-7 text-surface-500" />
@@ -193,7 +191,8 @@ export default function VenueListPage() {
           <p className="text-surface-700 font-semibold text-[15px]">{t("venues.notFound")}</p>
           <p className="text-[13px] text-surface-500 mt-1">{t("venues.tryOther")}</p>
         </div>
-      ) : (
+      )}
+      {!loading && !error && venues.length > 0 && (
         <div ref={venueGridRef} className="grid grid-cols-2 gap-2.5" data-scroll-stagger>
           {venues.map((venue) => (
             <VenueCard
@@ -215,12 +214,12 @@ function VenueCard({
   image,
   price,
   onClick,
-}: {
+}: Readonly<{
   venue: Venue;
   image: string | null;
   price: string;
   onClick: () => void;
-}) {
+}>) {
   return (
     <button
       onClick={onClick}
