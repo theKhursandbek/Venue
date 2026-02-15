@@ -145,7 +145,7 @@ export default function VenueDetailPage() {
   if (error || !venue) return <ErrorBox message={error} onRetry={() => navigate(0)} />;
 
   return (
-    <div className="-mx-4 -mt-5 animate-fade-in">
+    <div className="-mx-5 -mt-5 animate-fade-in">
       {/* Gallery */}
       <div className="relative h-64 bg-surface-900">
         {images.length > 0 ? (
@@ -209,7 +209,7 @@ export default function VenueDetailPage() {
         </div>
       </div>
 
-      <div className="px-4 pt-5 space-y-4">
+      <div className="px-5 pt-5 space-y-4">
         {/* Price card */}
         <div className="glass rounded-2xl p-4 flex items-center justify-between">
           <div>
