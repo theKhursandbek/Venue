@@ -19,7 +19,7 @@ export default function Layout() {
 
       {/* Top bar */}
       <header className="sticky top-0 z-40 glass-strong">
-        <div className="px-5 h-14 flex items-center justify-between">
+        <div className="px-32 h-14 flex items-center justify-between">
           <NavLink to="/" className="flex items-center gap-2.5">
             <div className="size-7 rounded-lg bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center">
               <span className="text-white text-[11px] font-black">V</span>
@@ -38,7 +38,7 @@ export default function Layout() {
         </div>
       </header>
 
-      <main className="flex-1 w-full px-4 py-4 pb-28">
+      <main className="flex-1 w-full px-32 py-4 pb-28">
         <Outlet />
       </main>
 

@@ -156,13 +156,13 @@ export default function VenueDetailPage() {
               <>
                 <button
                   onClick={() => setCurrentImage((currentImage - 1 + images.length) % images.length)}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 size-9 glass-strong rounded-xl flex items-center justify-center text-white/90 active:scale-90"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 size-9 bg-black/40 backdrop-blur-sm rounded-xl flex items-center justify-center text-white/90 active:scale-90"
                 >
                   <ChevronLeft className="size-4" />
                 </button>
                 <button
                   onClick={() => setCurrentImage((currentImage + 1) % images.length)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 size-9 glass-strong rounded-xl flex items-center justify-center text-white/90 active:scale-90"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 size-9 bg-black/40 backdrop-blur-sm rounded-xl flex items-center justify-center text-white/90 active:scale-90"
                 >
                   <ChevronRight className="size-4" />
                 </button>
@@ -188,13 +188,13 @@ export default function VenueDetailPage() {
 
         <button
           onClick={() => navigate(-1)}
-          className="absolute top-4 left-4 size-10 glass-strong rounded-xl flex items-center justify-center text-white/90 active:scale-90"
+          className="absolute top-4 left-4 size-10 bg-black/40 backdrop-blur-sm rounded-xl flex items-center justify-center text-white/90 active:scale-90"
         >
           <ArrowLeft className="size-4" />
         </button>
 
         {images.length > 1 && (
-          <div className="absolute top-4 right-4 glass-strong text-white/80 text-[11px] font-semibold px-3 py-1.5 rounded-xl">
+          <div className="absolute top-4 right-4 bg-black/40 backdrop-blur-sm text-white/80 text-[11px] font-semibold px-3 py-1.5 rounded-xl">
             {currentImage + 1}/{images.length}
           </div>
         )}
@@ -307,8 +307,8 @@ export default function VenueDetailPage() {
                     isSlotSelected(slot)
                       ? "bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg shadow-primary-500/25"
                       : slot.is_available
-                      ? "glass text-surface-600 hover:text-surface-900 hover:border-primary-500/20"
-                      : "text-surface-300 cursor-not-allowed line-through opacity-20"
+                      ? "glass text-surface-900 hover:text-primary-600 hover:border-primary-500/20"
+                      : "text-surface-400 cursor-not-allowed line-through opacity-50"
                   }`}
                 >
                   {slot.start_time.slice(0, 5)}
