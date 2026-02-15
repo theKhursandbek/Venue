@@ -68,14 +68,14 @@ export default function VenueListPage() {
             placeholder="Найти..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-3.5 py-2.5 rounded-lg bg-surface-850 text-surface-200 placeholder:text-surface-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20 text-[13px] border-none"
+            className="w-full pl-9 pr-3.5 py-2.5 rounded-lg bg-surface-850 text-surface-200 placeholder:text-surface-500 focus:outline-none focus:ring-2 focus:ring-surface-50/15 text-[13px] border-none"
           />
         </div>
         <button
           onClick={() => setShowFilters(!showFilters)}
           className={`px-3 rounded-lg transition-colors ${
             hasActiveFilters
-              ? "bg-primary-500 text-surface-950"
+              ? "bg-surface-50 text-surface-950"
               : "bg-surface-850 text-surface-400 hover:text-surface-200"
           }`}
         >
@@ -91,7 +91,7 @@ export default function VenueListPage() {
             {hasActiveFilters && (
               <button
                 onClick={() => { setMinPrice(""); setMaxPrice(""); }}
-                className="text-[11px] text-primary-400 font-medium"
+                className="text-[11px] text-surface-200 font-medium"
               >
                 Сбросить
               </button>
@@ -103,7 +103,7 @@ export default function VenueListPage() {
               placeholder="От"
               value={minPrice}
               onChange={(e) => setMinPrice(e.target.value)}
-              className="flex-1 px-3 py-2 rounded-lg bg-surface-850 text-surface-200 text-[12px] focus:outline-none focus:ring-2 focus:ring-primary-500/20 border-none"
+              className="flex-1 px-3 py-2 rounded-lg bg-surface-850 text-surface-200 text-[12px] focus:outline-none focus:ring-2 focus:ring-surface-50/15 border-none"
             />
             <span className="text-surface-600 self-center">—</span>
             <input
@@ -111,7 +111,7 @@ export default function VenueListPage() {
               placeholder="До"
               value={maxPrice}
               onChange={(e) => setMaxPrice(e.target.value)}
-              className="flex-1 px-3 py-2 rounded-lg bg-surface-850 text-surface-200 text-[12px] focus:outline-none focus:ring-2 focus:ring-primary-500/20 border-none"
+              className="flex-1 px-3 py-2 rounded-lg bg-surface-850 text-surface-200 text-[12px] focus:outline-none focus:ring-2 focus:ring-surface-50/15 border-none"
             />
           </div>
         </div>
@@ -121,13 +121,13 @@ export default function VenueListPage() {
       {hasActiveFilters && !showFilters && (
         <div className="flex items-center gap-1.5 animate-fade-in">
           {minPrice && (
-            <span className="inline-flex items-center gap-1 text-[11px] font-medium text-primary-400 bg-primary-500/10 px-2.5 py-1 rounded-full">
+            <span className="inline-flex items-center gap-1 text-[11px] font-medium text-surface-200 bg-surface-800 px-2.5 py-1 rounded-full">
               от {Number(minPrice).toLocaleString("ru-RU")}
               <button onClick={() => setMinPrice("")}><X className="size-3" /></button>
             </span>
           )}
           {maxPrice && (
-            <span className="inline-flex items-center gap-1 text-[11px] font-medium text-primary-400 bg-primary-500/10 px-2.5 py-1 rounded-full">
+            <span className="inline-flex items-center gap-1 text-[11px] font-medium text-surface-200 bg-surface-800 px-2.5 py-1 rounded-full">
               до {Number(maxPrice).toLocaleString("ru-RU")}
               <button onClick={() => setMaxPrice("")}><X className="size-3" /></button>
             </span>
@@ -198,10 +198,10 @@ function VenueCard({
       {/* Text */}
       <div className="flex-1 min-w-0 pt-0.5">
         <div className="flex items-start justify-between gap-2">
-          <h3 className="font-semibold text-surface-100 text-[14px] leading-snug group-hover:text-primary-400 transition-colors truncate">
+          <h3 className="font-semibold text-surface-100 text-[14px] leading-snug group-hover:text-surface-50 transition-colors truncate">
             {venue.name}
           </h3>
-          <ArrowRight className="size-3.5 text-surface-600 group-hover:text-primary-400 shrink-0 mt-0.5 transition-colors" />
+          <ArrowRight className="size-3.5 text-surface-600 group-hover:text-surface-300 shrink-0 mt-0.5 transition-colors" />
         </div>
         <p className="text-[12px] text-surface-500 mt-0.5 truncate">{venue.address}</p>
         <div className="flex items-center justify-between mt-1.5">
@@ -210,7 +210,7 @@ function VenueCard({
               <span key={a} className="text-[10px] text-surface-400 bg-surface-850 px-1.5 py-0.5 rounded-full truncate max-w-[5rem]">{a}</span>
             ))}
           </div>
-          <span className="text-[12px] font-semibold text-primary-400">{price}</span>
+          <span className="text-[12px] font-semibold text-surface-50">{price}</span>
         </div>
       </div>
     </button>

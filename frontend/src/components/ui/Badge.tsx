@@ -11,7 +11,7 @@ const variants = {
   success: "bg-success-500/10 text-success-400",
   warning: "bg-warning-500/10 text-warning-400",
   danger: "bg-danger-500/10 text-danger-400",
-  info: "bg-primary-500/10 text-primary-400",
+  info: "bg-surface-800 text-surface-300",
   neutral: "bg-surface-800 text-surface-400",
 };
 
