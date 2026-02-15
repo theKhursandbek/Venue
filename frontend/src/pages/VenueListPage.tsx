@@ -8,6 +8,7 @@ import PageLoader from "@/components/ui/PageLoader";
 import ErrorBox from "@/components/ui/ErrorBox";
 import type { Venue } from "@/types";
 import { getNumberLocale } from "@/utils/locale";
+import { translateAmenity } from "@/utils/amenities";
 
 export default function VenueListPage() {
   const [venues, setVenues] = useState<Venue[]>([]);
@@ -259,7 +260,7 @@ function VenueCard({
         {venue.amenities && venue.amenities.length > 0 && (
           <div className="flex gap-1 pt-0.5">
             {venue.amenities.slice(0, 2).map((a, i) => (
-              <span key={a} className="text-[10px] text-primary-600 bg-primary-500/8 border border-primary-500/15 px-1.5 py-0.5 rounded-md whitespace-nowrap transition-all duration-300 hover:scale-110 hover:bg-primary-500/15" style={{animationDelay: `${i * 80}ms`}}>{a}</span>
+              <span key={a} className="text-[10px] text-primary-600 bg-primary-500/8 border border-primary-500/15 px-1.5 py-0.5 rounded-md whitespace-nowrap transition-all duration-300 hover:scale-110 hover:bg-primary-500/15" style={{animationDelay: `${i * 80}ms`}}>{translateAmenity(a, i18n.language)}</span>
             ))}
             {venue.amenities.length > 2 && (
               <span className="text-[10px] text-surface-500">+{venue.amenities.length - 2}</span>

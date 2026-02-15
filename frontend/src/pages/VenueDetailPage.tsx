@@ -24,6 +24,7 @@ import { bookingService } from "@/services/bookingService";
 import type { Venue, TimeSlot, APIError } from "@/types";
 import type { AxiosError } from "axios";
 import { getNumberLocale } from "@/utils/locale";
+import { translateAmenity } from "@/utils/amenities";
 
 const DATE_LOCALES: Record<string, Locale> = { ru, en: enUS, uz };
 
@@ -261,7 +262,7 @@ export default function VenueDetailPage() {
               {venue.amenities.map((amenity, i) => (
                 <span key={amenity} className="text-[12px] text-surface-700 bg-primary-500/8 border border-primary-500/15 px-3 py-1.5 rounded-xl flex items-center gap-1.5 animate-scale-in transition-all duration-300 hover:scale-105 hover:bg-primary-500/15 hover:border-primary-500/30" style={{animationDelay: `${i * 60}ms`}}>
                   <Check className="size-3 text-primary-500" />
-                  {amenity}
+                  {translateAmenity(amenity, i18n.language)}
                 </span>
               ))}
             </div>
