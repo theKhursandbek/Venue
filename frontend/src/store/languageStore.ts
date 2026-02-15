@@ -17,10 +17,9 @@ interface LanguageState {
 export const useLanguageStore = create<LanguageState>()(
   persist(
     (set, get) => ({
-      language: (localStorage.getItem("language") as Language) || "uz",
+      language: "uz",
       setLanguage: (lang) => {
         i18n.changeLanguage(lang);
-        localStorage.setItem("language", lang);
         set({ language: lang });
       },
       cycle: () => {
@@ -37,7 +36,6 @@ export const useLanguageStore = create<LanguageState>()(
         return (state?: LanguageState) => {
           if (state) {
             i18n.changeLanguage(state.language);
-            localStorage.setItem("language", state.language);
           }
         };
       },

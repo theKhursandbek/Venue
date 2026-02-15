@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import toast from "react-hot-toast";
+import { getNumberLocale } from "@/utils/locale";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import PageLoader from "@/components/ui/PageLoader";
@@ -106,15 +107,11 @@ export default function ProfilePage() {
           </div>
           <p className="text-[15px] font-bold text-surface-900">
             {user?.date_joined
-              ? (() => {
-                  const localeMap: Record<string, string> = { uz: "uz-UZ", en: "en-US", ru: "ru-RU" };
-                  const localeStr = localeMap[i18n.language] || "ru-RU";
-                  return new Date(user.date_joined).toLocaleDateString(localeStr, {
-                    day: "numeric",
-                    month: "short",
-                    year: "numeric",
-                  });
-                })()
+              ? new Date(user.date_joined).toLocaleDateString(getNumberLocale(i18n.language), {
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                })
               : "—"}
           </p>
         </div>

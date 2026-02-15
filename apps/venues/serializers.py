@@ -44,6 +44,7 @@ class VenueListSerializer(serializers.ModelSerializer):
             "price_per_hour",
             "primary_image",
             "images",
+            "amenities",
             "is_active",
         )
     

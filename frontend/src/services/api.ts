@@ -6,6 +6,7 @@ import type {
 } from "axios";
 import type { APIError } from "@/types";
 import { useAuthStore } from "@/store/authStore";
+import i18n from "@/i18n";
 
 const api: AxiosInstance = axios.create({
   baseURL: "/api",
@@ -14,16 +15,14 @@ const api: AxiosInstance = axios.create({
   },
 });
 
-// Request interceptor — attach JWT token
+// Request interceptor — attach JWT token + language
 api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   const token = useAuthStore.getState().accessToken;
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
 
-  // Language header
-  const lang = localStorage.getItem("language") || "ru";
-  config.headers["Accept-Language"] = lang;
+  config.headers["Accept-Language"] = i18n.language || "uz";
 
   return config;
 });

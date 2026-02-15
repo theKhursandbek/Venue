@@ -1,4 +1,7 @@
 {
+  "common": {
+    "loading": "Yuklanmoqda..."
+  },
   "login": {
     "brand": "Venue",
     "subtitle": "Sport maydonlarini band qilish",

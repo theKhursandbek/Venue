@@ -23,6 +23,7 @@ import { venueService } from "@/services/venueService";
 import { bookingService } from "@/services/bookingService";
 import type { Venue, TimeSlot, APIError } from "@/types";
 import type { AxiosError } from "axios";
+import { getNumberLocale } from "@/utils/locale";
 
 const DATE_LOCALES: Record<string, Locale> = { ru, en: enUS, uz };
 
@@ -59,7 +60,7 @@ export default function VenueDetailPage() {
       }
     };
     fetch();
-  }, [id]);
+  }, [id, i18n.language]);
 
   useEffect(() => {
     if (!id) return;
@@ -77,7 +78,7 @@ export default function VenueDetailPage() {
       }
     };
     fetch();
-  }, [id, selectedDate]);
+  }, [id, selectedDate, i18n.language]);
 
   const handleSlotClick = (slot: TimeSlot) => {
     if (!slot.is_available) return;
@@ -151,7 +152,7 @@ export default function VenueDetailPage() {
     const end = timeToMinutes(selectedEnd);
     const hours = (end - start) / 60;
     const total = hours * Number(venue.price_per_hour);
-    return { hours, total: total.toLocaleString("ru-RU") };
+    return { hours, total: total.toLocaleString(getNumberLocale(i18n.language)) };
   };
 
   const priceInfo = calculatePrice();
@@ -237,7 +238,7 @@ export default function VenueDetailPage() {
         <div ref={priceRef} className="glass rounded-2xl p-4 flex items-center justify-between tilt-card shimmer-line aurora-glow reveal-scale" data-scroll="flip">
           <div>
             <p className="text-[11px] text-surface-500 uppercase tracking-wider mb-0.5">{t("venueDetail.price")}</p>
-            <span className="text-2xl font-bold gradient-text-animated neon-text">{Number(venue.price_per_hour).toLocaleString("ru-RU")}</span>
+            <span className="text-2xl font-bold gradient-text-animated neon-text">{Number(venue.price_per_hour).toLocaleString(getNumberLocale(i18n.language))}</span>
           </div>
           <span className="text-[13px] text-surface-500 glass rounded-xl px-3 py-1.5">{t("venueDetail.perHour")}</span>
         </div>

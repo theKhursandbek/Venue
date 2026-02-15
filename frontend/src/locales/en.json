@@ -1,4 +1,7 @@
 {
+  "common": {
+    "loading": "Loading..."
+  },
   "login": {
     "brand": "Venue",
     "subtitle": "Sports venue booking",

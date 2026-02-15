@@ -5,7 +5,18 @@ import uz from "@/locales/uz.json";
 import ru from "@/locales/ru.json";
 import en from "@/locales/en.json";
 
-const savedLang = localStorage.getItem("language") || "uz";
+function getSavedLang(): string {
+  try {
+    const stored = localStorage.getItem("venue-language");
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      return parsed?.state?.language || "uz";
+    }
+  } catch { /* ignore */ }
+  return "uz";
+}
+
+const savedLang = getSavedLang();
 
 i18n.use(initReactI18next).init({
   resources: {

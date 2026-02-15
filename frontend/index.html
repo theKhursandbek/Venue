@@ -207,11 +207,27 @@
         <div class="splash-dot"></div>
       </div>
       <div class="splash-title">Venue</div>
-      <div class="splash-subtitle">Бронирование площадок</div>
+      <div class="splash-subtitle" id="splash-subtitle"></div>
       <div class="splash-bar-track"><div class="splash-bar"></div></div>
     </div>
 
     <div id="root"></div>
+    <script>
+      // Set splash subtitle based on saved language
+      (function() {
+        var subtitles = {
+          uz: "Sport maydonlarini band qilish",
+          ru: "\u0411\u0440\u043e\u043d\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435 \u043f\u043b\u043e\u0449\u0430\u0434\u043e\u043a",
+          en: "Sports venue booking"
+        };
+        var lang = "uz";
+        try {
+          var stored = localStorage.getItem("venue-language");
+          if (stored) { lang = JSON.parse(stored).state.language || "uz"; }
+        } catch(e) { console.warn("splash: failed to read language", e); }
+        document.getElementById("splash-subtitle").textContent = subtitles[lang] || subtitles.uz;
+      })();
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

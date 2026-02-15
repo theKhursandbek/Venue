@@ -14,6 +14,7 @@ import { bookingService } from "@/services/bookingService";
 import { useRevealChildren } from "@/hooks/useReveal";
 import type { Booking, APIError } from "@/types";
 import type { AxiosError } from "axios";
+import { getNumberLocale } from "@/utils/locale";
 
 const DATE_LOCALES: Record<string, Locale> = { ru, en: enUS, uz };
 
@@ -50,7 +51,7 @@ export default function MyBookingsPage() {
 
   useEffect(() => {
     fetchBookings();
-  }, []);
+  }, [i18n.language]);
 
   const handleCancel = async (id: number) => {
     setCancellingId(id);
@@ -147,7 +148,7 @@ export default function MyBookingsPage() {
 
                 <div className="pt-1.5 border-t border-surface-300/30">
                   <span className="font-bold text-surface-900 text-[14px] gradient-text-animated">
-                    {Number(booking.total_price).toLocaleString("ru-RU")}
+                    {Number(booking.total_price).toLocaleString(getNumberLocale(i18n.language))}
                   </span>
                   <span className="font-normal text-surface-500 text-[10px] ml-1">{t("bookings.currency")}</span>
                   {canCancel(booking) && (

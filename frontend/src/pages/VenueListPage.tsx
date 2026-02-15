@@ -7,6 +7,7 @@ import { useRevealChildren } from "@/hooks/useReveal";
 import PageLoader from "@/components/ui/PageLoader";
 import ErrorBox from "@/components/ui/ErrorBox";
 import type { Venue } from "@/types";
+import { getNumberLocale } from "@/utils/locale";
 
 export default function VenueListPage() {
   const [venues, setVenues] = useState<Venue[]>([]);
@@ -17,7 +18,7 @@ export default function VenueListPage() {
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const fetchVenues = useCallback(async () => {
     setLoading(true);
@@ -34,7 +35,7 @@ export default function VenueListPage() {
     } finally {
       setLoading(false);
     }
-  }, [search, minPrice, maxPrice]);
+  }, [search, minPrice, maxPrice, i18n.language]);
 
   useEffect(() => {
     const timer = setTimeout(fetchVenues, 300);
@@ -42,7 +43,7 @@ export default function VenueListPage() {
   }, [fetchVenues]);
 
   const formatPrice = (price: string) =>
-    Number(price).toLocaleString("ru-RU");
+    Number(price).toLocaleString(getNumberLocale(i18n.language));
 
   const getImage = (venue: Venue) => {
     if (venue.primary_image) return venue.primary_image;
@@ -167,13 +168,13 @@ export default function VenueListPage() {
         <div className="flex items-center gap-2" data-scroll="left">
           {minPrice && (
             <span className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-primary-600 bg-primary-500/10 border border-primary-500/20 px-3 py-1.5 rounded-xl animate-scale-in hover:scale-105 transition-transform">
-              {t("venues.from").toLowerCase()} {Number(minPrice).toLocaleString("ru-RU")}
+              {t("venues.from").toLowerCase()} {Number(minPrice).toLocaleString(getNumberLocale(i18n.language))}
               <button onClick={() => setMinPrice("")} className="hover:text-primary-700 hover:rotate-90 transition-transform"><X className="size-3.5" /></button>
             </span>
           )}
           {maxPrice && (
             <span className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-primary-600 bg-primary-500/10 border border-primary-500/20 px-3 py-1.5 rounded-xl animate-scale-in hover:scale-105 transition-transform" style={{animationDelay: '100ms'}}>
-              {t("venues.to").toLowerCase()} {Number(maxPrice).toLocaleString("ru-RU")}
+              {t("venues.to").toLowerCase()} {Number(maxPrice).toLocaleString(getNumberLocale(i18n.language))}
               <button onClick={() => setMaxPrice("")} className="hover:text-primary-700 hover:rotate-90 transition-transform"><X className="size-3.5" /></button>
             </span>
           )}
