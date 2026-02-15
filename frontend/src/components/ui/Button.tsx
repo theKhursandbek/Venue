@@ -25,10 +25,10 @@ export default function Button({
     primary:
       "bg-gradient-to-r from-primary-500 to-primary-600 text-white hover:from-primary-400 hover:to-primary-500 shadow-lg shadow-primary-500/20",
     secondary:
-      "glass text-surface-200 hover:text-surface-50 hover:bg-surface-750/60",
+      "glass text-surface-700 hover:text-surface-900 hover:bg-surface-200/60",
     danger:
-      "bg-danger-500/15 text-danger-400 hover:bg-danger-500/25 border border-danger-500/20",
-    ghost: "text-surface-400 hover:text-surface-200 hover:bg-surface-800/40",
+      "bg-danger-500/10 text-danger-600 hover:bg-danger-500/20 border border-danger-500/20",
+    ghost: "text-surface-500 hover:text-surface-800 hover:bg-surface-200/40",
   };
 
   const sizes = {

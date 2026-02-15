@@ -57,23 +57,23 @@ export default function ProfilePage() {
   if (loadingProfile) return <PageLoader />;
 
   return (
-    <div className="space-y-5 animate-fade-in">
+    <div className="space-y-4 animate-fade-in">
       {/* Profile card */}
       <div className="glass rounded-2xl p-5">
         <div className="flex items-center gap-4">
           <div className="relative">
             <div className="size-16 rounded-2xl bg-gradient-to-br from-primary-500/20 to-accent-500/20 border border-primary-500/20 flex items-center justify-center">
-              <User className="size-7 text-primary-400" />
+              <User className="size-7 text-primary-500" />
             </div>
             {user?.is_verified && (
-              <div className="absolute -bottom-1 -right-1 size-5 bg-gradient-to-br from-primary-500 to-accent-500 rounded-lg flex items-center justify-center ring-2 ring-surface-900">
+              <div className="absolute -bottom-1 -right-1 size-5 bg-gradient-to-br from-primary-500 to-accent-500 rounded-lg flex items-center justify-center ring-2 ring-white">
                 <CheckCircle className="size-3 text-white" />
               </div>
             )}
           </div>
           <div>
-            <h1 className="text-xl font-bold text-surface-50">{user?.name || "Пользователь"}</h1>
-            <p className="text-[13px] text-surface-400 flex items-center gap-1.5 mt-0.5">
+            <h1 className="text-xl font-bold text-surface-900">{user?.name || "Пользователь"}</h1>
+            <p className="text-[13px] text-surface-500 flex items-center gap-1.5 mt-0.5">
               <Phone className="size-3.5" />
               {user?.phone_number}
             </p>
@@ -85,19 +85,19 @@ export default function ProfilePage() {
       <div className="grid grid-cols-2 gap-3">
         <div className="glass rounded-2xl p-4">
           <div className="flex items-center gap-2 mb-2">
-            <Shield className="size-4 text-primary-400" />
-            <p className="text-[11px] font-semibold text-surface-400 uppercase tracking-wider">Статус</p>
+            <Shield className="size-4 text-primary-500" />
+            <p className="text-[11px] font-semibold text-surface-500 uppercase tracking-wider">Статус</p>
           </div>
-          <p className="text-[15px] font-bold text-surface-50">
+          <p className="text-[15px] font-bold text-surface-900">
             {user?.is_verified ? "Активный" : "Не верифицирован"}
           </p>
         </div>
         <div className="glass rounded-2xl p-4">
           <div className="flex items-center gap-2 mb-2">
-            <Calendar className="size-4 text-accent-400" />
-            <p className="text-[11px] font-semibold text-surface-400 uppercase tracking-wider">С нами с</p>
+            <Calendar className="size-4 text-accent-500" />
+            <p className="text-[11px] font-semibold text-surface-500 uppercase tracking-wider">С нами с</p>
           </div>
-          <p className="text-[15px] font-bold text-surface-50">
+          <p className="text-[15px] font-bold text-surface-900">
             {user?.date_joined
               ? new Date(user.date_joined).toLocaleDateString("ru-RU", {
                   day: "numeric",
@@ -112,11 +112,11 @@ export default function ProfilePage() {
       {/* Personal info card */}
       <div className="glass rounded-2xl p-5">
         <div className="flex items-center justify-between mb-4">
-          <p className="text-[12px] font-semibold text-surface-300 uppercase tracking-wider">Личные данные</p>
+          <p className="text-[12px] font-semibold text-surface-600 uppercase tracking-wider">Личные данные</p>
           {!isEditing && (
             <button
               onClick={() => setIsEditing(true)}
-              className="text-[12px] font-semibold text-primary-400 hover:text-primary-300 transition-colors bg-primary-500/10 border border-primary-500/15 px-3 py-1 rounded-lg"
+              className="text-[12px] font-semibold text-primary-500 hover:text-primary-600 transition-colors bg-primary-500/10 border border-primary-500/15 px-3 py-1 rounded-lg"
             >
               Редактировать
             </button>
@@ -154,11 +154,11 @@ export default function ProfilePage() {
           <div className="space-y-4 animate-fade-in">
             <div className="glass rounded-xl p-3">
               <p className="text-[11px] text-surface-500 font-semibold uppercase tracking-wider mb-0.5">Имя</p>
-              <p className="text-[15px] text-surface-100 font-medium">{user?.name || "Не указано"}</p>
+              <p className="text-[15px] text-surface-800 font-medium">{user?.name || "Не указано"}</p>
             </div>
             <div className="glass rounded-xl p-3">
               <p className="text-[11px] text-surface-500 font-semibold uppercase tracking-wider mb-0.5">Телефон</p>
-              <p className="text-[15px] text-surface-100 font-medium">{user?.phone_number}</p>
+              <p className="text-[15px] text-surface-800 font-medium">{user?.phone_number}</p>
             </div>
           </div>
         )}
@@ -170,7 +170,7 @@ export default function ProfilePage() {
           logout();
           toast.success("Вы вышли из аккаунта");
         }}
-        className="w-full glass rounded-2xl p-4 text-danger-400 font-semibold text-[14px] hover:text-danger-300 transition-colors flex items-center justify-center gap-2"
+        className="w-full glass rounded-2xl p-4 text-danger-600 font-semibold text-[14px] hover:text-danger-500 transition-colors flex items-center justify-center gap-2"
       >
         <LogOut className="size-4" />
         Выйти из аккаунта

@@ -84,7 +84,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-dvh flex flex-col items-center justify-center px-5 relative">
+    <div className="min-h-dvh flex flex-col items-center justify-center px-3 relative">
       <div className="mesh-bg" />
 
       <div className="w-full max-w-sm animate-enter">
@@ -93,8 +93,8 @@ export default function LoginPage() {
           <div className="size-16 rounded-2xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center mx-auto mb-4 shadow-xl shadow-primary-500/20 animate-float">
             <span className="text-white text-2xl font-black">V</span>
           </div>
-          <h1 className="text-2xl font-bold text-surface-50 tracking-tight">Venue</h1>
-          <p className="text-surface-400 mt-1 text-[13px]">Бронирование спортивных площадок</p>
+          <h1 className="text-2xl font-bold text-surface-900 tracking-tight">Venue</h1>
+          <p className="text-surface-500 mt-1 text-[13px]">Бронирование спортивных площадок</p>
         </div>
 
         {/* Glass card */}
@@ -102,7 +102,7 @@ export default function LoginPage() {
           {step === "phone" ? (
             <div className="animate-fade-in space-y-5" key="phone">
               <div>
-                <label className="text-[12px] font-semibold text-surface-300 uppercase tracking-wider mb-2 block">Номер телефона</label>
+                <label className="text-[12px] font-semibold text-surface-600 uppercase tracking-wider mb-2 block">Номер телефона</label>
                 <div className="relative">
                   <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm select-none pointer-events-none">🇺🇿</span>
                   <input
@@ -115,11 +115,11 @@ export default function LoginPage() {
                       if (val.length <= 13) setPhone(val);
                     }}
                     autoFocus
-                    className="w-full pl-12 pr-4 py-3.5 rounded-xl bg-surface-800/50 border border-surface-700/30 text-surface-100 focus:outline-none focus:ring-2 focus:ring-primary-500/30 text-[16px] font-semibold tracking-widest"
+                    className="w-full pl-12 pr-4 py-3.5 rounded-xl bg-surface-100 border border-surface-300 text-surface-900 focus:outline-none focus:ring-2 focus:ring-primary-500/30 text-[16px] font-semibold tracking-widest"
                   />
                 </div>
                 {error && (
-                  <p className="text-[12px] text-danger-400 mt-2 font-medium animate-fade-in">{error}</p>
+                  <p className="text-[12px] text-danger-600 mt-2 font-medium animate-fade-in">{error}</p>
                 )}
               </div>
               <Button onClick={handleSendOTP} loading={loading} className="w-full" size="lg">
@@ -131,10 +131,10 @@ export default function LoginPage() {
             <div className="animate-fade-in space-y-5" key="otp">
               <div className="text-center">
                 <div className="size-10 rounded-xl bg-primary-500/10 border border-primary-500/20 flex items-center justify-center mx-auto mb-3">
-                  <ShieldCheck className="size-5 text-primary-400" />
+                  <ShieldCheck className="size-5 text-primary-500" />
                 </div>
-                <p className="text-[14px] text-surface-200">
-                  Код отправлен на <span className="font-bold text-surface-50">{phone}</span>
+                <p className="text-[14px] text-surface-600">
+                  Код отправлен на <span className="font-bold text-surface-900">{phone}</span>
                 </p>
               </div>
 
@@ -151,15 +151,15 @@ export default function LoginPage() {
                     onKeyDown={(e) => handleOtpKeyDown(i, e)}
                     className={`w-11 h-13 text-center text-xl font-bold rounded-xl border transition-all focus:outline-none focus:ring-2 focus:ring-primary-500/30 ${
                       digit
-                        ? "bg-primary-500/10 border-primary-500/30 text-primary-300"
-                        : "bg-surface-800/50 border-surface-700/30 text-surface-200"
+                        ? "bg-primary-500/10 border-primary-500/30 text-primary-600"
+                        : "bg-surface-100 border-surface-300 text-surface-800"
                     }`}
                   />
                 ))}
               </div>
 
               {error && (
-                <p className="text-[12px] text-danger-400 text-center font-medium animate-fade-in">{error}</p>
+                <p className="text-[12px] text-danger-600 text-center font-medium animate-fade-in">{error}</p>
               )}
 
               <div className="flex gap-2">
@@ -185,7 +185,7 @@ export default function LoginPage() {
           )}
         </div>
 
-        <p className="text-[11px] text-surface-600 text-center mt-6">OTP-код в консоли сервера (dev)</p>
+        <p className="text-[11px] text-surface-400 text-center mt-6">OTP-код в консоли сервера (dev)</p>
       </div>
     </div>
   );

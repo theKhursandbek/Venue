@@ -74,12 +74,12 @@ export default function MyBookingsPage() {
   if (error) return <ErrorBox message={error} onRetry={fetchBookings} />;
 
   return (
-    <div className="space-y-5 animate-fade-in">
+    <div className="space-y-4 animate-fade-in">
       <div className="flex items-end justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-surface-50 tracking-tight">Мои бронирования</h1>
+          <h1 className="text-2xl font-bold text-surface-900 tracking-tight">Мои бронирования</h1>
           {bookings.length > 0 && (
-            <p className="text-[12px] text-surface-400 mt-0.5">
+            <p className="text-[12px] text-surface-500 mt-0.5">
               {bookings.length} бронирован{bookings.length === 1 ? "ие" : "ий"}
             </p>
           )}
@@ -91,7 +91,7 @@ export default function MyBookingsPage() {
           <div className="size-16 rounded-2xl glass flex items-center justify-center mx-auto mb-4">
             <CalendarDays className="size-7 text-surface-500" />
           </div>
-          <p className="text-surface-200 text-[15px] font-semibold">Нет бронирований</p>
+          <p className="text-surface-700 text-[15px] font-semibold">Нет бронирований</p>
           <p className="text-[13px] text-surface-500 mt-1">Найдите площадку и забронируйте</p>
           <Link
             to="/"
@@ -102,7 +102,7 @@ export default function MyBookingsPage() {
           </Link>
         </div>
       ) : (
-        <div className="space-y-3 stagger-children">
+        <div className="grid grid-cols-2 gap-2.5 stagger-children">
           {bookings.map((booking) => {
             const status = STATUS_MAP[booking.status] || {
               label: booking.status,
@@ -112,44 +112,46 @@ export default function MyBookingsPage() {
             return (
               <div
                 key={booking.id}
-                className="glass rounded-2xl p-4 space-y-3"
+                className="glass rounded-2xl p-3 space-y-2"
               >
-                <div className="flex items-start justify-between gap-2">
+                <div className="flex items-start justify-between gap-1">
                   <Link
                     to={`/venues/${booking.venue}`}
-                    className="font-bold text-surface-50 hover:text-primary-400 transition-colors text-[15px] flex items-center gap-1.5 group"
+                    className="font-bold text-surface-900 hover:text-primary-600 transition-colors text-[13px] leading-snug line-clamp-1 group"
                   >
-                    {booking.venue_name || `Площадка #${booking.venue}`}
-                    <ArrowRight className="size-3.5 text-surface-600 group-hover:text-primary-400 transition-colors" />
+                    {booking.venue_name || `#${booking.venue}`}
                   </Link>
                   <Badge variant={status.variant}>{status.label}</Badge>
                 </div>
 
-                <div className="flex items-center gap-4 text-[12px] text-surface-400">
-                  <span className="flex items-center gap-1.5">
-                    <CalendarDays className="size-3.5 text-primary-400/60" />
+                <div className="space-y-1 text-[11px] text-surface-500">
+                  <span className="flex items-center gap-1">
+                    <CalendarDays className="size-3 text-primary-500/60" />
                     {formatDate(booking.booking_date)}
                   </span>
-                  <span className="flex items-center gap-1.5">
-                    <Clock className="size-3.5 text-primary-400/60" />
+                  <span className="flex items-center gap-1">
+                    <Clock className="size-3 text-primary-500/60" />
                     {formatTime(booking.start_time)} — {formatTime(booking.end_time)}
                   </span>
                 </div>
 
-                <div className="flex items-center justify-between pt-1 border-t border-surface-700/20">
-                  <span className="font-bold text-surface-50 text-[16px]">
-                    {Number(booking.total_price).toLocaleString("ru-RU")} <span className="font-normal text-surface-500 text-[12px]">сум</span>
+                <div className="pt-1.5 border-t border-surface-300/30">
+                  <span className="font-bold text-surface-900 text-[14px]">
+                    {Number(booking.total_price).toLocaleString("ru-RU")} <span className="font-normal text-surface-500 text-[10px]">сум</span>
                   </span>
                   {canCancel(booking) && (
-                    <Button
-                      variant="danger"
-                      size="sm"
-                      loading={cancellingId === booking.id}
-                      onClick={() => handleCancel(booking.id)}
-                    >
-                      <X className="size-3" />
-                      Отменить
-                    </Button>
+                    <div className="mt-2">
+                      <Button
+                        variant="danger"
+                        size="sm"
+                        loading={cancellingId === booking.id}
+                        onClick={() => handleCancel(booking.id)}
+                        className="w-full"
+                      >
+                        <X className="size-3" />
+                        Отменить
+                      </Button>
+                    </div>
                   )}
                 </div>
               </div>

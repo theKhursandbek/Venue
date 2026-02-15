@@ -145,13 +145,13 @@ export default function VenueDetailPage() {
   if (error || !venue) return <ErrorBox message={error} onRetry={() => navigate(0)} />;
 
   return (
-    <div className="-mx-5 -mt-5 animate-fade-in">
+    <div className="-mt-5 animate-fade-in">
       {/* Gallery */}
-      <div className="relative h-64 bg-surface-900">
+      <div className="relative h-64 bg-surface-200">
         {images.length > 0 ? (
           <>
             <img src={images[currentImage]} alt={venue.name} className="w-full h-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-surface-950 via-surface-950/20 to-surface-950/40" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-black/20" />
             {images.length > 1 && (
               <>
                 <button
@@ -182,7 +182,7 @@ export default function VenueDetailPage() {
           </>
         ) : (
           <div className="w-full h-full flex items-center justify-center">
-            <MapPin className="size-10 text-surface-700" />
+            <MapPin className="size-10 text-surface-400" />
           </div>
         )}
 
@@ -209,34 +209,34 @@ export default function VenueDetailPage() {
         </div>
       </div>
 
-      <div className="px-5 pt-5 space-y-4">
+      <div className="pt-4 space-y-3">
         {/* Price card */}
         <div className="glass rounded-2xl p-4 flex items-center justify-between">
           <div>
-            <p className="text-[11px] text-surface-400 uppercase tracking-wider mb-0.5">Стоимость</p>
+            <p className="text-[11px] text-surface-500 uppercase tracking-wider mb-0.5">Стоимость</p>
             <span className="text-2xl font-bold gradient-text">{Number(venue.price_per_hour).toLocaleString("ru-RU")}</span>
           </div>
-          <span className="text-[13px] text-surface-400 glass rounded-xl px-3 py-1.5">сум / час</span>
+          <span className="text-[13px] text-surface-500 glass rounded-xl px-3 py-1.5">сум / час</span>
         </div>
 
         {/* Description */}
         {venue.description && (
           <div className="glass rounded-2xl p-4">
-            <p className="text-[13px] text-surface-300 leading-relaxed">{venue.description}</p>
+            <p className="text-[13px] text-surface-600 leading-relaxed">{venue.description}</p>
           </div>
         )}
 
         {/* Amenities */}
         {venue.amenities && venue.amenities.length > 0 && (
           <div className="glass rounded-2xl p-4">
-            <p className="text-[12px] font-semibold text-surface-300 uppercase tracking-wider mb-3 flex items-center gap-1.5">
-              <Sparkles className="size-3.5 text-accent-400" />
+            <p className="text-[12px] font-semibold text-surface-600 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+              <Sparkles className="size-3.5 text-accent-500" />
               Удобства
             </p>
             <div className="flex flex-wrap gap-2">
               {venue.amenities.map((amenity) => (
-                <span key={amenity} className="text-[12px] text-surface-200 bg-primary-500/10 border border-primary-500/15 px-3 py-1.5 rounded-xl flex items-center gap-1.5">
-                  <Check className="size-3 text-primary-400" />
+                <span key={amenity} className="text-[12px] text-surface-700 bg-primary-500/8 border border-primary-500/15 px-3 py-1.5 rounded-xl flex items-center gap-1.5">
+                  <Check className="size-3 text-primary-500" />
                   {amenity}
                 </span>
               ))}
@@ -246,20 +246,20 @@ export default function VenueDetailPage() {
 
         {/* Date selector */}
         <div className="glass rounded-2xl p-4">
-          <p className="text-[12px] font-semibold text-surface-300 uppercase tracking-wider mb-3">Дата</p>
+          <p className="text-[12px] font-semibold text-surface-600 uppercase tracking-wider mb-3">Дата</p>
           <div className="flex items-center gap-3">
             <button
               onClick={() => changeDate(-1)}
               disabled={isBefore(addDays(new Date(selectedDate), -1), startOfToday())}
               className="size-10 rounded-xl glass flex items-center justify-center disabled:opacity-15 active:scale-90 transition-all"
             >
-              <ChevronLeft className="size-4 text-surface-300" />
+              <ChevronLeft className="size-4 text-surface-500" />
             </button>
             <div className="flex-1 text-center">
-              <p className="font-bold text-surface-50 text-[16px]">
+              <p className="font-bold text-surface-900 text-[16px]">
                 {format(new Date(selectedDate), "d MMMM", { locale: ru })}
               </p>
-              <p className="text-[12px] text-surface-400 capitalize mt-0.5">
+              <p className="text-[12px] text-surface-500 capitalize mt-0.5">
                 {format(new Date(selectedDate), "EEEE", { locale: ru })}
               </p>
             </div>
@@ -267,7 +267,7 @@ export default function VenueDetailPage() {
               onClick={() => changeDate(1)}
               className="size-10 rounded-xl glass flex items-center justify-center active:scale-90 transition-all"
             >
-              <ChevronRight className="size-4 text-surface-300" />
+              <ChevronRight className="size-4 text-surface-500" />
             </button>
           </div>
         </div>
@@ -275,12 +275,12 @@ export default function VenueDetailPage() {
         {/* Time slots */}
         <div className="glass rounded-2xl p-4">
           <div className="flex items-center justify-between mb-3">
-            <p className="text-[12px] font-semibold text-surface-300 uppercase tracking-wider flex items-center gap-1.5">
-              <Clock className="size-3.5 text-primary-400" />
+            <p className="text-[12px] font-semibold text-surface-600 uppercase tracking-wider flex items-center gap-1.5">
+              <Clock className="size-3.5 text-primary-500" />
               Время
             </p>
             {!slotsLoading && slots.length > 0 && (
-              <span className="text-[11px] text-primary-400 font-semibold bg-primary-500/10 border border-primary-500/15 px-2.5 py-1 rounded-lg">
+              <span className="text-[11px] text-primary-600 font-semibold bg-primary-500/10 border border-primary-500/15 px-2.5 py-1 rounded-lg">
                 {availableCount} свободных
               </span>
             )}
@@ -307,8 +307,8 @@ export default function VenueDetailPage() {
                     isSlotSelected(slot)
                       ? "bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg shadow-primary-500/25"
                       : slot.is_available
-                      ? "glass text-surface-300 hover:text-surface-100 hover:border-primary-500/20"
-                      : "text-surface-700 cursor-not-allowed line-through opacity-20"
+                      ? "glass text-surface-600 hover:text-surface-900 hover:border-primary-500/20"
+                      : "text-surface-300 cursor-not-allowed line-through opacity-20"
                   }`}
                 >
                   {slot.start_time.slice(0, 5)}
@@ -321,21 +321,21 @@ export default function VenueDetailPage() {
         {/* Booking summary */}
         {selectedStart && selectedEnd && priceInfo && (
           <div className="glass rounded-2xl p-5 border-primary-500/20 animate-scale-in space-y-3">
-            <p className="text-[12px] font-semibold text-primary-400 uppercase tracking-wider flex items-center gap-1.5">
+            <p className="text-[12px] font-semibold text-primary-600 uppercase tracking-wider flex items-center gap-1.5">
               <Zap className="size-3.5" />
               Итого
             </p>
             <div className="flex justify-between text-[13px]">
-              <span className="text-surface-400">Время</span>
-              <span className="text-surface-100 font-semibold">{selectedStart.slice(0, 5)} — {selectedEnd.slice(0, 5)}</span>
+              <span className="text-surface-500">Время</span>
+              <span className="text-surface-800 font-semibold">{selectedStart.slice(0, 5)} — {selectedEnd.slice(0, 5)}</span>
             </div>
             <div className="flex justify-between text-[13px]">
-              <span className="text-surface-400">Длительность</span>
-              <span className="text-surface-100 font-semibold">{priceInfo.hours} ч</span>
+              <span className="text-surface-500">Длительность</span>
+              <span className="text-surface-800 font-semibold">{priceInfo.hours} ч</span>
             </div>
-            <div className="h-px bg-surface-700/30 my-1" />
+            <div className="h-px bg-surface-300/50 my-1" />
             <div className="flex justify-between items-baseline">
-              <span className="text-[13px] text-surface-400">К оплате</span>
+              <span className="text-[13px] text-surface-500">К оплате</span>
               <span className="text-xl font-bold gradient-text">{priceInfo.total} сум</span>
             </div>
             <Button onClick={handleBook} loading={booking} className="w-full" size="lg">

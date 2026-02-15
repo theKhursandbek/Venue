@@ -8,11 +8,11 @@ interface BadgeProps {
 }
 
 const variants = {
-  success: "bg-success-500/15 text-success-400 border-success-500/20",
-  warning: "bg-warning-500/15 text-warning-400 border-warning-500/20",
-  danger: "bg-danger-500/15 text-danger-400 border-danger-500/20",
-  info: "bg-primary-500/15 text-primary-300 border-primary-500/20",
-  neutral: "bg-surface-750/60 text-surface-300 border-surface-600/30",
+  success: "bg-success-500/10 text-success-600 border-success-500/20",
+  warning: "bg-warning-500/10 text-warning-500 border-warning-500/20",
+  danger: "bg-danger-500/10 text-danger-600 border-danger-500/20",
+  info: "bg-primary-500/10 text-primary-600 border-primary-500/20",
+  neutral: "bg-surface-200/60 text-surface-600 border-surface-300/50",
 };
 
 export default function Badge({

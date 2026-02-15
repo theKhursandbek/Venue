@@ -13,10 +13,10 @@ export default function ErrorBox({
   return (
     <div className="flex flex-col items-center justify-center min-h-[40vh] px-4 animate-fade-in text-center">
       <div className="size-14 rounded-2xl bg-danger-500/10 border border-danger-500/20 flex items-center justify-center mb-4">
-        <AlertCircle className="size-6 text-danger-400" />
+        <AlertCircle className="size-6 text-danger-500" />
       </div>
-      <p className="text-surface-100 font-semibold text-[15px] mb-1">{message}</p>
-      <p className="text-surface-400 text-[13px] mb-5">Проверьте соединение и попробуйте снова</p>
+      <p className="text-surface-900 font-semibold text-[15px] mb-1">{message}</p>
+      <p className="text-surface-500 text-[13px] mb-5">Проверьте соединение и попробуйте снова</p>
       {onRetry && (
         <Button variant="secondary" onClick={onRetry} size="sm">
           <RefreshCw className="size-3.5" />
