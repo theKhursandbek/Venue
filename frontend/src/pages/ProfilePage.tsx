@@ -5,6 +5,8 @@ import {
   LogOut,
   Save,
   CheckCircle,
+  Shield,
+  Calendar,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import Button from "@/components/ui/Button";
@@ -56,40 +58,46 @@ export default function ProfilePage() {
 
   return (
     <div className="space-y-5 animate-fade-in">
-      {/* Header */}
-      <div className="flex items-center gap-3">
-        <div className="relative">
-          <div className="size-12 bg-surface-850 rounded-full flex items-center justify-center">
-            <User className="size-5 text-surface-400" />
-          </div>
-          {user?.is_verified && (
-            <div className="absolute -bottom-0.5 -right-0.5 size-4 bg-primary-500 rounded-full flex items-center justify-center ring-2 ring-surface-950">
-              <CheckCircle className="size-2.5 text-surface-950" />
+      {/* Profile card */}
+      <div className="glass rounded-2xl p-5">
+        <div className="flex items-center gap-4">
+          <div className="relative">
+            <div className="size-16 rounded-2xl bg-gradient-to-br from-primary-500/20 to-accent-500/20 border border-primary-500/20 flex items-center justify-center">
+              <User className="size-7 text-primary-400" />
             </div>
-          )}
-        </div>
-        <div>
-          <h1 className="text-lg font-bold text-surface-50">{user?.name || "Пользователь"}</h1>
-          <p className="text-[12px] text-surface-500 flex items-center gap-1">
-            <Phone className="size-3" />
-            {user?.phone_number}
-          </p>
+            {user?.is_verified && (
+              <div className="absolute -bottom-1 -right-1 size-5 bg-gradient-to-br from-primary-500 to-accent-500 rounded-lg flex items-center justify-center ring-2 ring-surface-900">
+                <CheckCircle className="size-3 text-white" />
+              </div>
+            )}
+          </div>
+          <div>
+            <h1 className="text-xl font-bold text-surface-50">{user?.name || "Пользователь"}</h1>
+            <p className="text-[13px] text-surface-400 flex items-center gap-1.5 mt-0.5">
+              <Phone className="size-3.5" />
+              {user?.phone_number}
+            </p>
+          </div>
         </div>
       </div>
 
-      <div className="divider" />
-
-      {/* Stats */}
-      <div className="flex gap-8">
-        <div>
-          <p className="text-[11px] text-surface-500 uppercase tracking-wider">Статус</p>
-          <p className="text-[14px] font-semibold text-surface-100 mt-0.5">
+      {/* Stats cards */}
+      <div className="grid grid-cols-2 gap-3">
+        <div className="glass rounded-2xl p-4">
+          <div className="flex items-center gap-2 mb-2">
+            <Shield className="size-4 text-primary-400" />
+            <p className="text-[11px] font-semibold text-surface-400 uppercase tracking-wider">Статус</p>
+          </div>
+          <p className="text-[15px] font-bold text-surface-50">
             {user?.is_verified ? "Активный" : "Не верифицирован"}
           </p>
         </div>
-        <div>
-          <p className="text-[11px] text-surface-500 uppercase tracking-wider">Регистрация</p>
-          <p className="text-[14px] font-semibold text-surface-100 mt-0.5">
+        <div className="glass rounded-2xl p-4">
+          <div className="flex items-center gap-2 mb-2">
+            <Calendar className="size-4 text-accent-400" />
+            <p className="text-[11px] font-semibold text-surface-400 uppercase tracking-wider">С нами с</p>
+          </div>
+          <p className="text-[15px] font-bold text-surface-50">
             {user?.date_joined
               ? new Date(user.date_joined).toLocaleDateString("ru-RU", {
                   day: "numeric",
@@ -101,16 +109,14 @@ export default function ProfilePage() {
         </div>
       </div>
 
-      <div className="divider" />
-
-      {/* Personal info */}
-      <div>
-        <div className="flex items-center justify-between mb-3">
-          <p className="text-[11px] text-surface-500 uppercase tracking-wider">Личные данные</p>
+      {/* Personal info card */}
+      <div className="glass rounded-2xl p-5">
+        <div className="flex items-center justify-between mb-4">
+          <p className="text-[12px] font-semibold text-surface-300 uppercase tracking-wider">Личные данные</p>
           {!isEditing && (
             <button
               onClick={() => setIsEditing(true)}
-              className="text-[12px] font-medium text-primary-400 hover:text-primary-300 transition-colors"
+              className="text-[12px] font-semibold text-primary-400 hover:text-primary-300 transition-colors bg-primary-500/10 border border-primary-500/15 px-3 py-1 rounded-lg"
             >
               Редактировать
             </button>
@@ -118,7 +124,7 @@ export default function ProfilePage() {
         </div>
 
         {isEditing ? (
-          <div className="animate-fade-in space-y-3">
+          <div className="animate-fade-in space-y-4">
             <Input
               label="Имя"
               value={name}
@@ -139,26 +145,24 @@ export default function ProfilePage() {
                 disabled={!hasChanges}
                 className="flex-1"
               >
-                <Save className="size-3" />
+                <Save className="size-3.5" />
                 Сохранить
               </Button>
             </div>
           </div>
         ) : (
-          <div className="space-y-3 animate-fade-in">
-            <div>
-              <p className="text-[11px] text-surface-500">Имя</p>
-              <p className="text-[14px] text-surface-100 mt-0.5">{user?.name || "Не указано"}</p>
+          <div className="space-y-4 animate-fade-in">
+            <div className="glass rounded-xl p-3">
+              <p className="text-[11px] text-surface-500 font-semibold uppercase tracking-wider mb-0.5">Имя</p>
+              <p className="text-[15px] text-surface-100 font-medium">{user?.name || "Не указано"}</p>
             </div>
-            <div>
-              <p className="text-[11px] text-surface-500">Телефон</p>
-              <p className="text-[14px] text-surface-100 mt-0.5">{user?.phone_number}</p>
+            <div className="glass rounded-xl p-3">
+              <p className="text-[11px] text-surface-500 font-semibold uppercase tracking-wider mb-0.5">Телефон</p>
+              <p className="text-[15px] text-surface-100 font-medium">{user?.phone_number}</p>
             </div>
           </div>
         )}
       </div>
-
-      <div className="divider" />
 
       {/* Logout */}
       <button
@@ -166,9 +170,9 @@ export default function ProfilePage() {
           logout();
           toast.success("Вы вышли из аккаунта");
         }}
-        className="text-danger-400 font-medium text-[13px] hover:text-danger-300 transition-colors flex items-center gap-1.5"
+        className="w-full glass rounded-2xl p-4 text-danger-400 font-semibold text-[14px] hover:text-danger-300 transition-colors flex items-center justify-center gap-2"
       >
-        <LogOut className="size-3.5" />
+        <LogOut className="size-4" />
         Выйти из аккаунта
       </button>
     </div>

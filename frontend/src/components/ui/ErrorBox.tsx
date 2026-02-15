@@ -1,4 +1,5 @@
 import { AlertCircle, RefreshCw } from "lucide-react";
+import Button from "./Button";
 
 interface ErrorBoxProps {
   message?: string;
@@ -11,16 +12,16 @@ export default function ErrorBox({
 }: ErrorBoxProps) {
   return (
     <div className="flex flex-col items-center justify-center min-h-[40vh] px-4 animate-fade-in text-center">
-      <AlertCircle className="size-5 text-danger-400 mb-2" />
-      <p className="text-surface-200 font-medium text-[13px] mb-1">{message}</p>
+      <div className="size-14 rounded-2xl bg-danger-500/10 border border-danger-500/20 flex items-center justify-center mb-4">
+        <AlertCircle className="size-6 text-danger-400" />
+      </div>
+      <p className="text-surface-100 font-semibold text-[15px] mb-1">{message}</p>
+      <p className="text-surface-400 text-[13px] mb-5">Проверьте соединение и попробуйте снова</p>
       {onRetry && (
-        <button
-          onClick={onRetry}
-          className="text-primary-400 text-[12px] font-medium hover:text-primary-300 mt-2 flex items-center gap-1 mx-auto transition-colors"
-        >
-          <RefreshCw className="size-3" />
+        <Button variant="secondary" onClick={onRetry} size="sm">
+          <RefreshCw className="size-3.5" />
           Повторить
-        </button>
+        </Button>
       )}
     </div>
   );

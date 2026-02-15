@@ -13,15 +13,15 @@ export default function Input({
   ...props
 }: InputProps) {
   return (
-    <div className="space-y-1.5">
+    <div className="space-y-2">
       {label && (
-        <label className="text-[12px] font-medium text-surface-400">{label}</label>
+        <label className="text-[12px] font-semibold text-surface-300 uppercase tracking-wider">{label}</label>
       )}
       <input
         className={clsx(
-          "w-full px-3.5 py-2.5 rounded-lg bg-surface-850 text-surface-100 placeholder:text-surface-500 transition-colors text-[13px]",
-          "border-none focus:outline-none focus:ring-2 focus:ring-primary-500/25",
-          error && "ring-2 ring-danger-500/20",
+          "w-full px-4 py-3 rounded-xl glass text-surface-100 placeholder:text-surface-500 transition-all text-[14px]",
+          "focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-500/30",
+          error && "ring-2 ring-danger-500/30",
           className
         )}
         {...props}

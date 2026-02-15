@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { CalendarDays, Clock, X, ArrowRight } from "lucide-react";
+import { CalendarDays, Clock, X, ArrowRight, Sparkles } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { ru } from "date-fns/locale";
 import toast from "react-hot-toast";
@@ -74,31 +74,35 @@ export default function MyBookingsPage() {
   if (error) return <ErrorBox message={error} onRetry={fetchBookings} />;
 
   return (
-    <div className="space-y-4 animate-fade-in">
-      <div className="flex items-baseline justify-between">
-        <h1 className="text-xl font-bold text-surface-50 tracking-tight">Мои бронирования</h1>
-        {bookings.length > 0 && (
-          <span className="text-[11px] text-surface-500">
-            {bookings.length} бронирован{bookings.length === 1 ? "ие" : "ий"}
-          </span>
-        )}
+    <div className="space-y-5 animate-fade-in">
+      <div className="flex items-end justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-surface-50 tracking-tight">Мои бронирования</h1>
+          {bookings.length > 0 && (
+            <p className="text-[12px] text-surface-400 mt-0.5">
+              {bookings.length} бронирован{bookings.length === 1 ? "ие" : "ий"}
+            </p>
+          )}
+        </div>
       </div>
 
       {bookings.length === 0 ? (
-        <div className="text-center py-16 animate-fade-in">
-          <CalendarDays className="size-5 text-surface-600 mx-auto mb-2" />
-          <p className="text-surface-300 text-[13px]">Нет бронирований</p>
-          <p className="text-[11px] text-surface-500 mt-0.5">Найдите площадку и забронируйте</p>
+        <div className="text-center py-20 animate-fade-in">
+          <div className="size-16 rounded-2xl glass flex items-center justify-center mx-auto mb-4">
+            <CalendarDays className="size-7 text-surface-500" />
+          </div>
+          <p className="text-surface-200 text-[15px] font-semibold">Нет бронирований</p>
+          <p className="text-[13px] text-surface-500 mt-1">Найдите площадку и забронируйте</p>
           <Link
             to="/"
-            className="inline-flex items-center gap-1.5 mt-4 text-primary-400 font-medium text-[12px] hover:text-primary-300 transition-colors"
+            className="inline-flex items-center gap-2 mt-5 bg-gradient-to-r from-primary-500 to-primary-600 text-white font-semibold text-[13px] px-5 py-2.5 rounded-xl shadow-lg shadow-primary-500/20 hover:shadow-xl transition-all"
           >
             Перейти к площадкам
-            <ArrowRight className="size-3" />
+            <ArrowRight className="size-3.5" />
           </Link>
         </div>
       ) : (
-        <div className="stagger-children">
+        <div className="space-y-3 stagger-children">
           {bookings.map((booking) => {
             const status = STATUS_MAP[booking.status] || {
               label: booking.status,
@@ -108,32 +112,32 @@ export default function MyBookingsPage() {
             return (
               <div
                 key={booking.id}
-                className="py-3.5 border-b border-surface-850 last:border-0"
+                className="glass rounded-2xl p-4 space-y-3"
               >
                 <div className="flex items-start justify-between gap-2">
                   <Link
                     to={`/venues/${booking.venue}`}
-                    className="font-semibold text-surface-100 hover:text-primary-400 transition-colors text-[14px] flex items-center gap-1 group"
+                    className="font-bold text-surface-50 hover:text-primary-400 transition-colors text-[15px] flex items-center gap-1.5 group"
                   >
                     {booking.venue_name || `Площадка #${booking.venue}`}
-                    <ArrowRight className="size-3 text-surface-600 group-hover:text-primary-400 transition-colors" />
+                    <ArrowRight className="size-3.5 text-surface-600 group-hover:text-primary-400 transition-colors" />
                   </Link>
                   <Badge variant={status.variant}>{status.label}</Badge>
                 </div>
 
-                <div className="flex items-center gap-3 mt-1.5 text-[12px] text-surface-400">
-                  <span className="flex items-center gap-1">
-                    <CalendarDays className="size-3" />
+                <div className="flex items-center gap-4 text-[12px] text-surface-400">
+                  <span className="flex items-center gap-1.5">
+                    <CalendarDays className="size-3.5 text-primary-400/60" />
                     {formatDate(booking.booking_date)}
                   </span>
-                  <span className="flex items-center gap-1">
-                    <Clock className="size-3" />
+                  <span className="flex items-center gap-1.5">
+                    <Clock className="size-3.5 text-primary-400/60" />
                     {formatTime(booking.start_time)} — {formatTime(booking.end_time)}
                   </span>
                 </div>
 
-                <div className="flex items-center justify-between mt-2">
-                  <span className="font-bold text-surface-50 text-[15px]">
+                <div className="flex items-center justify-between pt-1 border-t border-surface-700/20">
+                  <span className="font-bold text-surface-50 text-[16px]">
                     {Number(booking.total_price).toLocaleString("ru-RU")} <span className="font-normal text-surface-500 text-[12px]">сум</span>
                   </span>
                   {canCancel(booking) && (
