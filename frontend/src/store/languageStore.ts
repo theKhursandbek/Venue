@@ -33,11 +33,11 @@ export const useLanguageStore = create<LanguageState>()(
     }),
     {
       name: "venue-language",
-      onRehydrate: (_state) => {
-        return (rehydrated) => {
-          if (rehydrated) {
-            i18n.changeLanguage(rehydrated.language);
-            localStorage.setItem("language", rehydrated.language);
+      onRehydrateStorage: () => {
+        return (state?: LanguageState) => {
+          if (state) {
+            i18n.changeLanguage(state.language);
+            localStorage.setItem("language", state.language);
           }
         };
       },
