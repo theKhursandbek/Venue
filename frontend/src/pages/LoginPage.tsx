@@ -84,105 +84,70 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-dvh flex flex-col items-center justify-center px-5 bg-surface-950">
-      <div className="w-full max-w-xs space-y-5 animate-enter">
-        {/* Logo */}
+    <div className="min-h-dvh flex flex-col items-center justify-center px-6 bg-surface-950">
+      <div className="w-full max-w-xs space-y-6 animate-enter">
         <div className="text-center">
-          <div className="inline-flex items-center justify-center size-10 bg-primary-500 rounded-lg mb-3">
-            <span className="text-white font-bold text-sm">V</span>
-          </div>
-          <h1 className="text-xl font-semibold text-surface-100 tracking-tight">
-            Venue<span className="gradient-text">Book</span>
-          </h1>
-          <p className="text-surface-500 mt-0.5 text-[11px]">Бронирование спортивных площадок</p>
+          <h1 className="text-2xl font-bold text-surface-50 tracking-tight">venue</h1>
+          <p className="text-surface-500 mt-1 text-[12px]">Бронирование спортивных площадок</p>
         </div>
 
         {step === "phone" ? (
-          <div className="animate-fade-in space-y-3" key="phone">
-            <div className="bg-surface-900 border border-surface-700/30 rounded-lg p-4 v-edge">
-              <div className="flex items-center gap-2 mb-4">
-                <div className="size-7 bg-surface-800 border border-surface-700/30 rounded flex items-center justify-center">
-                  <Phone className="size-3 text-primary-400" />
-                </div>
-                <div>
-                  <h2 className="font-semibold text-surface-100 text-[13px]">Вход</h2>
-                  <p className="text-[11px] text-surface-500">Введите номер телефона</p>
-                </div>
+          <div className="animate-fade-in space-y-4" key="phone">
+            <div>
+              <label className="text-[12px] font-medium text-surface-400 mb-1.5 block">Номер телефона</label>
+              <div className="relative">
+                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs select-none pointer-events-none">🇺🇿</span>
+                <input
+                  type="tel"
+                  placeholder="+998901234567"
+                  value={phone}
+                  onChange={(e) => {
+                    let val = e.target.value;
+                    if (!val.startsWith("+998")) val = "+998";
+                    if (val.length <= 13) setPhone(val);
+                  }}
+                  autoFocus
+                  className="w-full pl-10 pr-3.5 py-3 rounded-lg bg-surface-850 text-surface-100 focus:outline-none focus:ring-2 focus:ring-primary-500/20 text-[15px] font-semibold tracking-widest border-none"
+                />
               </div>
-
-              <div className="space-y-1">
-                <label className="block text-[11px] font-medium text-surface-400">Номер телефона</label>
-                <div className="relative">
-                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-xs select-none pointer-events-none">🇺🇿</div>
-                  <input
-                    type="tel"
-                    placeholder="+998901234567"
-                    value={phone}
-                    onChange={(e) => {
-                      let val = e.target.value;
-                      if (!val.startsWith("+998")) val = "+998";
-                      if (val.length <= 13) setPhone(val);
-                    }}
-                    autoFocus
-                    className="w-full pl-9 pr-3 py-2 rounded-md border border-surface-700/30 bg-surface-850 text-surface-100 focus:outline-none focus:ring-1 focus:ring-primary-500/30 focus:border-primary-500/40 transition-colors text-[13px] font-semibold tracking-widest"
-                  />
-                </div>
-                {error && (
-                  <p className="text-[11px] text-danger-400 mt-1 flex items-center gap-1 font-medium animate-fade-in">
-                    <span className="size-1 rounded-full bg-danger-500 inline-block" />
-                    {error}
-                  </p>
-                )}
-              </div>
+              {error && (
+                <p className="text-[11px] text-danger-400 mt-2 font-medium animate-fade-in">{error}</p>
+              )}
             </div>
-
             <Button onClick={handleSendOTP} loading={loading} className="w-full" size="lg">
               Получить код
               <ArrowRight className="size-3.5" />
             </Button>
           </div>
         ) : (
-          <div className="animate-fade-in space-y-3" key="otp">
-            <div className="bg-surface-900 border border-surface-700/30 rounded-lg p-4 v-edge">
-              <div className="flex items-center gap-2 mb-4">
-                <div className="size-7 bg-success-50 border border-success-500/15 rounded flex items-center justify-center">
-                  <ShieldCheck className="size-3 text-success-400" />
-                </div>
-                <div>
-                  <h2 className="font-semibold text-surface-100 text-[13px]">Подтверждение</h2>
-                  <p className="text-[11px] text-surface-500">
-                    Код на <span className="font-semibold text-surface-300">{phone}</span>
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex gap-1.5 justify-center">
-                {otp.map((digit, i) => (
-                  <input
-                    key={i}
-                    ref={(el) => { otpRefs.current[i] = el; }}
-                    type="text"
-                    inputMode="numeric"
-                    maxLength={1}
-                    value={digit}
-                    onChange={(e) => handleOtpChange(i, e.target.value)}
-                    onKeyDown={(e) => handleOtpKeyDown(i, e)}
-                    className={`w-9 h-10 text-center text-base font-bold rounded-md border transition-colors duration-150 focus:outline-none focus:ring-1 focus:ring-primary-500/30 bg-surface-850 ${
-                      digit
-                        ? "border-primary-500/40 text-primary-300"
-                        : "border-surface-700/30 text-surface-200 hover:border-surface-600"
-                    }`}
-                  />
-                ))}
-              </div>
-
-              {error && (
-                <p className="text-[11px] text-danger-400 text-center mt-3 flex items-center justify-center gap-1 font-medium animate-fade-in">
-                  <span className="size-1 rounded-full bg-danger-500 inline-block" />
-                  {error}
-                </p>
-              )}
+          <div className="animate-fade-in space-y-4" key="otp">
+            <div className="text-center">
+              <p className="text-[13px] text-surface-300">
+                Код отправлен на <span className="font-semibold text-surface-100">{phone}</span>
+              </p>
             </div>
+
+            <div className="flex gap-2 justify-center">
+              {otp.map((digit, i) => (
+                <input
+                  key={i}
+                  ref={(el) => { otpRefs.current[i] = el; }}
+                  type="text"
+                  inputMode="numeric"
+                  maxLength={1}
+                  value={digit}
+                  onChange={(e) => handleOtpChange(i, e.target.value)}
+                  onKeyDown={(e) => handleOtpKeyDown(i, e)}
+                  className={`w-10 h-12 text-center text-lg font-bold rounded-lg border-none bg-surface-850 transition-all focus:outline-none focus:ring-2 focus:ring-primary-500/25 ${
+                    digit ? "text-primary-300" : "text-surface-200"
+                  }`}
+                />
+              ))}
+            </div>
+
+            {error && (
+              <p className="text-[11px] text-danger-400 text-center font-medium animate-fade-in">{error}</p>
+            )}
 
             <div className="flex gap-2">
               <Button

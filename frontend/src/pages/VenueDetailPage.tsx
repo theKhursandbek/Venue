@@ -6,10 +6,7 @@ import {
   Clock,
   ChevronLeft,
   ChevronRight,
-  CalendarDays,
   Check,
-  CreditCard,
-  Timer,
 } from "lucide-react";
 import { format, addDays, isBefore, startOfToday } from "date-fns";
 import { ru } from "date-fns/locale";
@@ -146,38 +143,34 @@ export default function VenueDetailPage() {
   if (error || !venue) return <ErrorBox message={error} onRetry={() => navigate(0)} />;
 
   return (
-    <div className="space-y-3 -mx-4 -mt-3 animate-fade-in">
-      {/* Image Gallery */}
-      <div className="relative h-48 bg-surface-850">
+    <div className="-mx-5 -mt-4 animate-fade-in">
+      {/* Gallery */}
+      <div className="relative h-56 bg-surface-900">
         {images.length > 0 ? (
           <>
-            <img
-              src={images[currentImage]}
-              alt={venue.name}
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-surface-950/80 via-transparent to-surface-950/20" />
+            <img src={images[currentImage]} alt={venue.name} className="w-full h-full object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-t from-surface-950 via-transparent to-surface-950/30" />
             {images.length > 1 && (
               <>
                 <button
                   onClick={() => setCurrentImage((currentImage - 1 + images.length) % images.length)}
-                  className="absolute left-2 top-1/2 -translate-y-1/2 size-7 bg-black/50 rounded flex items-center justify-center text-white/80 hover:bg-black/70 transition-colors active:scale-90"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 size-8 bg-black/40 rounded-full flex items-center justify-center text-white/80 active:scale-90"
                 >
-                  <ChevronLeft className="size-3.5" />
+                  <ChevronLeft className="size-4" />
                 </button>
                 <button
                   onClick={() => setCurrentImage((currentImage + 1) % images.length)}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 size-7 bg-black/50 rounded flex items-center justify-center text-white/80 hover:bg-black/70 transition-colors active:scale-90"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 size-8 bg-black/40 rounded-full flex items-center justify-center text-white/80 active:scale-90"
                 >
-                  <ChevronRight className="size-3.5" />
+                  <ChevronRight className="size-4" />
                 </button>
-                <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 flex gap-1">
+                <div className="absolute bottom-14 left-1/2 -translate-x-1/2 flex gap-1">
                   {images.map((_, i) => (
                     <button
                       key={i}
                       onClick={() => setCurrentImage(i)}
-                      className={`rounded-full transition-all duration-200 ${
-                        i === currentImage ? "w-4 h-1 bg-primary-400" : "w-1 h-1 bg-white/30"
+                      className={`rounded-full transition-all ${
+                        i === currentImage ? "w-5 h-1.5 bg-white" : "w-1.5 h-1.5 bg-white/30"
                       }`}
                     />
                   ))}
@@ -193,135 +186,124 @@ export default function VenueDetailPage() {
 
         <button
           onClick={() => navigate(-1)}
-          className="absolute top-2.5 left-2.5 size-7 bg-black/50 rounded flex items-center justify-center text-white/80 hover:bg-black/70 transition-colors active:scale-90"
+          className="absolute top-3 left-3 size-8 bg-black/40 rounded-full flex items-center justify-center text-white/80 active:scale-90"
         >
-          <ArrowLeft className="size-3.5" />
+          <ArrowLeft className="size-4" />
         </button>
 
         {images.length > 1 && (
-          <div className="absolute top-2.5 right-2.5 bg-black/50 text-surface-300 text-[10px] font-medium px-1.5 py-0.5 rounded">
+          <div className="absolute top-3 right-3 bg-black/40 text-white/70 text-[11px] font-medium px-2.5 py-1 rounded-full">
             {currentImage + 1}/{images.length}
           </div>
         )}
 
-        <div className="absolute bottom-0 left-0 right-0 p-3.5">
-          <h1 className="text-base font-semibold text-white leading-snug">{venue.name}</h1>
-          <p className="text-[11px] text-white/50 flex items-center gap-1 mt-0.5">
-            <MapPin className="size-2.5" />
+        {/* Title overlay */}
+        <div className="absolute bottom-0 left-0 right-0 px-5 pb-4">
+          <h1 className="text-lg font-bold text-white leading-snug">{venue.name}</h1>
+          <p className="text-[12px] text-white/50 flex items-center gap-1 mt-0.5">
+            <MapPin className="size-3" />
             {venue.address}
           </p>
         </div>
       </div>
 
-      <div className="px-4 space-y-2.5">
-        {/* Price */}
-        <div className="bg-surface-900 rounded-md border border-surface-700/20 p-3 v-edge flex items-center gap-2.5">
-          <div className="size-7 bg-primary-500/10 border border-primary-500/15 rounded flex items-center justify-center">
-            <CreditCard className="size-3 text-primary-400" />
-          </div>
-          <div>
-            <p className="text-[10px] text-surface-500 font-medium uppercase tracking-wider">Стоимость</p>
-            <div className="flex items-baseline gap-1">
-              <span className="text-[15px] font-semibold text-surface-100">{Number(venue.price_per_hour).toLocaleString("ru-RU")}</span>
-              <span className="text-[11px] text-surface-500">сум/час</span>
-            </div>
-          </div>
+      <div className="px-5 pt-5 space-y-5">
+        {/* Price — simple row */}
+        <div className="flex items-baseline justify-between">
+          <span className="text-2xl font-bold text-surface-50">{Number(venue.price_per_hour).toLocaleString("ru-RU")}</span>
+          <span className="text-[13px] text-surface-500">сум / час</span>
         </div>
+
+        <div className="divider" />
 
         {/* Description */}
         {venue.description && (
-          <div className="bg-surface-900 rounded-md border border-surface-700/20 p-3">
-            <p className="text-[12px] text-surface-400 leading-relaxed">{venue.description}</p>
-          </div>
+          <>
+            <p className="text-[13px] text-surface-400 leading-relaxed">{venue.description}</p>
+            <div className="divider" />
+          </>
         )}
 
-        {/* Amenities */}
+        {/* Amenities — flat tags */}
         {venue.amenities && venue.amenities.length > 0 && (
-          <div>
-            <h3 className="text-[11px] font-medium text-surface-400 mb-1.5">Удобства</h3>
-            <div className="grid grid-cols-2 gap-1">
-              {venue.amenities.map((amenity) => (
-                <div
-                  key={amenity}
-                  className="flex items-center gap-1.5 text-[12px] bg-surface-900 border border-surface-700/20 text-surface-400 px-2.5 py-1.5 rounded"
-                >
-                  <Check className="size-2.5 text-success-500 shrink-0" />
-                  <span className="truncate">{amenity}</span>
-                </div>
-              ))}
+          <>
+            <div>
+              <p className="text-[11px] text-surface-500 uppercase tracking-wider mb-2">Удобства</p>
+              <div className="flex flex-wrap gap-1.5">
+                {venue.amenities.map((amenity) => (
+                  <span key={amenity} className="text-[12px] text-surface-300 bg-surface-850 px-2.5 py-1 rounded-full flex items-center gap-1">
+                    <Check className="size-2.5 text-primary-400" />
+                    {amenity}
+                  </span>
+                ))}
+              </div>
             </div>
-          </div>
+            <div className="divider" />
+          </>
         )}
 
-        {/* Date */}
-        <div className="bg-surface-900 rounded-md border border-surface-700/20 p-3 space-y-2 v-edge">
-          <h3 className="text-[11px] font-medium text-surface-400 flex items-center gap-1.5">
-            <CalendarDays className="size-3 text-primary-400" />
-            Дата
-          </h3>
-          <div className="flex items-center gap-2">
+        {/* Date selector */}
+        <div>
+          <p className="text-[11px] text-surface-500 uppercase tracking-wider mb-2">Дата</p>
+          <div className="flex items-center gap-3">
             <button
               onClick={() => changeDate(-1)}
               disabled={isBefore(addDays(new Date(selectedDate), -1), startOfToday())}
-              className="p-1.5 rounded border border-surface-700/30 bg-surface-850 hover:bg-surface-800 disabled:opacity-15 transition-colors active:scale-90"
+              className="size-9 rounded-full bg-surface-850 flex items-center justify-center disabled:opacity-15 active:scale-90 transition-colors hover:bg-surface-800"
             >
-              <ChevronLeft className="size-3 text-surface-400" />
+              <ChevronLeft className="size-4 text-surface-400" />
             </button>
-            <div className="flex-1 text-center bg-surface-850 border border-surface-700/30 rounded py-1.5 px-2.5">
-              <p className="font-semibold text-surface-200 text-[13px]">
+            <div className="flex-1 text-center">
+              <p className="font-semibold text-surface-100 text-[15px]">
                 {format(new Date(selectedDate), "d MMMM", { locale: ru })}
               </p>
-              <p className="text-[10px] text-surface-500 capitalize">
+              <p className="text-[11px] text-surface-500 capitalize">
                 {format(new Date(selectedDate), "EEEE", { locale: ru })}
               </p>
             </div>
             <button
               onClick={() => changeDate(1)}
-              className="p-1.5 rounded border border-surface-700/30 bg-surface-850 hover:bg-surface-800 transition-colors active:scale-90"
+              className="size-9 rounded-full bg-surface-850 flex items-center justify-center active:scale-90 transition-colors hover:bg-surface-800"
             >
-              <ChevronRight className="size-3 text-surface-400" />
+              <ChevronRight className="size-4 text-surface-400" />
             </button>
           </div>
         </div>
 
-        {/* Time Slots */}
-        <div className="bg-surface-900 rounded-md border border-surface-700/20 p-3 space-y-2 v-edge">
-          <div className="flex items-center justify-between">
-            <h3 className="text-[11px] font-medium text-surface-400 flex items-center gap-1.5">
-              <Clock className="size-3 text-primary-400" />
-              Время
-            </h3>
+        <div className="divider" />
+
+        {/* Time slots */}
+        <div>
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-[11px] text-surface-500 uppercase tracking-wider">Время</p>
             {!slotsLoading && slots.length > 0 && (
-              <span className="text-[10px] font-medium text-success-400 bg-success-50 px-1.5 py-px rounded border border-success-500/15">
-                {availableCount} свободных
-              </span>
+              <span className="text-[11px] text-primary-400 font-medium">{availableCount} свободных</span>
             )}
           </div>
 
           {slotsLoading ? (
-            <div className="grid grid-cols-4 gap-1">
+            <div className="grid grid-cols-4 gap-1.5">
               {Array.from({ length: 12 }).map((_, i) => (
-                <div key={i} className="h-8 skeleton rounded" />
+                <div key={i} className="h-9 skeleton rounded-lg" />
               ))}
             </div>
           ) : slots.length === 0 ? (
-            <div className="text-center py-5">
-              <Clock className="size-4 text-surface-600 mx-auto mb-1" />
-              <p className="text-[11px] text-surface-500">Нет слотов</p>
+            <div className="text-center py-6">
+              <p className="text-[12px] text-surface-500">Нет доступных слотов</p>
             </div>
           ) : (
-            <div className="grid grid-cols-4 gap-1">
+            <div className="grid grid-cols-4 gap-1.5">
               {slots.map((slot) => (
                 <button
                   key={slot.start_time}
                   onClick={() => handleSlotClick(slot)}
                   disabled={!slot.is_available}
-                  className={`py-1.5 rounded text-[12px] font-medium transition-colors duration-150 active:scale-90 ${
+                  className={`py-2 rounded-lg text-[13px] font-medium transition-all active:scale-95 ${
                     isSlotSelected(slot)
-                      ? "bg-primary-500 text-white"
+                      ? "bg-primary-500 text-surface-950 font-semibold"
                       : slot.is_available
-                      ? "bg-surface-850 border border-surface-700/30 text-surface-300 hover:border-primary-500/25 hover:text-primary-400"
-                      : "bg-surface-850/30 text-surface-600 cursor-not-allowed line-through opacity-30"
+                      ? "bg-surface-850 text-surface-300 hover:bg-surface-800 hover:text-surface-100"
+                      : "text-surface-600 cursor-not-allowed line-through opacity-25"
                   }`}
                 >
                   {slot.start_time.slice(0, 5)}
@@ -331,37 +313,32 @@ export default function VenueDetailPage() {
           )}
         </div>
 
-        {/* Booking Summary */}
+        {/* Booking summary */}
         {selectedStart && selectedEnd && priceInfo && (
-          <div className="bg-surface-900 rounded-md border border-primary-500/15 p-3 space-y-2.5 animate-scale-in v-edge">
-            <h3 className="text-[11px] font-medium text-surface-400">Итоги</h3>
-            <div className="space-y-1.5">
-              <div className="flex justify-between items-center">
-                <span className="text-[11px] text-surface-500 flex items-center gap-1">
-                  <Timer className="size-2.5" /> Время
-                </span>
-                <span className="font-medium text-surface-200 text-[13px]">
-                  {selectedStart.slice(0, 5)} — {selectedEnd.slice(0, 5)}
-                </span>
+          <>
+            <div className="divider" />
+            <div className="space-y-3 animate-scale-in">
+              <div className="flex justify-between text-[13px]">
+                <span className="text-surface-400">Время</span>
+                <span className="text-surface-100 font-medium">{selectedStart.slice(0, 5)} — {selectedEnd.slice(0, 5)}</span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-[11px] text-surface-500 flex items-center gap-1">
-                  <Clock className="size-2.5" /> Длительность
-                </span>
-                <span className="font-medium text-surface-200 text-[13px]">{priceInfo.hours} ч</span>
+              <div className="flex justify-between text-[13px]">
+                <span className="text-surface-400">Длительность</span>
+                <span className="text-surface-100 font-medium">{priceInfo.hours} ч</span>
               </div>
-              <div className="flex justify-between items-center pt-2 border-t border-surface-700/30">
-                <span className="text-[11px] font-medium text-surface-400">Итого</span>
-                <span className="font-semibold text-primary-400 text-base">{priceInfo.total} сум</span>
+              <div className="divider" />
+              <div className="flex justify-between items-baseline">
+                <span className="text-[13px] text-surface-400">Итого</span>
+                <span className="text-xl font-bold text-surface-50">{priceInfo.total} сум</span>
               </div>
+              <Button onClick={handleBook} loading={booking} className="w-full" size="lg">
+                Забронировать
+              </Button>
             </div>
-            <Button onClick={handleBook} loading={booking} className="w-full" size="lg">
-              Забронировать
-            </Button>
-          </div>
+          </>
         )}
 
-        <div className="h-1" />
+        <div className="h-4" />
       </div>
     </div>
   );
