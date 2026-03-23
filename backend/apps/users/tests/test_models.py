@@ -31,7 +31,6 @@ class TestUserModel:
         user = User.objects.create_superuser(
             phone_number="+998909999999",
             name="Admin",
-            password="adminpass",
         )
         
         assert user.phone_number == "+998909999999"
@@ -39,7 +38,7 @@ class TestUserModel:
         assert user.is_verified is True
         assert user.is_staff is True
         assert user.is_superuser is True
-        assert user.has_usable_password()
+        assert not user.has_usable_password()
     
     def test_create_user_without_phone_raises_error(self):
         """Test that creating user without phone number raises error."""

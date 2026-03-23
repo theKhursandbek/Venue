@@ -78,7 +78,7 @@ class User(AbstractBaseUser, PermissionsMixin, TimeStampedModel):
         help_text=_("Designates whether the user can log into admin site."),
     )
     
-    objects = UserManager()
+    objects: UserManager = UserManager()
     
     USERNAME_FIELD = "phone_number"
     REQUIRED_FIELDS = []

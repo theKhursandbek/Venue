@@ -4,6 +4,7 @@ Pytest configuration and fixtures for venue-booking-backend.
 
 from datetime import date, time, timedelta
 from decimal import Decimal
+from typing import cast
 from unittest.mock import patch
 
 import pytest
@@ -12,7 +13,7 @@ from rest_framework.test import APIClient
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from apps.bookings.models import Booking, BookingStatus
-from apps.users.models import User
+from apps.users.models import User, UserManager
 from apps.venues.models import Venue
 
 
@@ -33,7 +34,8 @@ def api_client():
 @pytest.fixture
 def user(db):
     """Create a regular test user."""
-    return User.objects.create_user(
+    manager = cast(UserManager, User.objects)
+    return manager.create_user(  # type: ignore[attr-defined]
         phone_number="+998901234567",
         name="Test User",
         is_verified=True,
@@ -43,7 +45,8 @@ def user(db):
 @pytest.fixture
 def user2(db):
     """Create a second test user."""
-    return User.objects.create_user(
+    manager = cast(UserManager, User.objects)
+    return manager.create_user(  # type: ignore[attr-defined]
         phone_number="+998901234568",
         name="Test User 2",
         is_verified=True,
@@ -53,17 +56,18 @@ def user2(db):
 @pytest.fixture
 def admin_user(db):
     """Create an admin/staff user."""
-    return User.objects.create_superuser(
+    manager = cast(UserManager, User.objects)
+    return manager.create_superuser(  # type: ignore[attr-defined]
         phone_number="+998909999999",
         name="Admin User",
-        password="adminpass123",
     )
 
 
 @pytest.fixture
 def unverified_user(db):
     """Create an unverified user."""
-    return User.objects.create_user(
+    manager = cast(UserManager, User.objects)
+    return manager.create_user(  # type: ignore[attr-defined]
         phone_number="+998901111111",
         name="Unverified User",
         is_verified=False,

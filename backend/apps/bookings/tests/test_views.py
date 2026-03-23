@@ -45,9 +45,11 @@ class TestBookingListCreateView:
         
         assert response.status_code == status.HTTP_200_OK
         booking_ids = [b["id"] for b in response.data["results"]]
+        assert booking.pk is not None
+        assert other_booking.pk is not None
         
-        assert booking.id in booking_ids
-        assert other_booking.id not in booking_ids
+        assert booking.pk in booking_ids
+        assert other_booking.pk not in booking_ids
     
     def test_create_booking_success(self, authenticated_client, venue):
         """Test creating a booking successfully."""
@@ -224,10 +226,11 @@ class TestBookingDetailView:
     
     def test_get_booking_detail(self, authenticated_client, booking):
         """Test getting booking details."""
-        response = authenticated_client.get(self.get_url(booking.id))
+        assert booking.pk is not None
+        response = authenticated_client.get(self.get_url(booking.pk))
         
         assert response.status_code == status.HTTP_200_OK
-        assert response.data["id"] == booking.id
+        assert response.data["id"] == booking.pk
         assert "venue" in response.data
         assert "duration_hours" in response.data
         assert "can_cancel" in response.data
@@ -247,8 +250,9 @@ class TestBookingDetailView:
             start_time=time(10, 0),
             end_time=time(12, 0),
         )
+        assert other_booking.pk is not None
         
-        response = authenticated_client.get(self.get_url(other_booking.id))
+        response = authenticated_client.get(self.get_url(other_booking.pk))
         
         assert response.status_code == status.HTTP_404_NOT_FOUND
 
@@ -263,8 +267,9 @@ class TestBookingCancelView:
     def test_cancel_pending_booking(self, authenticated_client, booking):
         """Test cancelling a pending booking."""
         assert booking.status == BookingStatus.PENDING
+        assert booking.pk is not None
         
-        response = authenticated_client.patch(self.get_url(booking.id))
+        response = authenticated_client.patch(self.get_url(booking.pk))
         
         assert response.status_code == status.HTTP_200_OK
         assert response.data["status"] == BookingStatus.CANCELLED
@@ -274,20 +279,23 @@ class TestBookingCancelView:
     
     def test_cancel_confirmed_booking(self, authenticated_client, confirmed_booking):
         """Test cancelling a confirmed booking."""
-        response = authenticated_client.patch(self.get_url(confirmed_booking.id))
+        assert confirmed_booking.pk is not None
+        response = authenticated_client.patch(self.get_url(confirmed_booking.pk))
         
         assert response.status_code == status.HTTP_200_OK
         assert response.data["status"] == BookingStatus.CANCELLED
     
     def test_cannot_cancel_completed_booking(self, authenticated_client, completed_booking):
         """Test that completed booking cannot be cancelled."""
-        response = authenticated_client.patch(self.get_url(completed_booking.id))
+        assert completed_booking.pk is not None
+        response = authenticated_client.patch(self.get_url(completed_booking.pk))
         
         assert response.status_code == status.HTTP_400_BAD_REQUEST
     
     def test_cannot_cancel_already_cancelled(self, authenticated_client, cancelled_booking):
         """Test that already cancelled booking cannot be cancelled again."""
-        response = authenticated_client.patch(self.get_url(cancelled_booking.id))
+        assert cancelled_booking.pk is not None
+        response = authenticated_client.patch(self.get_url(cancelled_booking.pk))
         
         assert response.status_code == status.HTTP_400_BAD_REQUEST
     
@@ -300,13 +308,15 @@ class TestBookingCancelView:
             start_time=time(10, 0),
             end_time=time(12, 0),
         )
+        assert other_booking.pk is not None
         
-        response = authenticated_client.patch(self.get_url(other_booking.id))
+        response = authenticated_client.patch(self.get_url(other_booking.pk))
         
         assert response.status_code == status.HTTP_404_NOT_FOUND
     
     def test_cancel_requires_auth(self, api_client, booking):
         """Test that cancelling requires authentication."""
-        response = api_client.patch(self.get_url(booking.id))
+        assert booking.pk is not None
+        response = api_client.patch(self.get_url(booking.pk))
         
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
