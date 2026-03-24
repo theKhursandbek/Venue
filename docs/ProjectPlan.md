@@ -4,7 +4,7 @@
 
 ## **Overview**
 
-Build a REST API backend for a venue/spot booking application inspired by [Bron24.uz](https://bron24.uz/). The system includes user authentication via OTP, venue management, and booking functionality with a full admin panel.
+Build a REST API backend for a venue/spot booking application. The system includes user authentication via OTP, venue management, and booking functionality with a full admin panel.
 
 ---
 
