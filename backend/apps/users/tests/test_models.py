@@ -22,6 +22,7 @@ class TestUserModel:
         assert user.name == "Test User"
         assert user.is_active is True
         assert user.is_verified is False
+        assert user.is_registration_completed is False
         assert user.is_staff is False
         assert user.is_superuser is False
         assert not user.has_usable_password()
@@ -36,6 +37,7 @@ class TestUserModel:
         assert user.phone_number == "+998909999999"
         assert user.is_active is True
         assert user.is_verified is True
+        assert user.is_registration_completed is True
         assert user.is_staff is True
         assert user.is_superuser is True
         assert not user.has_usable_password()

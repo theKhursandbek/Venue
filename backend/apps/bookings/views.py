@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from core.exceptions import BookingCancellationException
-from core.permissions import IsOwner
+from core.permissions import IsOwner, IsRegistrationCompleted
 
 from .models import Booking
 from .serializers import (
@@ -25,7 +25,7 @@ class BookingListCreateView(generics.ListCreateAPIView):
     List user's bookings or create a new booking.
     """
     
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsRegistrationCompleted]
     
     def get_queryset(self):
         """Return only the current user's bookings."""
@@ -69,7 +69,7 @@ class BookingDetailView(generics.RetrieveAPIView):
     """
     
     serializer_class = BookingDetailSerializer
-    permission_classes = [IsAuthenticated, IsOwner]
+    permission_classes = [IsAuthenticated, IsRegistrationCompleted, IsOwner]
     
     def get_queryset(self):
         """Return only the current user's bookings."""
@@ -89,7 +89,7 @@ class BookingCancelView(APIView):
     Cancel a booking.
     """
     
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsRegistrationCompleted]
     
     @extend_schema(
         request=BookingCancelSerializer,

@@ -39,3 +39,18 @@ class IsVerifiedUser(permissions.BasePermission):
             and request.user.is_authenticated
             and request.user.is_verified
         )
+
+
+class IsRegistrationCompleted(permissions.BasePermission):
+    """
+    Custom permission to only allow users who completed registration.
+    """
+
+    message = "Please complete registration first."
+
+    def has_permission(self, request, view):
+        return (
+            request.user
+            and request.user.is_authenticated
+            and request.user.is_registration_completed
+        )

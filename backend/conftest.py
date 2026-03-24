@@ -39,6 +39,7 @@ def user(db):
         phone_number="+998901234567",
         name="Test User",
         is_verified=True,
+        is_registration_completed=True,
     )
 
 
@@ -50,6 +51,7 @@ def user2(db):
         phone_number="+998901234568",
         name="Test User 2",
         is_verified=True,
+        is_registration_completed=True,
     )
 
 

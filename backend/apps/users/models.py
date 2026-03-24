@@ -34,6 +34,7 @@ class UserManager(BaseUserManager):
         extra_fields.setdefault("is_superuser", True)
         extra_fields.setdefault("is_active", True)
         extra_fields.setdefault("is_verified", True)
+        extra_fields.setdefault("is_registration_completed", True)
         
         if extra_fields.get("is_staff") is not True:
             raise ValueError(_("Superuser must have is_staff=True."))
@@ -71,6 +72,11 @@ class User(AbstractBaseUser, PermissionsMixin, TimeStampedModel):
         _("verified"),
         default=False,
         help_text=_("Designates whether this user has verified their phone number."),
+    )
+    is_registration_completed = models.BooleanField(
+        _("registration completed"),
+        default=False,
+        help_text=_("Designates whether the user has completed registration (name and password set)."),
     )
     is_staff = models.BooleanField(
         _("staff status"),

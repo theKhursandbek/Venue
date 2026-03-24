@@ -2,8 +2,6 @@
 Tests for OTP service.
 """
 
-from unittest.mock import patch
-
 import pytest
 from django.core.cache import cache
 
@@ -27,8 +25,8 @@ class TestOTPService:
         """Test that OTP is stored in cache."""
         phone = "+998901234567"
         otp = OTPService.send_otp(phone)
-        
-        cached_otp = cache.get(f"otp:{phone}")
+
+        cached_otp = cache.get(f"otp:register:{phone}")
         assert cached_otp == otp
     
     def test_send_otp_rate_limit(self):
@@ -58,9 +56,9 @@ class TestOTPService:
         otp = OTPService.send_otp(phone)
         
         OTPService.verify_otp(phone, otp)
-        
+
         # OTP should be cleared
-        assert cache.get(f"otp:{phone}") is None
+        assert cache.get(f"otp:register:{phone}") is None
     
     def test_verify_otp_invalid(self):
         """Test verification with wrong OTP."""

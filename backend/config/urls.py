@@ -23,8 +23,14 @@ def api_root(request, format=None):
     """API Root - lists all available endpoints."""
     return Response({
         "auth": {
-            "send_otp": reverse("send-otp", request=request, format=format),
-            "verify_otp": reverse("verify-otp", request=request, format=format),
+            "register_send_otp": reverse("send-otp", request=request, format=format),
+            "register_verify_otp": reverse("verify-otp", request=request, format=format),
+            "complete_registration": reverse("complete-registration", request=request, format=format),
+            "password_login": reverse("password-login", request=request, format=format),
+            "password_reset_send_otp": reverse("password-reset-send-otp", request=request, format=format),
+            "password_reset_verify_otp": reverse("password-reset-verify-otp", request=request, format=format),
+            "password_reset_confirm": reverse("password-reset-confirm", request=request, format=format),
+            "logout": reverse("logout", request=request, format=format),
             "token_refresh": reverse("token-refresh", request=request, format=format),
             "me": reverse("user-profile", request=request, format=format),
         },

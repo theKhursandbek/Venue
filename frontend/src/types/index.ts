@@ -18,10 +18,44 @@ export interface VerifyOTPRequest {
 }
 
 export interface VerifyOTPResponse {
-  message?: string;
+  phone_number: string;
+  registration_token: string;
+}
+
+export interface PasswordLoginRequest {
+  phone_number: string;
+  password: string;
+}
+
+export interface CompleteRegistrationRequest {
+  registration_token: string;
+  name: string;
+  password: string;
+}
+
+export interface PasswordResetConfirmRequest {
+  reset_token: string;
+  new_password: string;
+}
+
+export interface PasswordResetVerifyResponse {
+  phone_number: string;
+  reset_token: string;
+}
+
+export interface AuthSuccessResponse {
   access: string;
   refresh: string;
   user: User;
+  requires_registration: boolean;
+}
+
+export interface LogoutRequest {
+  refresh: string;
+}
+
+export interface LogoutResponse {
+  message: string;
 }
 
 export interface RefreshTokenRequest {
@@ -39,6 +73,7 @@ export interface User {
   name: string | null;
   is_active?: boolean;
   is_verified: boolean;
+  is_registration_completed: boolean;
   created_at: string;
   date_joined?: string;
 }

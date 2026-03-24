@@ -21,7 +21,7 @@ import type { AxiosError } from "axios";
 import type { APIError } from "@/types";
 
 export default function ProfilePage() {
-  const { user, setUser, logout } = useAuthStore();
+  const { user, setUser, logout, refreshToken } = useAuthStore();
   const { t, i18n } = useTranslation();
 
   const [name, setName] = useState(user?.name || "");
@@ -175,7 +175,14 @@ export default function ProfilePage() {
       {/* Logout */}
       <div ref={logoutRef} className="reveal-up" data-scroll="up" data-scroll-delay="150">
       <button
-        onClick={() => {
+        onClick={async () => {
+          try {
+            if (refreshToken) {
+              await authService.logout({ refresh: refreshToken });
+            }
+          } catch {
+            // Ignore logout API failure and still clear local session
+          }
           logout();
           toast.success(t("profile.logoutSuccess"));
         }}

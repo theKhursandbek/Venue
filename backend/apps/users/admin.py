@@ -22,11 +22,19 @@ class UserAdmin(BaseUserAdmin):
         "name",
         "is_active",
         "verification_badge",
+        "is_registration_completed",
         "is_staff",
         "booking_count",
         "created_at",
     )
-    list_filter = ("is_active", "is_verified", "is_staff", "is_superuser", "created_at")
+    list_filter = (
+        "is_active",
+        "is_verified",
+        "is_registration_completed",
+        "is_staff",
+        "is_superuser",
+        "created_at",
+    )
     search_fields = ("phone_number", "name")
     ordering = ("-created_at",)
     readonly_fields = ("created_at", "updated_at", "last_login", "booking_stats")
@@ -42,6 +50,7 @@ class UserAdmin(BaseUserAdmin):
                 "fields": (
                     "is_active",
                     "is_verified",
+                    "is_registration_completed",
                     "is_staff",
                     "is_superuser",
                     "groups",

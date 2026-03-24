@@ -64,6 +64,10 @@ Build a REST API backend for a venue/spot booking application. The system includ
 | ----- | ----- | ----- |
 | POST | `/api/auth/send-otp/` | Send OTP to phone number |
 | POST | `/api/auth/verify-otp/` | Verify OTP and receive JWT tokens |
+| POST | `/api/auth/complete-registration/` | Complete first-time registration (set name + password after OTP verification) |
+| POST | `/api/auth/login/` | Login with phone number + password |
+| POST | `/api/auth/login-otp/` | Login with OTP as an alternative to password |
+| POST | `/api/auth/logout/` | Logout current session/device (invalidate refresh token) |
 | POST | `/api/auth/refresh/` | Refresh access token |
 | GET | `/api/auth/me/` | Get current user profile |
 | PATCH | `/api/auth/me/` | Update user profile |
@@ -89,11 +93,37 @@ Build a REST API backend for a venue/spot booking application. The system includ
 
 ## **Functional Requirements**
 
-### **OTP Authentication**
+### **Authentication & Session Flow (Hybrid: Password + OTP)**
+
+#### **First-time user flow (registration)**
+
+* User enters phone number and requests OTP  
+* OTP is verified  
+* System checks if user is new (no password set yet)  
+* New user must complete registration by providing:  
+   * `name`  
+   * `password`  
+* After successful registration, authentication tokens are issued and user is logged in
+
+#### **Returning user flow (login)**
+
+User can choose one of two login options:
+
+1. **Phone number + password**  
+2. **Phone number + OTP**
+
+Both login methods must return access + refresh tokens and authenticated user profile.
+
+#### **Logout & session handling**
+
+* Implement logout endpoint that invalidates the submitted refresh token (JWT blacklist)  
+* Frontend must clear local auth state/tokens on logout  
+* Support normal refresh-token session lifecycle (access rotation via refresh)
+
+#### **OTP-specific requirements (kept)**
 
 * Accept phone number and send OTP (mock SMS by logging OTP to console)  
 * Store OTP in Redis with 5-minute expiration  
-* Verify OTP and return JWT tokens (access and refresh)  
 * Implement rate limiting: maximum 3 OTP requests per phone number per 10 minutes
 
 ### **Venue Management**
@@ -143,11 +173,73 @@ Requirements:
 ## **Security Requirements**
 
 * JWT authentication with access and refresh tokens  
+* Password-based login support (secure password hashing using Django auth system)  
 * Rate limiting on authentication endpoints  
 * Input validation and sanitization on all endpoints  
 * Proper CORS configuration  
 * All secrets stored in environment variables  
 * Use Django ORM to prevent SQL injection
+
+---
+
+## **Detailed Implementation Structure for New Auth Feature**
+
+### **Backend changes**
+
+1. **User model / auth rules**
+   * Keep phone number as primary login identifier  
+   * Ensure password can be set for phone-authenticated users  
+   * Add helper flag/logic to detect whether registration is fully completed
+
+2. **Serializers**
+   * `CompleteRegistrationSerializer` (`phone_number`, `name`, `password`)  
+   * `PasswordLoginSerializer` (`phone_number`, `password`)  
+   * `OTPLoginSerializer` (`phone_number`, `otp`)  
+   * `LogoutSerializer` (`refresh`)
+
+3. **Views / services**
+   * `complete-registration`: after OTP verification context, set user name/password securely  
+   * `login`: authenticate with phone number + password  
+   * `login-otp`: verify OTP and login  
+   * `logout`: blacklist refresh token
+
+4. **Permissions & validation**
+   * Block password login if registration not completed  
+   * Enforce password policy (min length + basic strength)  
+   * Preserve ownership and existing API permission behavior
+
+5. **Tests**
+   * First-time registration flow test  
+   * Password login success/failure tests  
+   * OTP login success/failure tests  
+   * Logout token blacklist test
+
+### **Frontend changes**
+
+1. **Auth screens**
+   * Step 1: phone + OTP flow (existing)  
+   * Step 2 (first-time only): complete profile with `name` + `password`  
+   * Returning users: login screen with two tabs/modes:  
+     * `Phone + Password`  
+     * `Phone + OTP`
+
+2. **Auth service/store**
+   * Add API methods for complete registration, password login, OTP login, logout  
+   * Keep token persistence and refresh behavior  
+   * Clear store and redirect on logout
+
+3. **UX rules**
+   * Use phone number as the login field label  
+   * Show clear mode switch between Password and OTP login  
+   * Keep i18n strings for both flows in all supported languages
+
+### **Acceptance criteria for this feature**
+
+* New user must complete `name + password` after first OTP verification  
+* Returning user can login with either password or OTP  
+* Logout invalidates refresh token and ends local session  
+* Existing OTP behavior remains functional and rate-limited  
+* All auth flows are documented in Swagger and README
 
 ---
 

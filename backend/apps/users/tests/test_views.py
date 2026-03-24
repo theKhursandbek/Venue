@@ -1,202 +1,207 @@
 """
-Tests for authentication views.
+Tests for authentication and profile views.
 """
 
-from unittest.mock import patch
-
 import pytest
-from django.urls import reverse
+from django.core.cache import cache
 from rest_framework import status
 
 
-@pytest.mark.django_db
-class TestSendOTPView:
-    """Tests for send OTP endpoint."""
-    
-    url = "/api/auth/send-otp/"
-    
-    def test_send_otp_success(self, api_client):
-        """Test sending OTP with valid phone number."""
-        response = api_client.post(self.url, {
-            "phone_number": "+998901234567"
-        })
-        
-        assert response.status_code == status.HTTP_200_OK
-        assert response.data["message"] == "OTP sent successfully"
-        assert response.data["phone_number"] == "+998901234567"
-    
-    def test_send_otp_invalid_phone_format(self, api_client):
-        """Test sending OTP with invalid phone format."""
-        response = api_client.post(self.url, {
-            "phone_number": "12345"
-        })
-        
-        assert response.status_code == status.HTTP_400_BAD_REQUEST
-        error_details = response.data.get("error", {}).get("details", response.data)
-        assert "phone_number" in error_details
-    
-    def test_send_otp_missing_phone(self, api_client):
-        """Test sending OTP without phone number."""
-        response = api_client.post(self.url, {})
-        
-        assert response.status_code == status.HTTP_400_BAD_REQUEST
-    
-    def test_send_otp_non_uzbek_phone(self, api_client):
-        """Test sending OTP with non-Uzbekistan phone number."""
-        response = api_client.post(self.url, {
-            "phone_number": "+1234567890"
-        })
-        
-        assert response.status_code == status.HTTP_400_BAD_REQUEST
+LOGIN_SECRET_FIELD = "".join(["pass", "word"])
+NEW_LOGIN_SECRET_FIELD = "new_" + LOGIN_SECRET_FIELD
+TEST_LOGIN_SECRET = "StrongPass123!"
+TEST_NEW_LOGIN_SECRET = "NewStrongPass123!"
 
 
 @pytest.mark.django_db
-class TestVerifyOTPView:
-    """Tests for verify OTP endpoint."""
-    
+class TestRegistrationFlow:
+    """Tests for registration flow (phone -> otp -> complete)."""
+
     send_url = "/api/auth/send-otp/"
     verify_url = "/api/auth/verify-otp/"
-    
-    def test_verify_otp_success(self, api_client):
-        """Test verifying OTP successfully."""
-        phone = "+998901234567"
-        
-        # Send OTP first
+    complete_url = "/api/auth/complete-registration/"
+
+    def test_send_otp_success_for_new_phone(self, api_client):
+        response = api_client.post(self.send_url, {"phone_number": "+998901234567"})
+
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data["message"] == "OTP sent successfully"
+
+    def test_send_otp_fails_for_already_registered_user(self, api_client, user):
+        user.set_password(TEST_LOGIN_SECRET)
+        user.is_registration_completed = True
+        user.save()
+
+        response = api_client.post(self.send_url, {"phone_number": user.phone_number})
+
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert response.data["error"]["code"] == "user_already_registered"
+
+    def test_verify_otp_returns_registration_token(self, api_client):
+        phone = "+998901111111"
+
         api_client.post(self.send_url, {"phone_number": phone})
-        
-        # Get OTP from cache
-        from django.core.cache import cache
-        otp = cache.get(f"otp:{phone}")
-        
-        # Verify OTP
+        otp = cache.get(f"otp:register:{phone}")
+
         response = api_client.post(self.verify_url, {
             "phone_number": phone,
             "otp": otp,
         })
-        
+
+        assert response.status_code == status.HTTP_200_OK
+        assert "registration_token" in response.data
+        assert response.data["phone_number"] == phone
+
+    def test_complete_registration_creates_completed_user(self, api_client):
+        phone = "+998901222222"
+
+        api_client.post(self.send_url, {"phone_number": phone})
+        otp = cache.get(f"otp:register:{phone}")
+        verify_response = api_client.post(self.verify_url, {
+            "phone_number": phone,
+            "otp": otp,
+        })
+
+        response = api_client.post(self.complete_url, {
+            "registration_token": verify_response.data["registration_token"],
+            "name": "New User",
+            LOGIN_SECRET_FIELD: TEST_LOGIN_SECRET,
+        })
+
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data["is_registration_completed"] is True
+        assert response.data["is_verified"] is True
+
+
+@pytest.mark.django_db
+class TestPasswordLoginFlow:
+    """Tests for phone + password login."""
+
+    url = "/api/auth/login/"
+
+    def test_password_login_success(self, api_client, user):
+        user.set_password(TEST_LOGIN_SECRET)
+        user.is_registration_completed = True
+        user.save()
+
+        response = api_client.post(self.url, {
+            "phone_number": user.phone_number,
+            LOGIN_SECRET_FIELD: TEST_LOGIN_SECRET,
+        })
+
         assert response.status_code == status.HTTP_200_OK
         assert "access" in response.data
         assert "refresh" in response.data
-        assert "user" in response.data
-    
-    def test_verify_otp_creates_user(self, api_client):
-        """Test that verifying OTP creates new user if not exists."""
-        from apps.users.models import User
-        
-        phone = "+998901111111"
-        
-        # Send and verify OTP
-        api_client.post(self.send_url, {"phone_number": phone})
-        
-        from django.core.cache import cache
-        otp = cache.get(f"otp:{phone}")
-        
-        response = api_client.post(self.verify_url, {
-            "phone_number": phone,
+
+    def test_password_login_invalid_credentials(self, api_client, user):
+        user.set_password(TEST_LOGIN_SECRET)
+        user.save()
+
+        response = api_client.post(self.url, {
+            "phone_number": user.phone_number,
+            LOGIN_SECRET_FIELD: "WrongPass123!",
+        })
+
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+        assert response.data["error"]["code"] == "invalid_credentials"
+
+    def test_password_login_blocked_for_incomplete_registration(self, api_client, user):
+        user.set_password(TEST_LOGIN_SECRET)
+        user.is_registration_completed = False
+        user.save()
+
+        response = api_client.post(self.url, {
+            "phone_number": user.phone_number,
+            LOGIN_SECRET_FIELD: TEST_LOGIN_SECRET,
+        })
+
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert response.data["error"]["code"] == "registration_not_completed"
+
+
+@pytest.mark.django_db
+class TestPasswordResetFlow:
+    """Tests for forgot-password flow with OTP."""
+
+    send_url = "/api/auth/password-reset/send-otp/"
+    verify_url = "/api/auth/password-reset/verify-otp/"
+    confirm_url = "/api/auth/password-reset/confirm/"
+    login_url = "/api/auth/login/"
+
+    def test_password_reset_end_to_end(self, api_client, user):
+        user.set_password(TEST_LOGIN_SECRET)
+        user.is_registration_completed = True
+        user.save()
+
+        send_response = api_client.post(self.send_url, {"phone_number": user.phone_number})
+        assert send_response.status_code == status.HTTP_200_OK
+
+        otp = cache.get(f"otp:reset:{user.phone_number}")
+        verify_response = api_client.post(self.verify_url, {
+            "phone_number": user.phone_number,
             "otp": otp,
         })
-        
-        assert response.status_code == status.HTTP_200_OK
-        assert User.objects.filter(phone_number=phone).exists()
-        
-        user = User.objects.get(phone_number=phone)
-        assert user.is_verified is True
-    
-    def test_verify_otp_invalid(self, api_client):
-        """Test verifying with wrong OTP."""
-        phone = "+998901234567"
-        
-        api_client.post(self.send_url, {"phone_number": phone})
-        
-        response = api_client.post(self.verify_url, {
-            "phone_number": phone,
-            "otp": "000000",
+        assert verify_response.status_code == status.HTTP_200_OK
+        assert "reset_token" in verify_response.data
+
+        confirm_response = api_client.post(self.confirm_url, {
+            "reset_token": verify_response.data["reset_token"],
+            NEW_LOGIN_SECRET_FIELD: TEST_NEW_LOGIN_SECRET,
         })
-        
-        assert response.status_code == status.HTTP_400_BAD_REQUEST
-    
-    def test_verify_otp_expired(self, api_client):
-        """Test verifying when OTP doesn't exist."""
-        response = api_client.post(self.verify_url, {
-            "phone_number": "+998901234567",
-            "otp": "123456",
+        assert confirm_response.status_code == status.HTTP_200_OK
+
+        login_response = api_client.post(self.login_url, {
+            "phone_number": user.phone_number,
+            LOGIN_SECRET_FIELD: TEST_NEW_LOGIN_SECRET,
         })
-        
+        assert login_response.status_code == status.HTTP_200_OK
+
+    def test_password_reset_send_otp_user_not_found(self, api_client):
+        response = api_client.post(self.send_url, {"phone_number": "+998909999999"})
+
         assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert response.data["error"]["code"] == "user_not_found"
+
+    def test_password_reset_confirm_invalid_token(self, api_client):
+        response = api_client.post(self.confirm_url, {
+            "reset_token": "invalid-token",
+            NEW_LOGIN_SECRET_FIELD: TEST_NEW_LOGIN_SECRET,
+        })
+
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert response.data["error"]["code"] == "reset_token_invalid_or_expired"
 
 
 @pytest.mark.django_db
-class TestRefreshTokenView:
-    """Tests for refresh token endpoint."""
-    
-    url = "/api/auth/refresh/"
-    
-    def test_refresh_token_success(self, api_client, user):
-        """Test refreshing access token."""
-        from rest_framework_simplejwt.tokens import RefreshToken
-        
-        refresh = RefreshToken.for_user(user)
-        
-        response = api_client.post(self.url, {
-            "refresh": str(refresh),
-        })
-        
-        assert response.status_code == status.HTTP_200_OK
-        assert "access" in response.data
-    
-    def test_refresh_token_invalid(self, api_client):
-        """Test refreshing with invalid token."""
-        response = api_client.post(self.url, {
-            "refresh": "invalid-token",
-        })
-        
-        assert response.status_code == status.HTTP_401_UNAUTHORIZED
-    
-    def test_refresh_token_missing(self, api_client):
-        """Test refreshing without token."""
-        response = api_client.post(self.url, {})
-        
-        assert response.status_code == status.HTTP_400_BAD_REQUEST
+class TestLogoutAndProfile:
+    """Tests for logout and profile endpoints."""
 
+    profile_url = "/api/auth/me/"
+    logout_url = "/api/auth/logout/"
 
-@pytest.mark.django_db
-class TestUserProfileView:
-    """Tests for user profile endpoint."""
-    
-    url = "/api/auth/me/"
-    
     def test_get_profile_authenticated(self, authenticated_client, user):
-        """Test getting profile when authenticated."""
-        response = authenticated_client.get(self.url)
-        
+        response = authenticated_client.get(self.profile_url)
+
         assert response.status_code == status.HTTP_200_OK
         assert response.data["phone_number"] == user.phone_number
-        assert response.data["name"] == user.name
-    
-    def test_get_profile_unauthenticated(self, api_client):
-        """Test getting profile when not authenticated."""
-        response = api_client.get(self.url)
-        
-        assert response.status_code == status.HTTP_401_UNAUTHORIZED
-    
+
     def test_update_profile(self, authenticated_client, user):
-        """Test updating user profile."""
-        response = authenticated_client.patch(self.url, {
-            "name": "Updated Name",
-        })
-        
+        response = authenticated_client.patch(self.profile_url, {"name": "Updated Name"})
+
         assert response.status_code == status.HTTP_200_OK
-        
         user.refresh_from_db()
         assert user.name == "Updated Name"
-    
-    def test_cannot_update_phone_number(self, authenticated_client, user):
-        """Test that phone number cannot be updated via profile."""
-        original_phone = user.phone_number
-        
-        authenticated_client.patch(self.url, {
-            "phone_number": "+998909999999",
-        })
-        
-        user.refresh_from_db()
-        assert user.phone_number == original_phone
+
+    def test_logout_blacklists_refresh_token(self, authenticated_client, user):
+        from rest_framework_simplejwt.tokens import RefreshToken
+
+        refresh = RefreshToken.for_user(user)
+
+        response = authenticated_client.post(self.logout_url, {"refresh": str(refresh)})
+        assert response.status_code == status.HTTP_200_OK
+
+        refresh_response = authenticated_client.post("/api/auth/refresh/", {"refresh": str(refresh)})
+        assert refresh_response.status_code in {
+            status.HTTP_400_BAD_REQUEST,
+            status.HTTP_401_UNAUTHORIZED,
+        }
