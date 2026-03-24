@@ -1,7 +1,7 @@
 import api from "./api";
 import type {
   BookingCreateRequest,
-  Booking,
+  BookingDetail,
   BookingListResponse,
 } from "@/types";
 
@@ -10,9 +10,9 @@ export const bookingService = {
     api.get<BookingListResponse>("/bookings/", { params: { page } }),
 
   create: (data: BookingCreateRequest) =>
-    api.post<Booking>("/bookings/", data),
+    api.post<BookingDetail>("/bookings/", data),
 
-  detail: (id: number) => api.get<Booking>(`/bookings/${id}/`),
+  detail: (id: number) => api.get<BookingDetail>(`/bookings/${id}/`),
 
-  cancel: (id: number) => api.post<Booking>(`/bookings/${id}/cancel/`),
+  cancel: (id: number) => api.patch<BookingDetail>(`/bookings/${id}/cancel/`),
 };

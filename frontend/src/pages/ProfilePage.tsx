@@ -106,8 +106,8 @@ export default function ProfilePage() {
             <p className="text-[11px] font-semibold text-surface-500 uppercase tracking-wider">{t("profile.memberSince")}</p>
           </div>
           <p className="text-[15px] font-bold text-surface-900">
-            {user?.date_joined
-              ? new Date(user.date_joined).toLocaleDateString(getNumberLocale(i18n.language), {
+            {user?.created_at
+              ? new Date(user.created_at).toLocaleDateString(getNumberLocale(i18n.language), {
                   day: "numeric",
                   month: "short",
                   year: "numeric",

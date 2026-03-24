@@ -34,6 +34,8 @@ class VenueListSerializer(serializers.ModelSerializer):
     """
     
     primary_image = serializers.SerializerMethodField()
+    all_image_urls = serializers.SerializerMethodField()
+    image_count = serializers.IntegerField(read_only=True)
     
     class Meta:
         model = Venue
@@ -43,6 +45,8 @@ class VenueListSerializer(serializers.ModelSerializer):
             "address",
             "price_per_hour",
             "primary_image",
+            "all_image_urls",
+            "image_count",
             "images",
             "amenities",
             "is_active",
@@ -51,6 +55,10 @@ class VenueListSerializer(serializers.ModelSerializer):
     def get_primary_image(self, obj):
         """Return the primary image URL."""
         return obj.primary_image
+
+    def get_all_image_urls(self, obj):
+        """Return all image URLs (uploaded + external)."""
+        return obj.all_image_urls
 
 
 class VenueDetailSerializer(serializers.ModelSerializer):
@@ -61,6 +69,8 @@ class VenueDetailSerializer(serializers.ModelSerializer):
     
     uploaded_images = VenueImageSerializer(many=True, read_only=True)
     all_images = serializers.SerializerMethodField()
+    all_image_urls = serializers.SerializerMethodField()
+    image_count = serializers.IntegerField(read_only=True)
     
     class Meta:
         model = Venue
@@ -73,6 +83,8 @@ class VenueDetailSerializer(serializers.ModelSerializer):
             "images",
             "uploaded_images",
             "all_images",
+            "all_image_urls",
+            "image_count",
             "amenities",
             "is_active",
             "created_at",
@@ -80,6 +92,10 @@ class VenueDetailSerializer(serializers.ModelSerializer):
         )
     
     def get_all_images(self, obj):
+        """Return all image URLs (uploaded + external)."""
+        return obj.all_image_urls
+
+    def get_all_image_urls(self, obj):
         """Return all image URLs (uploaded + external)."""
         return obj.all_image_urls
 

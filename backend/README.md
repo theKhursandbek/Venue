@@ -331,13 +331,13 @@ curl -X PATCH "http://localhost:8000/api/bookings/1/cancel/" \
 
 **Get Profile:**
 ```bash
-curl -X GET "http://localhost:8000/api/auth/profile/" \
+curl -X GET "http://localhost:8000/api/auth/me/" \
   -H "Authorization: Bearer <token>"
 ```
 
 **Update Profile:**
 ```bash
-curl -X PATCH "http://localhost:8000/api/auth/profile/" \
+curl -X PATCH "http://localhost:8000/api/auth/me/" \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
   -d '{"name": "John Doe"}'

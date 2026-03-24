@@ -18,7 +18,7 @@ export interface VerifyOTPRequest {
 }
 
 export interface VerifyOTPResponse {
-  message: string;
+  message?: string;
   access: string;
   refresh: string;
   user: User;
@@ -36,9 +36,11 @@ export interface RefreshTokenResponse {
 export interface User {
   id: number;
   phone_number: string;
-  name: string;
+  name: string | null;
+  is_active?: boolean;
   is_verified: boolean;
-  date_joined: string;
+  created_at: string;
+  date_joined?: string;
 }
 
 // Venue
@@ -46,16 +48,17 @@ export interface Venue {
   id: number;
   name: string;
   address: string;
-  description: string;
+  description?: string;
   price_per_hour: string;
   images: string[];
   amenities: string[];
   is_active: boolean;
-  image_count: number;
-  primary_image: string | null;
-  all_image_urls: string[];
-  created_at: string;
-  updated_at: string;
+  image_count?: number;
+  primary_image?: string | null;
+  all_image_urls?: string[];
+  all_images?: string[];
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface VenueListResponse {
@@ -74,9 +77,9 @@ export interface TimeSlot {
 
 export interface AvailabilityResponse {
   venue_id: number;
-  venue_name: string;
   date: string;
-  operating_hours: {
+  venue_name?: string;
+  operating_hours?: {
     start: string;
     end: string;
   };
@@ -86,7 +89,6 @@ export interface AvailabilityResponse {
 // Booking
 export interface Booking {
   id: number;
-  user: number;
   venue: number;
   venue_name: string;
   booking_date: string;
@@ -94,8 +96,20 @@ export interface Booking {
   end_time: string;
   total_price: string;
   status: "pending" | "confirmed" | "cancelled" | "completed";
-  can_cancel: boolean;
+  created_at: string;
+  updated_at?: string;
+}
+
+export interface BookingDetail {
+  id: number;
+  venue: Venue;
+  booking_date: string;
+  start_time: string;
+  end_time: string;
+  total_price: string;
+  status: "pending" | "confirmed" | "cancelled" | "completed";
   duration_hours: number;
+  can_cancel: boolean;
   created_at: string;
   updated_at: string;
 }

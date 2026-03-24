@@ -1,0 +1,3 @@
+-- Optional PostgreSQL init script for production compose.
+-- Keep this file present so the compose volume mount is valid.
+-- Add idempotent SQL statements here if initialization is needed.
